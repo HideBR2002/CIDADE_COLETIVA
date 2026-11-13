@@ -1,0 +1,2796 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cidade Coletiva</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f2ed;
+  font-family: Arial, sans-serif;
+  color: #282828;
+}
+
+header {
+  text-align: center;
+  padding: 20px 15px 14px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 29px;
+  letter-spacing: 2px;
+}
+
+header p {
+  margin: 7px 0 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.cidade-container {
+  width: min(850px, 96%);
+  margin: 10px auto;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fffaf5;
+  box-shadow: 0 8px 30px #00000012;
+}
+
+#cidade svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.controles {
+  text-align: center;
+  padding: 18px 15px 8px;
+}
+
+button {
+  border: none;
+  background: #ed0750;
+  color: white;
+  padding: 14px 27px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: #bb003d;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#estado {
+  font-size: 12px;
+  color: #777;
+  margin-top: 12px;
+}
+
+.legenda {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 12px auto 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.legenda span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ponto {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.descricao {
+  max-width: 680px;
+  margin: 18px auto 28px;
+  padding: 0 20px;
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ==================================
+   ÁREA DE PARTICIPAÇÃO
+================================== */
+
+.participacao {
+  width: min(600px, 92%);
+  margin: 28px auto 25px;
+  padding: 25px;
+  background: #fffaf5;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px #0000000d;
+}
+
+.participacao h2 {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 21px;
+}
+
+.participacao > p {
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.participacao label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.participacao textarea {
+  width: 100%;
+  min-height: 75px;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.participacao textarea:focus {
+  border-color: #009ca6;
+  box-shadow: 0 0 0 2px #009ca620;
+}
+
+.contador {
+  text-align: right;
+  color: #888;
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.cores {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0 20px;
+}
+
+.cor-opcao {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  outline: 2px solid transparent;
+}
+
+.cor-opcao.selecionada {
+  outline-color: #282828;
+  outline-offset: 2px;
+}
+
+.cor-opcao:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+#botaoEnviar {
+  width: 100%;
+  margin-top: 5px;
+}
+
+#mensagemStatus {
+  min-height: 18px;
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  color: #777;
+}
+
+@media (max-width: 600px) {
+
+  .participacao {
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CIDADE COLETIVA</h1>
+  <p>Uma cidade construída pela imaginação de todos.</p>
+</header>
+
+
+<main>
+
+  <!-- CIDADE -->
+  <div class="cidade-container">
+    <div id="cidade"></div>
+  </div>
+
+  <!-- CONTROLES -->
+  <div class="controles">
+
+    <button
+      id="botaoTransformar"
+      onclick="transformarCidade()">
+      Transformar a cidade
+    </button>
+
+    <div id="estado">
+      Cidade atualmente ocupada por publicidade comercial.
+    </div>
+
+  </div>
+
+  <!-- PARTICIPAÇÃO -->
+  <section class="participacao">
+
+    <h2>Faça parte da cidade</h2>
+
+    <p>
+      Compartilhe uma palavra ou frase curta.
+      Sua contribuição poderá fazer parte da paisagem urbana.
+    </p>
+
+    <form
+      id="formContribuicao"
+      onsubmit="adicionarContribuicao(event)">
+
+      <label for="mensagemContribuicao">
+        Sua mensagem
+      </label>
+
+      <textarea
+        id="mensagemContribuicao"
+        maxlength="35"
+        rows="2"
+        placeholder="Ex.: Uma cidade para todos"
+        oninput="atualizarContador()"
+        required></textarea>
+
+      <div class="contador" id="contador">
+        0/35 caracteres
+      </div>
+
+      <label>Escolha uma cor</label>
+
+      <div class="cores">
+
+        <button type="button"
+          class="cor-opcao selecionada"
+          data-cor="#f50057"
+          style="background:#f50057"
+          onclick="selecionarCor('#f50057')">
+        </button>
+
+        <button type="button"
+          class="cor-opcao"
+          data-cor="#009ca6"
+          style="background:#009ca6"
+          onclick="selecionarCor('#009ca6')">
+        </button>
+
+        <button type="button"
+          class="cor-opcao"
+          data-cor="#625bd5"
+          style="background:#625bd5"
+          onclick="selecionarCor('#625bd5')">
+        </button>
+
+        <button type="button"
+          class="cor-opcao"
+          data-cor="#ff8c42"
+          style="background:#ff8c42"
+          onclick="selecionarCor('#ff8c42')">
+        </button>
+
+        <button type="button"
+          class="cor-opcao"
+          data-cor="#168fc0"
+          style="background:#168fc0"
+          onclick="selecionarCor('#168fc0')">
+        </button>
+
+        <button type="button"
+          class="cor-opcao"
+          data-cor="#e5a52c"
+          style="background:#e5a52c"
+          onclick="selecionarCor('#e5a52c')">
+        </button>
+
+      </div>
+
+      <button
+        type="submit"
+        id="botaoEnviar"
+        disabled>
+        Adicionar minha contribuição
+      </button>
+
+      <p id="mensagemStatus" aria-live="polite">
+        Transforme a cidade para liberar as contribuições.
+      </p>
+
+    </form>
+
+  </section>
+
+  <!-- LEGENDA -->
+  <div class="legenda">
+
+    <span>
+      <i class="ponto" style="background:#f50057"></i>
+      Construções
+    </span>
+
+    <span id="legendaComercial">
+      <i class="ponto" style="background:#ff8c42"></i>
+      Publicidade comercial
+    </span>
+
+    <span id="legendaCultural" style="display:none">
+      <i class="ponto" style="background:#009ca6"></i>
+      Manifestações culturais
+    </span>
+
+  </div>
+
+  <div class="descricao">
+    Uma cidade em que os espaços comerciais podem ser
+    transformados em espaços de expressão cultural,
+    criatividade e participação coletiva.
+  </div>
+
+</main>
+
+
+<script>
+
+// ======================================================
+// 1. CORES DAS JANELAS
+// ======================================================
+
+const CORES_JANELAS = [
+  "#18a7bd",
+  "#ffbd43",
+  "#168fc0",
+  "#f4a142"
+];
+
+
+// ======================================================
+// 2. CIDADE ORIGINAL — PRESERVADA
+// ======================================================
+
+const PREDIOS = [
+
+  // CAMADA 1
+
+  { x: 65,  y: 5,  w: 92, d: 46, h: 190, cor: "#f50057", janela: 0 },
+  { x: 157, y: 0,  w: 92, d: 48, h: 165, cor: "#168fc0", janela: 2 },
+  { x: 249, y: 9,  w: 92, d: 46, h: 205, cor: "#ff5722", janela: 1 },
+  { x: 341, y: 3,  w: 92, d: 48, h: 180, cor: "#8c9994", janela: 0 },
+  { x: 433, y: 10, w: 92, d: 46, h: 220, cor: "#009ca6", janela: 2 },
+  { x: 525, y: 2,  w: 92, d: 48, h: 185, cor: "#f50057", janela: 1 },
+  { x: 617, y: 7,  w: 92, d: 46, h: 205, cor: "#ff8c42", janela: 3 },
+  { x: 709, y: 0,  w: 92, d: 48, h: 175, cor: "#168fc0", janela: 0 },
+  { x: 801, y: 8,  w: 92, d: 46, h: 220, cor: "#ff5722", janela: 2 },
+  { x: 893, y: 4,  w: 92, d: 48, h: 190, cor: "#009ca6", janela: 1 },
+
+  // CAMADA 2
+
+  { x: 18,  y: 91, w: 95, d: 48, h: 160, cor: "#ff8c42", janela: 1 },
+  { x: 111, y: 87, w: 95, d: 48, h: 190, cor: "#625bd5", janela: 0 },
+  { x: 204, y: 96, w: 95, d: 48, h: 145, cor: "#f50057", janela: 2 },
+  { x: 297, y: 90, w: 95, d: 48, h: 210, cor: "#ff5722", janela: 3 },
+  { x: 390, y: 94, w: 95, d: 48, h: 175, cor: "#168fc0", janela: 1 },
+  { x: 483, y: 88, w: 95, d: 48, h: 195, cor: "#ffb078", janela: 0 },
+  { x: 576, y: 96, w: 95, d: 48, h: 165, cor: "#009ca6", janela: 2 },
+  { x: 669, y: 89, w: 95, d: 48, h: 205, cor: "#e5a52c", janela: 3 },
+  { x: 762, y: 94, w: 95, d: 48, h: 180, cor: "#f50057", janela: 1 },
+  { x: 855, y: 88, w: 95, d: 48, h: 195, cor: "#625bd5", janela: 0 },
+  { x: 948, y: 94, w: 95, d: 48, h: 165, cor: "#ff8c42", janela: 2 },
+
+  // CAMADA 3
+
+  { x: 0,   y: 177, w: 96, d: 50, h: 145, cor: "#168fc0", janela: 1 },
+  { x: 94,  y: 183, w: 96, d: 50, h: 195, cor: "#ff5722", janela: 2 },
+  { x: 188, y: 174, w: 96, d: 50, h: 165, cor: "#009ca6", janela: 0 },
+  { x: 282, y: 183, w: 96, d: 50, h: 210, cor: "#f50057", janela: 3 },
+  { x: 376, y: 176, w: 96, d: 50, h: 155, cor: "#ff8c42", janela: 1 },
+  { x: 470, y: 185, w: 96, d: 50, h: 195, cor: "#625bd5", janela: 2 },
+  { x: 564, y: 176, w: 96, d: 50, h: 165, cor: "#ff5722", janela: 0 },
+  { x: 658, y: 183, w: 96, d: 50, h: 205, cor: "#168fc0", janela: 3 },
+  { x: 752, y: 176, w: 96, d: 50, h: 175, cor: "#f50057", janela: 1 },
+  { x: 846, y: 184, w: 96, d: 50, h: 200, cor: "#ffb078", janela: 2 },
+  { x: 940, y: 178, w: 96, d: 50, h: 150, cor: "#009ca6", janela: 0 },
+
+  // CAMADA 4
+
+  { x: 18,  y: 265, w: 100, d: 52, h: 155, cor: "#625bd5", janela: 0 },
+  { x: 116, y: 271, w: 100, d: 52, h: 180, cor: "#ff8c42", janela: 1 },
+  { x: 214, y: 263, w: 100, d: 52, h: 145, cor: "#168fc0", janela: 2 },
+  { x: 312, y: 270, w: 100, d: 52, h: 175, cor: "#f50057", janela: 3 },
+
+  { x: 408, y: 292, w: 195, d: 90, h: 175, cor: "#f50057", janela: 0 },
+
+  { x: 624, y: 269, w: 100, d: 52, h: 165, cor: "#009ca6", janela: 1 },
+  { x: 722, y: 262, w: 100, d: 52, h: 195, cor: "#ff5722", janela: 2 },
+  { x: 820, y: 270, w: 100, d: 52, h: 155, cor: "#625bd5", janela: 3 },
+  { x: 918, y: 264, w: 100, d: 52, h: 185, cor: "#ff8c42", janela: 0 },
+
+  // CAMADA 5
+
+  { x: 22,  y: 368, w: 100, d: 48, h: 125, cor: "#ff5722", janela: 2 },
+  { x: 122, y: 373, w: 100, d: 48, h: 145, cor: "#009ca6", janela: 0 },
+  { x: 222, y: 366, w: 100, d: 48, h: 130, cor: "#ffb078", janela: 1 },
+  { x: 322, y: 375, w: 100, d: 48, h: 150, cor: "#168fc0", janela: 3 },
+
+  { x: 610, y: 370, w: 100, d: 48, h: 135, cor: "#ff8c42", janela: 0 },
+  { x: 710, y: 366, w: 100, d: 48, h: 155, cor: "#f50057", janela: 2 },
+  { x: 810, y: 375, w: 100, d: 48, h: 130, cor: "#168fc0", janela: 1 },
+  { x: 910, y: 369, w: 100, d: 48, h: 145, cor: "#ff5722", janela: 3 }
+
+];
+
+
+// ======================================================
+// 3. PUBLICIDADE COMERCIAL ORIGINAL
+// ======================================================
+
+const ANUNCIOS = [
+
+  {
+    id: "ad01",
+    tipo: "painel",
+    x: 55, y: 205, w: 145, h: 62,
+    titulo: "SUPER OFERTA",
+    subtitulo: "PREÇOS ESPECIAIS",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffbd43"
+  },
+
+  {
+    id: "ad02",
+    tipo: "painel",
+    x: 350, y: 218, w: 155, h: 66,
+    titulo: "CONECTA",
+    subtitulo: "TECNOLOGIA PARA TODOS",
+    fundo: "#168fc0",
+    texto: "#ffffff",
+    destaque: "#ffbd43"
+  },
+
+  {
+    id: "ad03",
+    tipo: "painel",
+    x: 660, y: 205, w: 150, h: 64,
+    titulo: "NOVA COLEÇÃO",
+    subtitulo: "ESTILO URBANO",
+    fundo: "#ff8c42",
+    texto: "#282828",
+    destaque: "#ffffff"
+  },
+
+  {
+    id: "ad04",
+    tipo: "painel",
+    x: 410, y: 410, w: 170, h: 65,
+    titulo: "MAIS SABOR",
+    subtitulo: "EXPERIMENTE HOJE",
+    fundo: "#e5a52c",
+    texto: "#282828",
+    destaque: "#f50057"
+  },
+
+  {
+    id: "ad05",
+    tipo: "cartaz",
+    x: 225, y: 310, w: 65, h: 54,
+    titulo: "VIVA!",
+    fundo: "#ffffff",
+    texto: "#f50057"
+  },
+
+  {
+    id: "ad06",
+    tipo: "cartaz",
+    x: 590, y: 300, w: 65, h: 54,
+    titulo: "NOVIDADE",
+    fundo: "#f50057",
+    texto: "#ffffff"
+  },
+
+  {
+    id: "ad07",
+    tipo: "cartaz",
+    x: 790, y: 355, w: 65, h: 54,
+    titulo: "OFERTA",
+    fundo: "#ffbd43",
+    texto: "#282828"
+  },
+
+  {
+    id: "ad08",
+    tipo: "cartaz",
+    x: 120, y: 410, w: 65, h: 54,
+    titulo: "AGORA",
+    fundo: "#168fc0",
+    texto: "#ffffff"
+  },
+
+  {
+    id: "ad09",
+    tipo: "cartaz",
+    x: 850, y: 190, w: 65, h: 54,
+    titulo: "DESCUBRA",
+    fundo: "#009ca6",
+    texto: "#ffffff"
+  },
+
+  {
+    id: "ad10",
+    tipo: "letreiro",
+    x: 250, y: 65, w: 135, h: 43,
+    titulo: "MUNDO NOVO",
+    subtitulo: "IDEIAS QUE MOVEM",
+    fundo: "#625bd5",
+    texto: "#ffffff"
+  },
+
+  {
+    id: "ad11",
+    tipo: "letreiro",
+    x: 680, y: 70, w: 135, h: 43,
+    titulo: "VIVA MELHOR",
+    subtitulo: "DESCUBRA O NOVO",
+    fundo: "#f50057",
+    texto: "#ffffff"
+  }
+
+];
+
+
+// ======================================================
+// 3.1. MAPA DOS 30 ESPAÇOS PARTICIPATIVOS
+// PAINÉIS INTEGRADOS ÀS FACHADAS ISOMÉTRICAS
+// ======================================================
+
+const ESPACOS_PARTICIPATIVOS = [
+
+  // REGIÃO SUPERIOR — 11 ESPAÇOS
+
+  { id: "ad01", predio: 10, face: "esquerda", v: 0.34 },
+  { id: "ad02", predio: 11, face: "direita",  v: 0.42 },
+  { id: "ad03", predio: 12, face: "esquerda", v: 0.50 },
+  { id: "ad04", predio: 13, face: "direita",  v: 0.58 },
+  { id: "ad12", predio: 14, face: "esquerda", v: 0.38 },
+  { id: "ad13", predio: 15, face: "direita",  v: 0.48 },
+  { id: "ad14", predio: 16, face: "esquerda", v: 0.58 },
+  { id: "ad15", predio: 17, face: "direita",  v: 0.35 },
+  { id: "ad16", predio: 18, face: "esquerda", v: 0.46 },
+  { id: "ad17", predio: 19, face: "direita",  v: 0.56 },
+  { id: "ad18", predio: 20, face: "esquerda", v: 0.40 },
+
+  // REGIÃO CENTRAL — 11 ESPAÇOS
+
+  { id: "ad19", predio: 21, face: "direita",  v: 0.45 },
+  { id: "ad20", predio: 22, face: "esquerda", v: 0.55 },
+  { id: "ad21", predio: 23, face: "direita",  v: 0.36 },
+  { id: "ad22", predio: 24, face: "esquerda", v: 0.48 },
+  { id: "ad23", predio: 25, face: "direita",  v: 0.58 },
+  { id: "ad24", predio: 26, face: "esquerda", v: 0.38 },
+  { id: "ad25", predio: 27, face: "direita",  v: 0.48 },
+  { id: "ad26", predio: 28, face: "esquerda", v: 0.58 },
+  { id: "ad27", predio: 29, face: "direita",  v: 0.38 },
+  { id: "ad28", predio: 30, face: "esquerda", v: 0.50 },
+  { id: "ad29", predio: 31, face: "direita",  v: 0.55 },
+
+  // REGIÃO INFERIOR — 8 ESPAÇOS
+
+  { id: "ad30", predio: 41, face: "esquerda", v: 0.34 },
+  { id: "ad31", predio: 42, face: "direita",  v: 0.44 },
+  { id: "ad32", predio: 43, face: "esquerda", v: 0.54 },
+  { id: "ad33", predio: 44, face: "direita",  v: 0.36 },
+  { id: "ad34", predio: 45, face: "esquerda", v: 0.46 },
+  { id: "ad35", predio: 46, face: "direita",  v: 0.56 },
+  { id: "ad36", predio: 47, face: "esquerda", v: 0.38 },
+  { id: "ad37", predio: 48, face: "direita",  v: 0.50 }
+
+];
+
+// Verificação estrutural
+
+if (ESPACOS_PARTICIPATIVOS.length !== 30) {
+  throw new Error("O mapa precisa conter exatamente 30 espaços.");
+}
+
+const IDS_ESPACOS_PARTICIPATIVOS =
+  new Set(ESPACOS_PARTICIPATIVOS.map(item => item.id));
+
+if (IDS_ESPACOS_PARTICIPATIVOS.size !== 30) {
+  throw new Error("Existem IDs duplicados nos espaços participativos.");
+}
+
+// ======================================================
+// 4. MANIFESTAÇÕES CULTURAIS
+// ======================================================
+//
+// Cada mensagem ocupa o espaço de um anúncio.
+//
+// Futuramente, estes textos poderão vir do público
+// através de um formulário e QR Code.
+//
+// ======================================================
+
+
+const MANIFESTACOES = [
+
+  {
+    id: "ad01",
+    titulo: "UMA CIDADE",
+    subtitulo: "PARA TODOS",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "geometrico",
+    simbolo: "★"
+  },
+
+  {
+    id: "ad02",
+    titulo: "CONEXÕES",
+    subtitulo: "HUMANAS",
+    fundo: "#625bd5",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "tipografia",
+    simbolo: "♥"
+  },
+
+  {
+    id: "ad03",
+    titulo: "A DIVERSIDADE",
+    subtitulo: "NOS CONSTRÓI",
+    fundo: "#ffb078",
+    texto: "#282828",
+    destaque: "#009ca6",
+    estilo: "abstrato",
+    simbolo: "✳"
+  },
+
+  {
+    id: "ad04",
+    titulo: "A CULTURA",
+    subtitulo: "ALIMENTA A CIDADE",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "poesia",
+    simbolo: "✦"
+  },
+
+  {
+    id: "ad05",
+    titulo: "TODOS",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "geometrico",
+    simbolo: "♥"
+  },
+
+  {
+    id: "ad06",
+    titulo: "CRIAR",
+    fundo: "#ffb078",
+    texto: "#282828",
+    destaque: "#f50057",
+    estilo: "abstrato",
+    simbolo: "✳"
+  },
+
+  {
+    id: "ad07",
+    titulo: "VIVER",
+    fundo: "#625bd5",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "tipografia",
+    simbolo: "★"
+  },
+
+  {
+    id: "ad08",
+    titulo: "LIVRE",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "poesia",
+    simbolo: "♥"
+  },
+
+  {
+    id: "ad09",
+    titulo: "JUNTOS",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "geometrico",
+    simbolo: "✦"
+  },
+
+  {
+    id: "ad10",
+    titulo: "VOZES DA CIDADE",
+    subtitulo: "CADA PESSOA CONSTRÓI",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "tipografia"
+  },
+
+  {
+    id: "ad11",
+    titulo: "ARTE PARA TODOS",
+    subtitulo: "A CIDADE É NOSSA",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "abstrato"
+  }
+
+];
+
+
+
+// ======================================================
+// 5. ESTADO DA CIDADE
+// ======================================================
+
+let cidadeTransformada = false;
+
+let contribuicoes = [];
+
+let corSelecionada = "#f50057";
+
+const MAX_CONTRIBUICOES = 30;
+
+const CORES_CONTRIBUICAO = [
+  "#f50057",
+  "#009ca6",
+  "#625bd5",
+  "#ff8c42",
+  "#168fc0",
+  "#e5a52c"
+];
+
+// ======================================================
+// 6. GEOMETRIA DOS PRÉDIOS
+// ======================================================
+
+function pontosEdificio(b) {
+
+  const w = b.w;
+  const d = b.d;
+  const h = b.h;
+
+  return {
+
+    topo: [
+      [w / 2, 0],
+      [w, d / 2],
+      [w / 2, d],
+      [0, d / 2]
+    ],
+
+    esquerda: [
+      [0, d / 2],
+      [w / 2, d],
+      [w / 2, d + h],
+      [0, d / 2 + h]
+    ],
+
+    direita: [
+      [w / 2, d],
+      [w, d / 2],
+      [w, d / 2 + h],
+      [w / 2, d + h]
+    ]
+
+  };
+
+}
+
+
+// ======================================================
+// 7. ESCURECER FACHADAS
+// ======================================================
+
+function escurecer(hex, fator) {
+
+  const valor = parseInt(hex.replace("#", ""), 16);
+
+  const r = (valor >> 16) & 255;
+  const g = (valor >> 8) & 255;
+  const b = valor & 255;
+
+  const nr = Math.round(r * (1 - fator));
+  const ng = Math.round(g * (1 - fator));
+  const nb = Math.round(b * (1 - fator));
+
+  return "#" +
+    [nr, ng, nb]
+      .map(v => v.toString(16).padStart(2, "0"))
+      .join("");
+
+}
+
+
+// ======================================================
+// 8. CRIAR POLÍGONOS
+// ======================================================
+
+function poligono(pontos, cor, contorno = "#484848") {
+
+  const coordenadas = pontos
+    .map(p => `${p[0]},${p[1]}`)
+    .join(" ");
+
+  return `
+    <polygon
+      points="${coordenadas}"
+      fill="${cor}"
+      stroke="${contorno}"
+      stroke-width="1"
+      stroke-linejoin="round"
+    />
+  `;
+
+}
+
+
+// ======================================================
+// 9. JANELAS ORIGINAIS
+// ======================================================
+
+function criarJanelas(b, lado) {
+
+  const w = b.w;
+  const d = b.d;
+  const h = b.h;
+
+  const quantidadeColunas =
+    Math.max(2, Math.floor((lado === "esquerda" ? w : d) / 23));
+
+  const quantidadeLinhas =
+    Math.max(2, Math.floor(h / 35));
+
+  let resultado = "";
+
+  for (let linha = 0; linha < quantidadeLinhas; linha++) {
+
+    for (let coluna = 0; coluna < quantidadeColunas; coluna++) {
+
+      const u0 = (coluna + 0.19) / quantidadeColunas;
+      const u1 = (coluna + 0.77) / quantidadeColunas;
+
+      const v0 = (linha + 0.14) / quantidadeLinhas;
+      const v1 = (linha + 0.69) / quantidadeLinhas;
+
+      let a, c, e, f;
+
+      if (lado === "esquerda") {
+
+        a = [u0 * w / 2, d / 2 + u0 * d / 2 + v0 * h];
+        c = [u1 * w / 2, d / 2 + u1 * d / 2 + v0 * h];
+        e = [u1 * w / 2, d / 2 + u1 * d / 2 + v1 * h];
+        f = [u0 * w / 2, d / 2 + u0 * d / 2 + v1 * h];
+
+      } else {
+
+        a = [w / 2 + u0 * w / 2, d - u0 * d / 2 + v0 * h];
+        c = [w / 2 + u1 * w / 2, d - u1 * d / 2 + v0 * h];
+        e = [w / 2 + u1 * w / 2, d - u1 * d / 2 + v1 * h];
+        f = [w / 2 + u0 * w / 2, d - u0 * d / 2 + v1 * h];
+
+      }
+
+      const indice =
+        (b.janela + linha * 3 + coluna * 2) %
+        CORES_JANELAS.length;
+
+      resultado += poligono(
+        [a, c, e, f],
+        CORES_JANELAS[indice],
+        "#4a4a4a"
+      );
+
+    }
+
+  }
+
+  return resultado;
+
+}
+
+
+// ======================================================
+// 10. DESENHAR PRÉDIO
+// ======================================================
+
+function criarPredio(b) {
+
+  const geometria = pontosEdificio(b);
+
+  let html = `
+    <g transform="translate(${b.x},${b.y})">
+  `;
+
+  html += poligono(
+    geometria.esquerda,
+    escurecer(b.cor, 0.19)
+  );
+
+  html += poligono(
+    geometria.direita,
+    escurecer(b.cor, 0.38)
+  );
+
+  html += poligono(
+    geometria.topo,
+    b.cor
+  );
+
+  html += criarJanelas(b, "esquerda");
+  html += criarJanelas(b, "direita");
+
+  html += "</g>";
+
+  return html;
+
+}
+
+
+// ======================================================
+// 11. SÍMBOLO DOS ANÚNCIOS
+// ======================================================
+
+function simboloComercial(x, y, cor) {
+
+  return `
+    <circle
+      cx="${x}"
+      cy="${y}"
+      r="10"
+      fill="${cor}"
+    />
+
+    <path
+      d="M ${x-5} ${y} L ${x-1} ${y+4} L ${x+6} ${y-5}"
+      fill="none"
+      stroke="#282828"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  `;
+
+}
+
+
+// ======================================================
+// 12. DESENHAR ANÚNCIO COMERCIAL GRANDE
+// ======================================================
+
+function criarPainel(ad) {
+
+  const {x,y,w,h} = ad;
+
+  return `
+    <g id="${ad.id}">
+
+      <rect
+        x="${x+5}" y="${y+7}"
+        width="${w}" height="${h}"
+        rx="4" fill="#000000" opacity="0.17"
+      />
+
+      <rect
+        x="${x}" y="${y}"
+        width="${w}" height="${h}"
+        rx="4"
+        fill="${ad.fundo}"
+        stroke="#292929"
+        stroke-width="2"
+      />
+
+      <rect
+        x="${x}" y="${y}"
+        width="${w}" height="9"
+        rx="3"
+        fill="${ad.destaque}"
+      />
+
+      ${simboloComercial(x+20,y+34,ad.destaque)}
+
+      <text
+        x="${x+35}" y="${y+34}"
+        fill="${ad.texto}"
+        font-family="Arial"
+        font-size="17"
+        font-weight="900"
+        textLength="${w-43}"
+        lengthAdjust="spacingAndGlyphs"
+      >${ad.titulo}</text>
+
+      <text
+        x="${x+15}" y="${y+51}"
+        fill="${ad.texto}"
+        font-family="Arial"
+        font-size="9"
+        font-weight="bold"
+      >${ad.subtitulo}</text>
+
+      <text
+        x="${x+w-8}" y="${y+h-5}"
+        fill="${ad.texto}"
+        text-anchor="end"
+        font-size="6"
+        font-weight="bold"
+      >PUBLICIDADE</text>
+
+    </g>
+  `;
+
+}
+
+
+// ======================================================
+// 13. CARTAZ COMERCIAL
+// ======================================================
+
+function criarCartaz(ad) {
+
+  const {x,y,w,h} = ad;
+
+  return `
+    <g id="${ad.id}">
+
+      <rect
+        x="${x+3}" y="${y+4}"
+        width="${w}" height="${h}"
+        fill="#000000" opacity="0.18"
+      />
+
+      <rect
+        x="${x}" y="${y}"
+        width="${w}" height="${h}"
+        rx="3"
+        fill="${ad.fundo}"
+        stroke="#333333"
+        stroke-width="2"
+      />
+
+      <rect
+        x="${x+5}" y="${y+5}"
+        width="${w-10}" height="8"
+        fill="${ad.texto}"
+        opacity="0.2"
+      />
+
+      <text
+        x="${x+w/2}" y="${y+31}"
+        fill="${ad.texto}"
+        font-size="11"
+        font-weight="900"
+        text-anchor="middle"
+        textLength="${w-9}"
+        lengthAdjust="spacingAndGlyphs"
+      >${ad.titulo}</text>
+
+      <text
+        x="${x+w/2}" y="${y+h-8}"
+        fill="${ad.texto}"
+        font-size="6"
+        font-weight="bold"
+        text-anchor="middle"
+      >COMERCIAL</text>
+
+    </g>
+  `;
+
+}
+
+
+// ======================================================
+// 14. LETREIRO COMERCIAL
+// ======================================================
+
+function criarLetreiro(ad) {
+
+  const {x,y,w,h} = ad;
+
+  return `
+    <g id="${ad.id}">
+
+      <path
+        d="
+          M ${x+15} ${y+h}
+          V ${y+h+25}
+          M ${x+w-15} ${y+h}
+          V ${y+h+25}
+        "
+        stroke="#51483f"
+        stroke-width="4"
+      />
+
+      <rect
+        x="${x+3}" y="${y+4}"
+        width="${w}" height="${h}"
+        fill="#000000" opacity="0.2"
+      />
+
+      <rect
+        x="${x}" y="${y}"
+        width="${w}" height="${h}"
+        rx="4"
+        fill="${ad.fundo}"
+        stroke="#333333"
+        stroke-width="2"
+      />
+
+      <text
+        x="${x+w/2}" y="${y+20}"
+        fill="${ad.texto}"
+        font-size="14"
+        font-weight="900"
+        text-anchor="middle"
+        textLength="${w-12}"
+        lengthAdjust="spacingAndGlyphs"
+      >${ad.titulo}</text>
+
+      <text
+        x="${x+w/2}" y="${y+32}"
+        fill="${ad.texto}"
+        font-size="8"
+        font-weight="bold"
+        text-anchor="middle"
+      >${ad.subtitulo}</text>
+
+    </g>
+  `;
+
+}
+
+
+// ======================================================
+// 15. DESENHAR MANIFESTAÇÃO CULTURAL
+// ======================================================
+
+
+function criarManifestacao(ad, cultura) {
+
+  const {x, y, w, h} = ad;
+
+  const titulo = cultura.titulo || "";
+  const subtitulo = cultura.subtitulo || "";
+  const fundo = cultura.fundo;
+  const texto = cultura.texto;
+  const destaque = cultura.destaque;
+
+  let arte = "";
+
+  // ==================================================
+  // 1. FUNDO ARTÍSTICO
+  // ==================================================
+
+  arte += `
+    <rect
+      x="${x}"
+      y="${y}"
+      width="${w}"
+      height="${h}"
+      fill="${fundo}"
+    />
+  `;
+
+
+  // ==================================================
+  // 2. COMPOSIÇÕES GEOMÉTRICAS
+  // ==================================================
+
+  if (cultura.estilo === "geometrico") {
+
+    arte += `
+      <circle
+        cx="${x+w*0.82}"
+        cy="${y+h*0.35}"
+        r="${Math.min(h*0.42,w*0.25)}"
+        fill="${destaque}"
+      />
+
+      <path
+        d="
+          M ${x} ${y+h*0.75}
+          L ${x+w*0.38} ${y}
+          L ${x+w*0.55} ${y+h}
+          Z
+        "
+        fill="#f50057"
+        opacity="0.8"
+      />
+
+      <path
+        d="
+          M ${x+w*0.58} ${y}
+          L ${x+w} ${y+h*0.2}
+          L ${x+w} ${y+h}
+          L ${x+w*0.78} ${y+h}
+          Z
+        "
+        fill="${destaque}"
+        opacity="0.65"
+      />
+
+      <path
+        d="
+          M ${x} ${y+h*0.9}
+          L ${x+w*0.25} ${y+h*0.9}
+          L ${x+w*0.38} ${y+h}
+          L ${x} ${y+h}
+          Z
+        "
+        fill="#282828"
+        opacity="0.2"
+      />
+    `;
+
+  }
+
+
+  // ==================================================
+  // 3. COMPOSIÇÕES ABSTRATAS
+  // ==================================================
+
+  else if (cultura.estilo === "abstrato") {
+
+    arte += `
+      <circle
+        cx="${x+w*0.18}"
+        cy="${y+h*0.35}"
+        r="${h*0.42}"
+        fill="${destaque}"
+      />
+
+      <circle
+        cx="${x+w*0.82}"
+        cy="${y+h*0.75}"
+        r="${h*0.36}"
+        fill="#009ca6"
+      />
+
+      <path
+        d="
+          M ${x+w*0.35} ${y}
+          L ${x+w*0.72} ${y}
+          L ${x+w*0.48} ${y+h}
+          L ${x+w*0.18} ${y+h}
+          Z
+        "
+        fill="#ff5722"
+        opacity="0.85"
+      />
+
+      <path
+        d="
+          M ${x+w*0.55} ${y}
+          Q ${x+w*0.85} ${y+h*0.15}
+            ${x+w*0.7} ${y+h*0.5}
+          T ${x+w} ${y+h}
+        "
+        stroke="${texto}"
+        stroke-width="5"
+        fill="none"
+        opacity="0.65"
+      />
+
+      <path
+        d="
+          M ${x} ${y+h*0.8}
+          L ${x+w*0.4} ${y+h*0.2}
+          L ${x+w*0.55} ${y+h*0.3}
+        "
+        stroke="${texto}"
+        stroke-width="3"
+        fill="none"
+      />
+    `;
+
+  }
+
+
+  // ==================================================
+  // 4. COMPOSIÇÕES TIPOGRÁFICAS
+  // ==================================================
+
+  else if (cultura.estilo === "tipografia") {
+
+    arte += `
+      <path
+        d="
+          M ${x} ${y+h*0.75}
+          L ${x+w*0.28} ${y}
+          L ${x+w*0.48} ${y}
+          L ${x+w*0.22} ${y+h}
+          Z
+        "
+        fill="${destaque}"
+      />
+
+      <circle
+        cx="${x+w*0.86}"
+        cy="${y+h*0.25}"
+        r="${h*0.3}"
+        fill="${destaque}"
+        opacity="0.9"
+      />
+
+      <path
+        d="
+          M ${x+w*0.7} ${y+h*0.8}
+          L ${x+w} ${y+h*0.8}
+        "
+        stroke="${texto}"
+        stroke-width="4"
+      />
+    `;
+
+  }
+
+
+  // ==================================================
+  // 5. COMPOSIÇÕES POÉTICAS
+  // ==================================================
+
+  else if (cultura.estilo === "poesia") {
+
+    arte += `
+      <path
+        d="
+          M ${x} ${y+h*0.8}
+          Q ${x+w*0.25} ${y-h*0.2}
+            ${x+w*0.5} ${y+h*0.65}
+          T ${x+w} ${y+h*0.2}
+        "
+        stroke="${destaque}"
+        stroke-width="9"
+        fill="none"
+      />
+
+      <circle
+        cx="${x+w*0.85}"
+        cy="${y+h*0.75}"
+        r="${h*0.18}"
+        fill="${destaque}"
+      />
+
+      <path
+        d="
+          M ${x+w*0.08} ${y+h*0.15}
+          L ${x+w*0.2} ${y+h*0.15}
+        "
+        stroke="${texto}"
+        stroke-width="3"
+      />
+    `;
+
+  }
+
+
+  // ==================================================
+  // 6. TEXTO PRINCIPAL
+  // ==================================================
+
+  const tamanhoTitulo =
+    ad.tipo === "painel" ? 17 :
+    ad.tipo === "cartaz" ? 13 : 13;
+
+  const centroX = x + w/2;
+
+  const tituloY =
+    ad.tipo === "cartaz" ? y+h*0.62 :
+    ad.tipo === "letreiro" ? y+h*0.65 :
+    y+h*0.57;
+
+  const larguraTexto = w*0.88;
+
+  arte += `
+    <text
+      x="${centroX}"
+      y="${tituloY}"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      fill="${texto}"
+      font-family="Arial, sans-serif"
+      font-size="${tamanhoTitulo}"
+      font-weight="900"
+      textLength="${larguraTexto}"
+      lengthAdjust="spacingAndGlyphs"
+      paint-order="stroke"
+      stroke="${fundo}"
+      stroke-width="0.5"
+    >${titulo}</text>
+  `;
+
+
+  // ==================================================
+  // 7. TEXTO SECUNDÁRIO
+  // ==================================================
+
+  if (subtitulo) {
+
+    arte += `
+      <text
+        x="${centroX}"
+        y="${y+h*0.82}"
+        text-anchor="middle"
+        fill="${texto}"
+        font-family="Arial, sans-serif"
+        font-size="8"
+        font-weight="bold"
+        letter-spacing="0.5"
+      >${subtitulo}</text>
+    `;
+
+  }
+
+
+  // ==================================================
+  // 8. ELEMENTOS ARTÍSTICOS ADICIONAIS
+  // ==================================================
+
+  if (cultura.simbolo) {
+
+    arte += `
+      <text
+        x="${x+w*0.12}"
+        y="${y+h*0.27}"
+        fill="${destaque}"
+        font-size="${Math.min(h*0.32, 22)}"
+        font-weight="bold"
+        text-anchor="middle"
+      >${cultura.simbolo}</text>
+    `;
+
+  }
+
+
+  // ==================================================
+  // 9. FINALIZAÇÃO DO MURAL
+  // ==================================================
+
+  return `
+    <g id="${ad.id}">
+
+      <defs>
+        <clipPath id="recorte-${ad.id}">
+          <rect
+            x="${x}"
+            y="${y}"
+            width="${w}"
+            height="${h}"
+          />
+        </clipPath>
+      </defs>
+
+      <g clip-path="url(#recorte-${ad.id})">
+        ${arte}
+      </g>
+
+    </g>
+  `;
+
+}
+
+
+// ======================================================
+// 15.1. GEOMETRIA DOS PAINÉIS NAS FACHADAS
+// ======================================================
+
+// Converter coordenadas relativas da fachada
+// em coordenadas do SVG.
+
+function pontoNaFachada(predio, face, u, v) {
+
+  const { w, d, h } = predio;
+
+  if (face === "esquerda") {
+
+    return {
+      x: u * w / 2,
+      y: d / 2 + u * d / 2 + v * h
+    };
+
+  }
+
+  return {
+    x: w / 2 + u * w / 2,
+    y: d - u * d / 2 + v * h
+  };
+
+}
+
+
+// ======================================================
+// QUEBRAR MENSAGEM PARA CABER NO PAINEL
+// ======================================================
+
+function quebrarTextoPainel(texto, limite = 11) {
+
+  const palavras = String(texto).trim().split(/\s+/);
+
+  const linhas = [];
+  let linha = "";
+
+  for (const palavra of palavras) {
+
+    // Dividir palavras maiores que o limite.
+    if (palavra.length > limite) {
+
+      if (linha) {
+        linhas.push(linha);
+        linha = "";
+      }
+
+      for (let i = 0; i < palavra.length; i += limite) {
+        linhas.push(palavra.slice(i, i + limite));
+      }
+
+      continue;
+    }
+
+    const tentativa = linha
+      ? `${linha} ${palavra}`
+      : palavra;
+
+    if (tentativa.length <= limite) {
+
+      linha = tentativa;
+
+    } else {
+
+      if (linha) linhas.push(linha);
+
+      linha = palavra;
+
+    }
+
+  }
+
+  if (linha) linhas.push(linha);
+
+  return linhas.slice(0, 3);
+
+}
+
+
+// ======================================================
+// DESENHAR PAINEL SOBRE A FACHADA
+// ======================================================
+
+function criarPainelFachada(posicao, contribuicao) {
+
+  const predio = PREDIOS[posicao.predio];
+
+  if (!predio) return "";
+
+  const { w, d, h } = predio;
+
+  const u0 = 0.08;
+  const u1 = 0.92;
+
+  const largura = (u1 - u0) * w / 2;
+
+  const altura = 22;
+
+  const v0 = posicao.v;
+  const v1 = v0 + altura / h;
+
+  if (v1 > 0.95) return "";
+
+  const origem = pontoNaFachada(
+    predio,
+    posicao.face,
+    u0,
+    v0
+  );
+
+  // Inclinação da fachada isométrica.
+
+  const inclinacao =
+    posicao.face === "esquerda"
+      ? d / w
+      : -d / w;
+
+  const transformacao =
+    `matrix(1 ${inclinacao} 0 1 ${origem.x} ${origem.y})`;
+
+  // Painel vazio ou ocupado.
+
+  const ocupado = Boolean(contribuicao);
+
+  const fundo = ocupado
+    ? contribuicao.cor
+    : "#fffaf5";
+
+  const corTexto = ocupado
+    ? (["#ff8c42", "#e5a52c"].includes(fundo)
+        ? "#282828"
+        : "#ffffff")
+    : "#009ca6";
+
+  const mensagem = ocupado
+    ? contribuicao.texto
+    : "PARTICIPE";
+
+  const linhas = quebrarTextoPainel(mensagem);
+
+  const maiorLinha = Math.max(
+    1,
+    ...linhas.map(linha => linha.length)
+  );
+
+  const tamanhoFonte = Math.max(
+    4.2,
+    Math.min(
+      7.5,
+      (largura - 8) / (maiorLinha * 0.58)
+    )
+  );
+
+  let textoSVG = "";
+
+  const espacamento = 6.2;
+
+  const inicioY =
+    altura / 2 -
+    ((linhas.length - 1) * espacamento) / 2;
+
+  linhas.forEach((linha, indice) => {
+
+    textoSVG += `
+      <text
+        x="${largura / 2}"
+        y="${inicioY + indice * espacamento}"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        fill="${corTexto}"
+        font-family="Arial, sans-serif"
+        font-size="${tamanhoFonte}"
+        font-weight="900"
+      >${escaparXML(linha)}</text>
+    `;
+
+  });
+
+  return `
+    <g
+      id="fachada-${posicao.id}"
+      transform="translate(${predio.x},${predio.y})"
+    >
+
+      <g transform="${transformacao}">
+
+        <rect
+          x="0"
+          y="0"
+          width="${largura}"
+          height="${altura}"
+          rx="2"
+          fill="${fundo}"
+          stroke="${ocupado ? "#292929" : "#009ca6"}"
+          stroke-width="1"
+          opacity="${ocupado ? 1 : 0.94}"
+        />
+
+        ${textoSVG}
+
+        <circle
+          cx="4"
+          cy="4"
+          r="1.5"
+          fill="${corTexto}"
+        />
+
+      </g>
+
+    </g>
+  `;
+
+}
+
+// ======================================================
+// 16. CAMADAS DA CIDADE
+// ======================================================
+
+function montarIntervencoes() {
+
+  let html = `<g id="camada-intervencoes">`;
+
+  // ==================================================
+  // 1. CIDADE COMERCIAL
+  // ==================================================
+
+  if (!cidadeTransformada) {
+
+    for (const anuncio of ANUNCIOS) {
+
+      if (anuncio.tipo === "painel") {
+
+        html += criarPainel(anuncio);
+
+      } else if (anuncio.tipo === "cartaz") {
+
+        html += criarCartaz(anuncio);
+
+      } else if (anuncio.tipo === "letreiro") {
+
+        html += criarLetreiro(anuncio);
+
+      }
+
+    }
+
+    html += `</g>`;
+
+    return html;
+
+  }
+
+
+  // ==================================================
+  // 2. MANIFESTAÇÕES CULTURAIS FIXAS
+  // ==================================================
+
+  for (const anuncio of ANUNCIOS) {
+
+    const cultura = MANIFESTACOES.find(
+      item => item.id === anuncio.id
+    );
+
+    // Os quatro primeiros espaços passam
+    // a pertencer à estrutura participativa.
+
+    if (!cultura) continue;
+
+    if (IDS_ESPACOS_PARTICIPATIVOS.has(anuncio.id)) {
+      continue;
+    }
+
+    html += criarManifestacao(anuncio, cultura);
+
+  }
+
+
+  // ==================================================
+  // 3. TRINTA ESPAÇOS PARTICIPATIVOS
+  // ==================================================
+
+  for (const posicao of ESPACOS_PARTICIPATIVOS) {
+
+    const contribuicao = contribuicoes.find(
+      item => String(item.id) === String(posicao.id)
+    );
+
+    html += criarPainelFachada(
+      posicao,
+      contribuicao
+    );
+
+  }
+
+
+  html += `</g>`;
+
+  return html;
+
+}
+
+// ======================================================
+// 17. MONTAR A CIDADE
+// ======================================================
+
+function montarCidade() {
+
+  let resultado = `
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1100 610"
+      role="img"
+      aria-label="Cidade Coletiva"
+    >
+
+      <rect
+        width="1100"
+        height="610"
+        fill="#fffaf5"
+      />
+  `;
+
+  // Desenhar os prédios respeitando
+  // a ordem original de profundidade.
+
+  for (let i = 0; i < PREDIOS.length; i++) {
+
+    resultado += criarPredio(PREDIOS[i]);
+
+    // Desenhar o painel diretamente
+    // na fachada do prédio correspondente.
+
+    if (cidadeTransformada) {
+
+      for (const posicao of ESPACOS_PARTICIPATIVOS) {
+
+        if (posicao.predio !== i) continue;
+
+        const contribuicao = contribuicoes.find(
+          item => String(item.id) === String(posicao.id)
+        );
+
+        resultado += criarPainelFachada(
+          posicao,
+          contribuicao
+        );
+
+      }
+
+    }
+
+  }
+
+  // Desenhar manifestações culturais fixas.
+
+  resultado += montarIntervencoes();
+
+  resultado += "</svg>";
+
+  document.getElementById("cidade").innerHTML =
+    resultado;
+
+}
+
+// ======================================================
+// 18. TRANSFORMAR A CIDADE
+// ======================================================
+
+
+
+function transformarCidade() {
+
+  cidadeTransformada = !cidadeTransformada;
+
+  montarCidade();
+
+  const botao =
+    document.getElementById("botaoTransformar");
+
+  const estado =
+    document.getElementById("estado");
+
+  const legendaComercial =
+    document.getElementById("legendaComercial");
+
+  const legendaCultural =
+    document.getElementById("legendaCultural");
+
+  if (cidadeTransformada) {
+
+    botao.textContent = "Voltar à cidade comercial";
+
+    estado.textContent =
+      "A cidade agora expressa manifestações culturais e coletivas.";
+
+    legendaComercial.style.display = "none";
+    legendaCultural.style.display = "flex";
+
+  } else {
+
+    botao.textContent = "Transformar a cidade";
+
+    estado.textContent =
+      "Cidade atualmente ocupada por publicidade comercial.";
+
+    legendaComercial.style.display = "flex";
+    legendaCultural.style.display = "none";
+
+  }
+
+  atualizarFormulario();
+
+}
+
+
+ // ======================================================
+ // 19. INICIAR — SUPABASE E REALTIME
+ // ======================================================
+
+ let bancoDisponivel = false;
+ let canalContribuicoesRealtime = null;
+
+ (async function iniciarCidadeColetiva() {
+
+   const status = document.getElementById("mensagemStatus");
+
+   try {
+
+     if (!window.supabaseClient) {
+       throw new Error("Conexão com Supabase não encontrada.");
+     }
+
+     if (!navigator.onLine) {
+       throw new Error("Sem conexão com a internet.");
+     }
+
+     status.textContent =
+       "Carregando contribuições da cidade...";
+
+     contribuicoes = await carregarContribuicoes();
+
+     bancoDisponivel = true;
+
+     // Iniciar atualização em tempo real
+     iniciarRealtime();
+
+     montarCidade();
+
+     atualizarContador();
+
+     atualizarFormulario();
+
+     console.log(
+       "Cidade Coletiva iniciada.",
+       contribuicoes.length,
+       "contribuições carregadas."
+     );
+
+   } catch (erro) {
+
+     bancoDisponivel = false;
+
+     console.error("Erro ao iniciar a cidade:", erro);
+
+     status.textContent =
+       "Não foi possível carregar as contribuições.";
+
+     atualizarContador();
+
+     atualizarFormulario();
+
+   }
+
+ })();
+
+
+// ======================================================
+// 20. SISTEMA DE PARTICIPAÇÃO DOS VISITANTES
+// ======================================================
+
+
+// ======================================================
+// 20.1. CARREGAR CONTRIBUIÇÕES DO SUPABASE
+// ======================================================
+
+async function carregarContribuicoes() {
+
+  try {
+
+    const { data, error } = await window.supabaseClient
+      .from("contribuicoes")
+      .select("painel_id, texto, cor, created_at")
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    if (!Array.isArray(data)) return [];
+
+    const carregadas = data
+      .map(item => ({
+        id: String(item.painel_id),
+        texto: item.texto,
+        cor: item.cor
+      }))
+      .filter(item => {
+
+        return (
+          IDS_ESPACOS_PARTICIPATIVOS.has(item.id) &&
+          typeof item.texto === "string" &&
+          item.texto.trim().length > 0 &&
+          item.texto.length <= 35 &&
+          CORES_CONTRIBUICAO.includes(item.cor)
+        );
+
+      });
+
+    return carregadas.slice(0, MAX_CONTRIBUICOES);
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao carregar contribuições:",
+      erro
+    );
+
+    throw erro;
+
+  }
+
+}
+
+ // ------------------------------------------------------
+ // 20.2 SALVAR CONTRIBUIÇÕES NO SUPABASE
+ // ------------------------------------------------------
+
+ async function salvarContribuicoes(contribuicao) {
+
+   try {
+
+     const { data, error } = await window.supabaseClient
+       .from("contribuicoes")
+       .insert({
+
+         painel_id: contribuicao.id,
+         texto: contribuicao.texto,
+         cor: contribuicao.cor
+
+       })
+       .select("painel_id, texto, cor")
+       .single();
+
+     if (error) {
+
+       console.error(
+         "Erro ao salvar no Supabase:",
+         error
+       );
+
+       return {
+         sucesso: false,
+         codigo: error.code,
+         mensagem: error.message
+       };
+
+     }
+
+     return {
+
+       sucesso: true,
+
+       contribuicao: {
+         id: String(data.painel_id),
+         texto: data.texto,
+         cor: data.cor
+       }
+
+     };
+
+   } catch (erro) {
+
+     console.error(
+       "Falha na gravação:",
+       erro
+     );
+
+     return {
+       sucesso: false,
+       codigo: erro.code || null,
+       mensagem: erro.message
+     };
+
+   }
+
+ }
+
+// ------------------------------------------------------
+// 20.3 ESCOLHER UMA COR
+// ------------------------------------------------------
+
+function selecionarCor(cor) {
+
+  if (!CORES_CONTRIBUICAO.includes(cor)) {
+    return;
+  }
+
+  corSelecionada = cor;
+
+  const botoes = document.querySelectorAll(".cor-opcao");
+
+  botoes.forEach(botao => {
+
+    const selecionada =
+      botao.dataset.cor === cor;
+
+    botao.classList.toggle(
+      "selecionada",
+      selecionada
+    );
+
+    botao.setAttribute(
+      "aria-pressed",
+      selecionada ? "true" : "false"
+    );
+
+  });
+
+}
+
+
+// ------------------------------------------------------
+// 20.4 ATUALIZAR CONTADOR
+// ------------------------------------------------------
+
+function atualizarContador() {
+
+  const campo =
+    document.getElementById("mensagemContribuicao");
+
+  const contador =
+    document.getElementById("contador");
+
+  if (!campo || !contador) {
+    return;
+  }
+
+  contador.textContent =
+    `${campo.value.length}/35 caracteres`;
+
+  contador.style.color =
+    campo.value.length >= 35 ? "#f50057" : "#888";
+
+}
+
+
+// ======================================================
+// 20.5. ATUALIZAR ESTADO DO FORMULÁRIO
+// ======================================================
+
+function atualizarFormulario() {
+
+  const botao = document.getElementById("botaoEnviar");
+
+  const status = document.getElementById("mensagemStatus");
+
+  if (!botao || !status) return;
+
+  const quantidade = contribuicoes.length;
+
+  const restantes = Math.max(
+    0,
+    MAX_CONTRIBUICOES - quantidade
+  );
+
+  if (!bancoDisponivel) {
+
+    botao.disabled = true;
+
+    status.textContent =
+      "Aguardando conexão com o banco de dados.";
+
+  } else if (!cidadeTransformada) {
+
+    botao.disabled = true;
+
+    status.textContent =
+      "Transforme a cidade para liberar as contribuições.";
+
+  } else if (restantes === 0) {
+
+    botao.disabled = true;
+
+    status.textContent =
+      `Todos os ${MAX_CONTRIBUICOES} espaços disponíveis já receberam contribuições.`;
+
+  } else {
+
+    botao.disabled = false;
+
+    status.textContent =
+      `${restantes} espaço(s) disponível(is) para participação.`;
+
+  }
+
+}
+
+// ------------------------------------------------------
+// 20.6 PROTEGER TEXTO PARA SVG
+// ------------------------------------------------------
+
+function escaparXML(texto) {
+
+  return String(texto)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+
+}
+
+
+// ------------------------------------------------------
+// 20.7 DIVIDIR FRASE EM DUAS LINHAS
+// ------------------------------------------------------
+
+function dividirMensagem(texto) {
+
+  if (texto.length <= 17) {
+
+    return [texto];
+
+  }
+
+  const meio = Math.floor(texto.length / 2);
+
+  let corte = texto.lastIndexOf(" ", meio);
+
+  if (corte < 1) {
+    corte = texto.indexOf(" ", meio);
+  }
+
+  if (corte < 1) {
+    corte = meio;
+  }
+
+  return [
+    texto.substring(0, corte).trim(),
+    texto.substring(corte).trim()
+  ];
+
+}
+
+
+// ------------------------------------------------------
+// 20.8 DESENHAR CONTRIBUIÇÃO DO VISITANTE
+// ------------------------------------------------------
+
+
+
+ function criarContribuicao(anuncio, contribuicao) {
+
+   const {x, y, w, h} = anuncio;
+
+   const fundo = contribuicao.cor;
+
+   const linhas = dividirMensagem(contribuicao.texto);
+
+   const corTexto =
+     ["#ff8c42", "#e5a52c"].includes(fundo)
+       ? "#282828"
+       : "#ffffff";
+
+   const maiorLinha = Math.max(
+     1,
+     ...linhas.map(l => l.length)
+   );
+
+   const tamanhoFonte = Math.max(
+     6,
+     Math.min(
+       13,
+       (w - 16) / (maiorLinha * 0.62)
+     )
+   );
+
+   let arte = "";
+
+   // Fundo com contorno
+   arte += `
+     <rect
+       x="${x}"
+       y="${y}"
+       width="${w}"
+       height="${h}"
+       rx="4"
+       fill="${fundo}"
+       stroke="#292929"
+       stroke-width="1.2"
+     />
+   `;
+
+   // Detalhe decorativo
+   arte += `
+     <circle
+       cx="${x+w*0.88}"
+       cy="${y+h*0.22}"
+       r="${h*0.22}"
+       fill="#ffffff"
+       opacity="0.18"
+     />
+
+     <path
+       d="
+         M ${x} ${y+h*0.8}
+         L ${x+w*0.3} ${y}
+         L ${x+w*0.48} ${y}
+         L ${x+w*0.2} ${y+h}
+         Z
+       "
+       fill="#ffffff"
+       opacity="0.12"
+     />
+   `;
+
+   // Texto em uma linha
+   if (linhas.length === 1) {
+
+     arte += `
+       <text
+         x="${x+w/2}"
+         y="${y+h/2}"
+         text-anchor="middle"
+         dominant-baseline="middle"
+         fill="${corTexto}"
+         font-family="Arial, sans-serif"
+         font-size="${tamanhoFonte}"
+         font-weight="900"
+       >${escaparXML(linhas[0])}</text>
+     `;
+
+   } else {
+
+     // Texto em duas linhas
+     arte += `
+       <text
+         x="${x+w/2}"
+         y="${y+h*0.40}"
+         text-anchor="middle"
+         dominant-baseline="middle"
+         fill="${corTexto}"
+         font-family="Arial, sans-serif"
+         font-size="${tamanhoFonte}"
+         font-weight="900"
+       >${escaparXML(linhas[0])}</text>
+
+       <text
+         x="${x+w/2}"
+         y="${y+h*0.68}"
+         text-anchor="middle"
+         dominant-baseline="middle"
+         fill="${corTexto}"
+         font-family="Arial, sans-serif"
+         font-size="${tamanhoFonte}"
+         font-weight="900"
+       >${escaparXML(linhas[1])}</text>
+     `;
+
+   }
+
+   // Identificação visual
+   arte += `
+     <circle
+       cx="${x+7}"
+       cy="${y+7}"
+       r="2.5"
+       fill="${corTexto}"
+     />
+   `;
+
+   return `
+     <g id="${anuncio.id}">
+
+       <defs>
+         <clipPath id="recorte-${anuncio.id}">
+           <rect
+             x="${x}"
+             y="${y}"
+             width="${w}"
+             height="${h}"
+             rx="4"
+           />
+         </clipPath>
+       </defs>
+
+       <g clip-path="url(#recorte-${anuncio.id})">
+         ${arte}
+       </g>
+
+     </g>
+   `;
+
+ }
+
+
+// ======================================================
+// 20.9. ADICIONAR CONTRIBUIÇÃO
+// ======================================================
+
+async function adicionarContribuicao(event) {
+
+  event.preventDefault();
+
+  const campo =
+    document.getElementById("mensagemContribuicao");
+
+  const status =
+    document.getElementById("mensagemStatus");
+
+  const botao =
+    document.getElementById("botaoEnviar");
+
+  const texto = campo.value.trim();
+
+  if (!bancoDisponivel) {
+
+    status.textContent =
+      "Banco de dados indisponível.";
+
+    return;
+
+  }
+
+  if (!cidadeTransformada) {
+
+    status.textContent =
+      "Primeiro transforme a cidade.";
+
+    return;
+
+  }
+
+  if (!texto || texto.length > 35) {
+
+    status.textContent =
+      "Digite uma mensagem de até 35 caracteres.";
+
+    return;
+
+  }
+
+  if (contribuicoes.length >= MAX_CONTRIBUICOES) {
+
+    atualizarFormulario();
+
+    return;
+
+  }
+
+  botao.disabled = true;
+
+  status.textContent =
+    "Verificando espaços disponíveis...";
+
+  try {
+
+    // Consultar os espaços ocupados no banco.
+
+    const { data, error } = await window.supabaseClient
+      .from("contribuicoes")
+      .select("painel_id");
+
+    if (error) throw error;
+
+    const paineisOcupados = new Set(
+      (data || []).map(
+        item => String(item.painel_id)
+      )
+    );
+
+    // Considerar também os registros locais.
+
+    contribuicoes.forEach(item => {
+
+      paineisOcupados.add(String(item.id));
+
+    });
+
+    // Procurar exclusivamente nos 30 espaços.
+
+    const painelDisponivel =
+      ESPACOS_PARTICIPATIVOS.find(
+        espaco =>
+          !paineisOcupados.has(String(espaco.id))
+      );
+
+    if (!painelDisponivel) {
+
+      contribuicoes = await carregarContribuicoes();
+
+      montarCidade();
+
+      atualizarContador();
+
+      atualizarFormulario();
+
+      status.textContent =
+        "Todos os espaços participativos já estão ocupados.";
+
+      return;
+
+    }
+
+    const novaContribuicao = {
+
+      id: String(painelDisponivel.id),
+
+      texto: texto,
+
+      cor: corSelecionada
+
+    };
+
+    status.textContent =
+      "Enviando sua contribuição...";
+
+    const resultado =
+      await salvarContribuicoes(novaContribuicao);
+
+    if (!resultado.sucesso) {
+
+      if (resultado.codigo === "23505") {
+
+        contribuicoes = await carregarContribuicoes();
+
+        montarCidade();
+
+        atualizarContador();
+
+        status.textContent =
+          "Outro visitante ocupou esse espaço. Tente novamente.";
+
+      } else {
+
+        status.textContent =
+          "Erro ao salvar: " + resultado.mensagem;
+
+      }
+
+      atualizarFormulario();
+
+      return;
+
+    }
+
+    // Evitar duplicação com o Realtime.
+
+    const jaExiste = contribuicoes.some(
+      item =>
+        String(item.id) ===
+        String(resultado.contribuicao.id)
+    );
+
+    if (!jaExiste) {
+
+      contribuicoes.push(resultado.contribuicao);
+
+    }
+
+    montarCidade();
+
+    campo.value = "";
+
+    atualizarContador();
+
+    atualizarFormulario();
+
+    status.textContent =
+      "Sua contribuição agora faz parte da Cidade Coletiva!";
+
+    console.log(
+      "Contribuição salva:",
+      resultado.contribuicao
+    );
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao adicionar contribuição:",
+      erro
+    );
+
+    status.textContent =
+      "Não foi possível enviar. Tente novamente.";
+
+    atualizarFormulario();
+
+  } finally {
+
+    botao.disabled = false;
+
+    atualizarFormulario();
+
+  }
+
+}
+
+// ======================================================
+// 21. ATUALIZAÇÃO AUTOMÁTICA — SUPABASE REALTIME
+// ======================================================
+
+function iniciarRealtime() {
+
+  if (canalContribuicoesRealtime) {
+    return;
+  }
+
+  console.log("Iniciando escuta Realtime...");
+
+  canalContribuicoesRealtime = window.supabaseClient
+
+    .channel("cidade-coletiva-contribuicoes")
+
+    .on(
+
+      "postgres_changes",
+
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "contribuicoes"
+      },
+
+      (payload) => {
+
+        const registro = payload.new;
+
+        if (!registro) return;
+
+        const id = String(registro.painel_id);
+
+        // Validar se pertence aos 30 espaços.
+
+        if (!IDS_ESPACOS_PARTICIPATIVOS.has(id)) {
+          return;
+        }
+
+        // Validar mensagem.
+
+        if (
+          typeof registro.texto !== "string" ||
+          registro.texto.trim().length === 0 ||
+          registro.texto.length > 35
+        ) {
+          return;
+        }
+
+        // Validar cor.
+
+        if (!CORES_CONTRIBUICAO.includes(registro.cor)) {
+          return;
+        }
+
+        // Impedir duplicação.
+
+        const jaExiste = contribuicoes.some(
+          item => String(item.id) === id
+        );
+
+        if (jaExiste) return;
+
+        // Respeitar o limite.
+
+        if (
+          contribuicoes.length >= MAX_CONTRIBUICOES
+        ) {
+          return;
+        }
+
+        const novaContribuicao = {
+
+          id: id,
+
+          texto: registro.texto,
+
+          cor: registro.cor
+
+        };
+
+        contribuicoes.push(novaContribuicao);
+
+        montarCidade();
+
+        atualizarContador();
+
+        atualizarFormulario();
+
+        const status =
+          document.getElementById("mensagemStatus");
+
+        if (status) {
+
+          status.textContent =
+            "Uma nova contribuição chegou à Cidade Coletiva!";
+
+        }
+
+        console.log(
+          "Cidade atualizada automaticamente."
+        );
+
+      }
+
+    )
+
+    .subscribe((status) => {
+
+      if (status === "SUBSCRIBED") {
+
+        console.log(
+          "Realtime conectado com sucesso!"
+        );
+
+      }
+
+      if (status === "CHANNEL_ERROR") {
+
+        console.error(
+          "Erro na conexão Realtime."
+        );
+
+      }
+
+      if (status === "TIMED_OUT") {
+
+        console.error(
+          "Tempo esgotado ao conectar ao Realtime."
+        );
+
+      }
+
+      if (status === "CLOSED") {
+
+        console.warn(
+          "Canal Realtime encerrado."
+        );
+
+      }
+
+    });
+
+}
+
+
+</script>
+
+</body>
+</html>
