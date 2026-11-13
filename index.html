@@ -39,7 +39,7 @@ header p {
 }
 
 .cidade-container {
-  width: min(850px, 96%);
+  width: min(1100px, 98%);
   margin: 10px auto;
   overflow: hidden;
   border-radius: 8px;
@@ -591,66 +591,66 @@ const ANUNCIOS = [
 
 ];
 
-
 // ======================================================
-// 3.1. MAPA DOS 30 ESPAÇOS PARTICIPATIVOS
-// PAINÉIS INTEGRADOS ÀS FACHADAS ISOMÉTRICAS
+// 3.1. MAPA DAS 20 PLACAS SUSPENSAS
+// PALAVRAS ENVIADAS PELO PÚBLICO
 // ======================================================
 
 const ESPACOS_PARTICIPATIVOS = [
 
-  // REGIÃO SUPERIOR — 11 ESPAÇOS
+  // CAMADA SUPERIOR — 4 placas
+  { id: "ad01", predio: 0,  dx: 0, dy: 0 },
+  { id: "ad02", predio: 3,  dx: 0, dy: 0 },
+  { id: "ad03", predio: 6,  dx: 0, dy: 0 },
+  { id: "ad04", predio: 9,  dx: 0, dy: 0 },
 
-  { id: "ad01", predio: 10, face: "esquerda", v: 0.34 },
-  { id: "ad02", predio: 11, face: "direita",  v: 0.42 },
-  { id: "ad03", predio: 12, face: "esquerda", v: 0.50 },
-  { id: "ad04", predio: 13, face: "direita",  v: 0.58 },
-  { id: "ad12", predio: 14, face: "esquerda", v: 0.38 },
-  { id: "ad13", predio: 15, face: "direita",  v: 0.48 },
-  { id: "ad14", predio: 16, face: "esquerda", v: 0.58 },
-  { id: "ad15", predio: 17, face: "direita",  v: 0.35 },
-  { id: "ad16", predio: 18, face: "esquerda", v: 0.46 },
-  { id: "ad17", predio: 19, face: "direita",  v: 0.56 },
-  { id: "ad18", predio: 20, face: "esquerda", v: 0.40 },
+  // SEGUNDA CAMADA — 4 placas
+  { id: "ad12", predio: 10, dx: 0, dy: 0 },
+  { id: "ad13", predio: 13, dx: 0, dy: 0 },
+  { id: "ad14", predio: 17, dx: 0, dy: 0 },
+  { id: "ad15", predio: 20, dx: 0, dy: 0 },
 
-  // REGIÃO CENTRAL — 11 ESPAÇOS
+  // TERCEIRA CAMADA — 4 placas
+  { id: "ad16", predio: 21, dx: 0, dy: 0 },
+  { id: "ad17", predio: 24, dx: 0, dy: 0 },
+  { id: "ad18", predio: 28, dx: 0, dy: 0 },
+  { id: "ad19", predio: 31, dx: 0, dy: 0 },
 
-  { id: "ad19", predio: 21, face: "direita",  v: 0.45 },
-  { id: "ad20", predio: 22, face: "esquerda", v: 0.55 },
-  { id: "ad21", predio: 23, face: "direita",  v: 0.36 },
-  { id: "ad22", predio: 24, face: "esquerda", v: 0.48 },
-  { id: "ad23", predio: 25, face: "direita",  v: 0.58 },
-  { id: "ad24", predio: 26, face: "esquerda", v: 0.38 },
-  { id: "ad25", predio: 27, face: "direita",  v: 0.48 },
-  { id: "ad26", predio: 28, face: "esquerda", v: 0.58 },
-  { id: "ad27", predio: 29, face: "direita",  v: 0.38 },
-  { id: "ad28", predio: 30, face: "esquerda", v: 0.50 },
-  { id: "ad29", predio: 31, face: "direita",  v: 0.55 },
+  // QUARTA CAMADA — 4 placas
+  { id: "ad20", predio: 32, dx: 0, dy: 0 },
+  { id: "ad21", predio: 34, dx: 0, dy: 0 },
+  { id: "ad22", predio: 38, dx: 0, dy: 0 },
+  { id: "ad23", predio: 40, dx: 0, dy: 0 },
 
-  // REGIÃO INFERIOR — 8 ESPAÇOS
-
-  { id: "ad30", predio: 41, face: "esquerda", v: 0.34 },
-  { id: "ad31", predio: 42, face: "direita",  v: 0.44 },
-  { id: "ad32", predio: 43, face: "esquerda", v: 0.54 },
-  { id: "ad33", predio: 44, face: "direita",  v: 0.36 },
-  { id: "ad34", predio: 45, face: "esquerda", v: 0.46 },
-  { id: "ad35", predio: 46, face: "direita",  v: 0.56 },
-  { id: "ad36", predio: 47, face: "esquerda", v: 0.38 },
-  { id: "ad37", predio: 48, face: "direita",  v: 0.50 }
+  // CAMADA INFERIOR — 4 placas
+  { id: "ad24", predio: 41, dx: 0, dy: 0 },
+  { id: "ad25", predio: 43, dx: 0, dy: 0 },
+  { id: "ad26", predio: 46, dx: 0, dy: 0 },
+  { id: "ad27", predio: 48, dx: 0, dy: 0 }
 
 ];
 
-// Verificação estrutural
+// VERIFICAÇÃO ESTRUTURAL
 
-if (ESPACOS_PARTICIPATIVOS.length !== 30) {
-  throw new Error("O mapa precisa conter exatamente 30 espaços.");
+if (ESPACOS_PARTICIPATIVOS.length !== 20) {
+  throw new Error("O mapa precisa conter exatamente 20 placas.");
 }
 
 const IDS_ESPACOS_PARTICIPATIVOS =
   new Set(ESPACOS_PARTICIPATIVOS.map(item => item.id));
 
-if (IDS_ESPACOS_PARTICIPATIVOS.size !== 30) {
-  throw new Error("Existem IDs duplicados nos espaços participativos.");
+if (IDS_ESPACOS_PARTICIPATIVOS.size !== 20) {
+  throw new Error("Existem IDs duplicados nas placas.");
+}
+
+for (const posicao of ESPACOS_PARTICIPATIVOS) {
+
+  if (!PREDIOS[posicao.predio]) {
+    throw new Error(
+      `Prédio inexistente na placa ${posicao.id}.`
+    );
+  }
+
 }
 
 // ======================================================
@@ -795,7 +795,7 @@ let contribuicoes = [];
 
 let corSelecionada = "#f50057";
 
-const MAX_CONTRIBUICOES = 30;
+const MAX_CONTRIBUICOES = 20;
 
 const CORES_CONTRIBUICAO = [
   "#f50057",
@@ -1534,49 +1534,28 @@ function criarManifestacao(ad, cultura) {
 
 }
 
-
 // ======================================================
-// 15.1. GEOMETRIA DOS PAINÉIS NAS FACHADAS
+// 15.1. PLACAS SUSPENSAS PARA PALAVRAS
 // ======================================================
 
-// Converter coordenadas relativas da fachada
-// em coordenadas do SVG.
+// DISTRIBUIR MENSAGENS EM ATÉ TRÊS LINHAS
 
-function pontoNaFachada(predio, face, u, v) {
+function quebrarTextoPlaca(texto, limite = 17) {
 
-  const { w, d, h } = predio;
+  const palavras = String(texto || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
 
-  if (face === "esquerda") {
-
-    return {
-      x: u * w / 2,
-      y: d / 2 + u * d / 2 + v * h
-    };
-
+  if (!palavras.length) {
+    return ["SUA PALAVRA", "AQUI"];
   }
-
-  return {
-    x: w / 2 + u * w / 2,
-    y: d - u * d / 2 + v * h
-  };
-
-}
-
-
-// ======================================================
-// QUEBRAR MENSAGEM PARA CABER NO PAINEL
-// ======================================================
-
-function quebrarTextoPainel(texto, limite = 11) {
-
-  const palavras = String(texto).trim().split(/\s+/);
 
   const linhas = [];
   let linha = "";
 
-  for (const palavra of palavras) {
+  for (let palavra of palavras) {
 
-    // Dividir palavras maiores que o limite.
     if (palavra.length > limite) {
 
       if (linha) {
@@ -1584,11 +1563,14 @@ function quebrarTextoPainel(texto, limite = 11) {
         linha = "";
       }
 
-      for (let i = 0; i < palavra.length; i += limite) {
-        linhas.push(palavra.slice(i, i + limite));
+      while (palavra.length > limite) {
+
+        linhas.push(palavra.slice(0, limite));
+
+        palavra = palavra.slice(limite);
+
       }
 
-      continue;
     }
 
     const tentativa = linha
@@ -1601,7 +1583,9 @@ function quebrarTextoPainel(texto, limite = 11) {
 
     } else {
 
-      if (linha) linhas.push(linha);
+      if (linha) {
+        linhas.push(linha);
+      }
 
       linha = palavra;
 
@@ -1609,7 +1593,9 @@ function quebrarTextoPainel(texto, limite = 11) {
 
   }
 
-  if (linha) linhas.push(linha);
+  if (linha) {
+    linhas.push(linha);
+  }
 
   return linhas.slice(0, 3);
 
@@ -1617,47 +1603,33 @@ function quebrarTextoPainel(texto, limite = 11) {
 
 
 // ======================================================
-// DESENHAR PAINEL SOBRE A FACHADA
+// DESENHAR UMA PLACA SUSPENSA
 // ======================================================
 
-function criarPainelFachada(posicao, contribuicao) {
+function criarPlacaSuspensa(posicao, contribuicao) {
 
   const predio = PREDIOS[posicao.predio];
 
   if (!predio) return "";
 
-  const { w, d, h } = predio;
+  const largura = 118;
+  const altura = 40;
 
-  const u0 = 0.08;
-  const u1 = 0.92;
+  const centroX =
+    predio.x +
+    predio.w / 2 +
+    (posicao.dx || 0);
 
-  const largura = (u1 - u0) * w / 2;
+  const topoY =
+    predio.y -
+    49 +
+    (posicao.dy || 0);
 
-  const altura = 22;
+  const x = centroX - largura / 2;
+  const y = topoY;
 
-  const v0 = posicao.v;
-  const v1 = v0 + altura / h;
-
-  if (v1 > 0.95) return "";
-
-  const origem = pontoNaFachada(
-    predio,
-    posicao.face,
-    u0,
-    v0
-  );
-
-  // Inclinação da fachada isométrica.
-
-  const inclinacao =
-    posicao.face === "esquerda"
-      ? d / w
-      : -d / w;
-
-  const transformacao =
-    `matrix(1 ${inclinacao} 0 1 ${origem.x} ${origem.y})`;
-
-  // Painel vazio ou ocupado.
+  // Ponto de fixação no topo do prédio.
+  const ancoraY = predio.y + predio.d / 2;
 
   const ocupado = Boolean(contribuicao);
 
@@ -1666,16 +1638,18 @@ function criarPainelFachada(posicao, contribuicao) {
     : "#fffaf5";
 
   const corTexto = ocupado
-    ? (["#ff8c42", "#e5a52c"].includes(fundo)
-        ? "#282828"
-        : "#ffffff")
+    ? (
+        ["#ff8c42", "#e5a52c"].includes(fundo)
+          ? "#282828"
+          : "#ffffff"
+      )
     : "#009ca6";
 
   const mensagem = ocupado
     ? contribuicao.texto
-    : "PARTICIPE";
+    : "SUA PALAVRA AQUI";
 
-  const linhas = quebrarTextoPainel(mensagem);
+  const linhas = quebrarTextoPlaca(mensagem);
 
   const maiorLinha = Math.max(
     1,
@@ -1683,26 +1657,27 @@ function criarPainelFachada(posicao, contribuicao) {
   );
 
   const tamanhoFonte = Math.max(
-    4.2,
+    6,
     Math.min(
-      7.5,
-      (largura - 8) / (maiorLinha * 0.58)
+      9,
+      (largura - 12) / (maiorLinha * 0.58)
     )
   );
 
-  let textoSVG = "";
-
-  const espacamento = 6.2;
+  const espacamento = 9;
 
   const inicioY =
+    y +
     altura / 2 -
     ((linhas.length - 1) * espacamento) / 2;
+
+  let textoSVG = "";
 
   linhas.forEach((linha, indice) => {
 
     textoSVG += `
       <text
-        x="${largura / 2}"
+        x="${centroX}"
         y="${inicioY + indice * espacamento}"
         text-anchor="middle"
         dominant-baseline="middle"
@@ -1716,35 +1691,51 @@ function criarPainelFachada(posicao, contribuicao) {
   });
 
   return `
-    <g
-      id="fachada-${posicao.id}"
-      transform="translate(${predio.x},${predio.y})"
-    >
+    <g id="placa-${posicao.id}">
 
-      <g transform="${transformacao}">
+      <!-- CABO DE SUSTENTAÇÃO -->
+      <line
+        x1="${centroX}"
+        y1="${y + altura}"
+        x2="${centroX}"
+        y2="${ancoraY}"
+        stroke="#454545"
+        stroke-width="1.5"
+      />
 
-        <rect
-          x="0"
-          y="0"
-          width="${largura}"
-          height="${altura}"
-          rx="2"
-          fill="${fundo}"
-          stroke="${ocupado ? "#292929" : "#009ca6"}"
-          stroke-width="1"
-          opacity="${ocupado ? 1 : 0.94}"
-        />
+      <!-- SOMBRA -->
+      <rect
+        x="${x + 2}"
+        y="${y + 2}"
+        width="${largura}"
+        height="${altura}"
+        rx="4"
+        fill="#000000"
+        opacity="0.14"
+      />
 
-        ${textoSVG}
+      <!-- CORPO DA PLACA -->
+      <rect
+        x="${x}"
+        y="${y}"
+        width="${largura}"
+        height="${altura}"
+        rx="4"
+        fill="${fundo}"
+        stroke="${ocupado ? "#292929" : "#009ca6"}"
+        stroke-width="1.3"
+      />
 
-        <circle
-          cx="4"
-          cy="4"
-          r="1.5"
-          fill="${corTexto}"
-        />
+      <!-- TEXTO -->
+      ${textoSVG}
 
-      </g>
+      <!-- INDICADOR VISUAL -->
+      <circle
+        cx="${x + 6}"
+        cy="${y + 6}"
+        r="2"
+        fill="${corTexto}"
+      />
 
     </g>
   `;
@@ -1760,7 +1751,7 @@ function montarIntervencoes() {
   let html = `<g id="camada-intervencoes">`;
 
   // ==================================================
-  // 1. CIDADE COMERCIAL
+  // CIDADE ORIGINAL: PUBLICIDADE COMERCIAL
   // ==================================================
 
   if (!cidadeTransformada) {
@@ -1783,54 +1774,25 @@ function montarIntervencoes() {
 
     }
 
-    html += `</g>`;
+  } else {
 
-    return html;
+    // ==================================================
+    // CIDADE TRANSFORMADA: MANIFESTAÇÕES CULTURAIS
+    // ==================================================
 
-  }
+    for (const anuncio of ANUNCIOS) {
 
+      const cultura = MANIFESTACOES.find(
+        item => item.id === anuncio.id
+      );
 
-  // ==================================================
-  // 2. MANIFESTAÇÕES CULTURAIS FIXAS
-  // ==================================================
+      if (!cultura) continue;
 
-  for (const anuncio of ANUNCIOS) {
+      html += criarManifestacao(anuncio, cultura);
 
-    const cultura = MANIFESTACOES.find(
-      item => item.id === anuncio.id
-    );
-
-    // Os quatro primeiros espaços passam
-    // a pertencer à estrutura participativa.
-
-    if (!cultura) continue;
-
-    if (IDS_ESPACOS_PARTICIPATIVOS.has(anuncio.id)) {
-      continue;
     }
 
-    html += criarManifestacao(anuncio, cultura);
-
   }
-
-
-  // ==================================================
-  // 3. TRINTA ESPAÇOS PARTICIPATIVOS
-  // ==================================================
-
-  for (const posicao of ESPACOS_PARTICIPATIVOS) {
-
-    const contribuicao = contribuicoes.find(
-      item => String(item.id) === String(posicao.id)
-    );
-
-    html += criarPainelFachada(
-      posicao,
-      contribuicao
-    );
-
-  }
-
 
   html += `</g>`;
 
@@ -1847,39 +1809,46 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1100 610"
+      viewBox="0 -60 1100 670"
       role="img"
       aria-label="Cidade Coletiva"
     >
 
       <rect
+        x="0"
+        y="-60"
         width="1100"
-        height="610"
+        height="670"
         fill="#fffaf5"
       />
+
   `;
 
-  // Desenhar os prédios respeitando
-  // a ordem original de profundidade.
+  // DESENHAR OS PRÉDIOS
+  // PRESERVAR A ORDEM ORIGINAL DE PROFUNDIDADE
 
   for (let i = 0; i < PREDIOS.length; i++) {
 
-    resultado += criarPredio(PREDIOS[i]);
+    const predio = PREDIOS[i];
 
-    // Desenhar o painel diretamente
-    // na fachada do prédio correspondente.
+    resultado += criarPredio(predio);
+
+    // INSERIR PLACAS NA CIDADE TRANSFORMADA
 
     if (cidadeTransformada) {
 
       for (const posicao of ESPACOS_PARTICIPATIVOS) {
 
-        if (posicao.predio !== i) continue;
+        if (posicao.predio !== i) {
+          continue;
+        }
 
         const contribuicao = contribuicoes.find(
-          item => String(item.id) === String(posicao.id)
+          item =>
+            String(item.id) === String(posicao.id)
         );
 
-        resultado += criarPainelFachada(
+        resultado += criarPlacaSuspensa(
           posicao,
           contribuicao
         );
@@ -1890,7 +1859,7 @@ function montarCidade() {
 
   }
 
-  // Desenhar manifestações culturais fixas.
+  // INSERIR CAMADAS DE INTERVENÇÃO
 
   resultado += montarIntervencoes();
 
@@ -1958,6 +1927,11 @@ function transformarCidade() {
 
  let bancoDisponivel = false;
  let canalContribuicoesRealtime = null;
+
+// Renderizar a cidade imediatamente,
+// independentemente da conexão com o banco.
+
+montarCidade();
 
  (async function iniciarCidadeColetiva() {
 
