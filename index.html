@@ -2436,19 +2436,27 @@ function montarCidade() {
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
 
+  // Primeiro desenhar todos os edifícios, respeitando
+  // a ordem original de profundidade da cidade.
   for (let i = 0; i < PREDIOS.length; i++) {
-
-    // Desenhar o edifício original.
     resultado += criarPredio(PREDIOS[i]);
+  }
 
-    // Inserir a obra vinculada ao edifício.
-    // A posição no loop respeita a profundidade.
-    if (cidadeTransformada) {
+  // Depois inserir as obras arquitetônicas em uma camada
+  // própria, acima dos edifícios. Isso impede que prédios
+  // desenhados posteriormente ocultem as intervenções.
+  if (cidadeTransformada) {
+    resultado += `
+      <g id="camada-obras-arquitetonicas">
+    `;
 
+    for (let i = 0; i < PREDIOS.length; i++) {
       resultado += renderizarObraArquitetonica(i);
-
     }
 
+    resultado += `
+      </g>
+    `;
   }
 
   // ==================================================
