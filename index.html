@@ -477,6 +477,25 @@ const PREDIOS = [
 
 ];
 
+// DELIMITAÇÃO DO QUADRANTE 4 — setor inferior do cruzamento em X.
+const QUADRANTE_4 = { centro: { x: 525, y: 205 } };
+
+function pertenceAoQuadrante4(x, y) {
+  const centro = QUADRANTE_4.centro;
+  const limiteEsquerdo = centro.y +
+    ((455 - centro.y) / (centro.x - 15)) * (centro.x - x);
+  const limiteDireito = centro.y +
+    ((485 - centro.y) / (965 - centro.x)) * (x - centro.x);
+  return y >= (x <= centro.x ? limiteEsquerdo : limiteDireito);
+}
+
+function predioPertenceAoQuadrante4(predio) {
+  return pertenceAoQuadrante4(
+    predio.x + predio.w / 2,
+    predio.y + predio.d / 2
+  );
+}
+
 // NOVO PLANO URBANO — mantém os índices usados pelas funcionalidades.
 (function aplicarNovoPlanoUrbano() {
   // Os equipamentos ocupam lotes definidos da malha e não compartilham
@@ -512,7 +531,13 @@ const PREDIOS = [
     predio.w=Math.min(predio.w,104);
     predio.d=Math.min(predio.d,52);
   });
-})();;
+})();
+const PREDIOS_QUADRANTE_4 = new Set(
+  PREDIOS.reduce((indices, predio, indice) => {
+    if (predioPertenceAoQuadrante4(predio)) indices.push(indice);
+    return indices;
+  }, [])
+);;
 
 
 
@@ -2744,6 +2769,7 @@ function montarIntervencoes() {
   if (!cidadeTransformada) {
 
     for (const anuncio of ANUNCIOS) {
+      if (pertenceAoQuadrante4(anuncio.x + anuncio.w / 2, anuncio.y + anuncio.h / 2)) continue;
 
       if (anuncio.tipo === "painel") {
 
@@ -2876,6 +2902,7 @@ function montarCidade() {
   // de profundidade. Construções posteriores podem ocultar
   // partes de obras posicionadas atrás delas, como na cidade real.
   for (let i = 0; i < PREDIOS.length; i++) {
+    if (PREDIOS_QUADRANTE_4.has(i)) continue;
     if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
       // Substituição real: o edifício original não é desenhado.
       resultado += renderizarTransformacaoUrbana(i);
@@ -2912,6 +2939,7 @@ function montarCidade() {
     `;
 
     for (const posicao of ESPACOS_PARTICIPATIVOS) {
+      if (PREDIOS_QUADRANTE_4.has(posicao.predio)) continue;
 
       const contribuicao = contribuicoes.find(
         item =>
