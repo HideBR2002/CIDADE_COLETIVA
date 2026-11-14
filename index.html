@@ -1113,11 +1113,12 @@ const OBRAS_PROTOTIPO = [
 
   // Cinco estruturas artísticas independentes, implantadas nos intervalos
   // entre os espaços públicos; não ficam sobre telhados nem dentro das praças.
-  { id: "arte06", categoria: "instalacao", tipo: "aneis", x: 185, y: 448, escala: 0.72, paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte07", categoria: "instalacao", tipo: "pavilhao", x: 365, y: 500, escala: 0.68, paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"] },
-  { id: "arte08", categoria: "instalacao", tipo: "portal", x: 565, y: 425, escala: 0.70, paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"] },
-  { id: "arte09", categoria: "instalacao", tipo: "vertical", x: 790, y: 492, escala: 0.66, paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte10", categoria: "instalacao", tipo: "modular", x: 1000, y: 445, escala: 0.70, paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"] },
+  // Cinco instalações posicionadas nos intervalos dos percursos entre praças.
+  { id: "arte06", categoria: "instalacao", tipo: "aneis", x: 245, y: 285, escala: 0.58, paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"] },
+  { id: "arte07", categoria: "instalacao", tipo: "pavilhao", x: 765, y: 285, escala: 0.56, paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"] },
+  { id: "arte08", categoria: "instalacao", tipo: "portal", x: 245, y: 455, escala: 0.58, paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"] },
+  { id: "arte09", categoria: "instalacao", tipo: "vertical", x: 765, y: 455, escala: 0.55, paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"] },
+  { id: "arte10", categoria: "instalacao", tipo: "modular", x: 505, y: 390, escala: 0.56, paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"] },
 
   // Cinco mosaicos maiores, assentados no passeio frontal.
   { id: "arte11", categoria: "pavimento", x: 145, y: 548, cor: "#009ca6" },
@@ -1337,12 +1338,12 @@ function criarJanelas(b, lado) {
 // ======================================================
 
 const TRANSFORMACOES_URBANAS = [
-  // Quatro praças periféricas: implantação nas margens livres do enquadramento.
-  // predio identifica o edifício efetivamente substituído; posicao define o novo piso.
-  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -155, y: 275, w: 125, d: 76 } },
-  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 1055, y: 275, w: 125, d: 76 } },
-  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -155, y: 390, w: 125, d: 76 } },
-  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 1055, y: 390, w: 125, d: 76 } },
+  // Quatro praças periféricas nos quatro quadrantes da cidade.
+  // A praça central funciona como nó de conexão dos quatro percursos.
+  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -75, y: 12, w: 125, d: 76 } },
+  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 975, y: 12, w: 125, d: 76 } },
+  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -75, y: 385, w: 125, d: 76 } },
+  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 975, y: 385, w: 125, d: 76 } },
   // A praça central mantém a implantação atual.
   { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
   // Cinco equipamentos coletivos de menor escala.
@@ -1384,11 +1385,12 @@ for (const item of TRANSFORMACOES_URBANAS) {
 }
 
 function criarRedeEspacosPublicos() {
-  // Percursos conectam as quatro praças periféricas à praça central.
+  // Quatro percursos diretos: cada praça periférica se conecta à praça central.
   const pracas = TRANSFORMACOES_URBANAS.filter(item => item.grupo === "pracas");
   const central = pracas.find(item => item.tipo === "convivencia");
   const perifericas = pracas.filter(item => item !== central);
   if (!central || perifericas.length !== 4) return "";
+
   const ponto = item => {
     if (item.posicao) {
       return {
@@ -1399,19 +1401,20 @@ function criarRedeEspacosPublicos() {
     const b = PREDIOS[item.predio];
     return { x: b.x + b.w / 2, y: b.y + b.h + b.d / 2 };
   };
+
   const c = ponto(central);
   const linhas = perifericas.map(item => {
     const p = ponto(item);
-    const lado = p.x < c.x ? -1 : 1;
-    const corredorX = lado < 0 ? -115 : 1150;
-    const controleY = (p.y + c.y) / 2;
+    const mx = (p.x + c.x) / 2;
+    const my = (p.y + c.y) / 2;
     return '<path d="M ' + p.x + ' ' + p.y +
-      ' C ' + corredorX + ' ' + p.y + ', ' + corredorX + ' ' + controleY +
-      ', ' + c.x + ' ' + c.y + '"/>';
+      ' Q ' + mx + ' ' + my + ' ' + c.x + ' ' + c.y + '"/>';
   }).join("");
+
   return '<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
-    '<g stroke="#b9aa91" stroke-width="5" opacity=".24">' + linhas + '</g>' +
-    '<g stroke="#f7edda" stroke-width="2" stroke-dasharray="4 7" opacity=".88">' + linhas + '</g>' +
+    '<g stroke="#b9aa91" stroke-width="13" opacity=".58">' + linhas + '</g>' +
+    '<g stroke="#f7edda" stroke-width="8" opacity=".98">' + linhas + '</g>' +
+    '<g stroke="#c9b99d" stroke-width="1.5" stroke-dasharray="5 8" opacity=".9">' + linhas + '</g>' +
     '</g>';
 }
 
@@ -2795,10 +2798,6 @@ function montarCidade() {
   `;
 
   // ==================================================
-  if (cidadeTransformada) {
-    resultado += criarRedeEspacosPublicos();
-  }
-
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
 
@@ -2817,8 +2816,12 @@ function montarCidade() {
     }
   }
 
-  // Obras independentes da cobertura: pequenas instalações nas praças
-  // e mosaicos no passeio frontal, sem competir com as placas.
+  // Rede de caminhos em primeiro plano conecta as quatro praças à central.
+  if (cidadeTransformada) {
+    resultado += criarRedeEspacosPublicos();
+  }
+
+  // Instalações artísticas implantadas nos intervalos dos caminhos.
   if (cidadeTransformada) {
     resultado += renderizarInstalacoesIndependentes();
     resultado += renderizarArteDoPavimento();
