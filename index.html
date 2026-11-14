@@ -40,7 +40,7 @@ header p {
 
 
 .cidade-container {
-  width: min(1600px, 98%);
+  width: min(1800px, 98%);
   margin: 10px auto;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1340,20 +1340,20 @@ function criarJanelas(b, lado) {
 const TRANSFORMACOES_URBANAS = [
   // Quatro praças periféricas nos quatro quadrantes da cidade.
   // A praça central funciona como nó de conexão dos quatro percursos.
-  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -75, y: 12, w: 125, d: 76 } },
-  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 975, y: 12, w: 125, d: 76 } },
-  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -75, y: 385, w: 125, d: 76 } },
-  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 975, y: 385, w: 125, d: 76 } },
+  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -115, y: 12, w: 125, d: 76 } },
+  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 12, w: 125, d: 76 } },
+  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -115, y: 385, w: 125, d: 76 } },
+  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 385, w: 125, d: 76 } },
   // A praça central mantém a implantação atual.
   { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
   // Equipamentos alinhados verticalmente com as praças periféricas.
   // Lateral esquerda: um equipamento abaixo de cada praça.
   // Lateral direita: um abaixo da praça superior e dois abaixo da inferior.
-  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos", posicao: { x: -51.5, y: 105, w: 78, d: 46 } },
-  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos", posicao: { x: 998.5, y: 105, w: 78, d: 46 } },
-  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: -51.5, y: 470, w: 78, d: 46 } },
-  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos", posicao: { x: 998.5, y: 470, w: 78, d: 46 } },
-  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: 998.5, y: 530, w: 78, d: 46 } }
+  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos", posicao: { x: -91.5, y: 105, w: 78, d: 46 } },
+  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos", posicao: { x: 1038.5, y: 105, w: 78, d: 46 } },
+  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: -91.5, y: 470, w: 78, d: 46 } },
+  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos", posicao: { x: 1038.5, y: 470, w: 78, d: 46 } },
+  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: 1038.5, y: 530, w: 78, d: 46 } }
 ];
 
 const IDS_TRANSFORMACOES_URBANAS = new Set(
@@ -2804,7 +2804,7 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 -60 1600 770"
+      viewBox="0 -60 1800 820"
       role="img"
       aria-label="Cidade Coletiva"
     >
@@ -2812,14 +2812,14 @@ function montarCidade() {
       <rect
         x="0"
         y="-60"
-        width="1600"
-        height="770"
+        width="1800"
+        height="820"
         fill="#fffaf5"
       />
 
       <g
         id="conteudo-cidade"
-        transform="translate(216 0) scale(1.12)"
+        transform="translate(316 0) scale(1.12)"
       >
 
   `;
