@@ -1357,19 +1357,16 @@ const TRANSFORMACOES_URBANAS = [
 const IDS_TRANSFORMACOES_URBANAS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.id)
 );
-// Somente as cinco praças substituem edifícios. Os cinco equipamentos
-// menores permanecem cadastrados no plano, mas não são renderizados sobre
-// os lotes: sua implantação visual será tratada como estruturas independentes.
+// As dez transformações substituem os edifícios de origem no modo coletivo:
+// cinco praças e cinco equipamentos culturais.
 const PREDIOS_TRANSFORMADOS = new Set(
-  TRANSFORMACOES_URBANAS
-    .filter(item => item.grupo === "pracas")
-    .map(item => item.predio)
+  TRANSFORMACOES_URBANAS.map(item => item.predio)
 );
 
 if (TRANSFORMACOES_URBANAS.length !== 10 ||
     IDS_TRANSFORMACOES_URBANAS.size !== 10 ||
-    PREDIOS_TRANSFORMADOS.size !== 5) {
-  throw new Error("Devem existir dez transformações cadastradas e cinco edifícios substituídos pelas praças.");
+    PREDIOS_TRANSFORMADOS.size !== 10) {
+  throw new Error("Devem existir dez transformações cadastradas e dez edifícios substituídos por espaços coletivos.");
 }
 
 for (const item of TRANSFORMACOES_URBANAS) {
@@ -2801,15 +2798,27 @@ function montarCidade() {
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
 
-  // Desenhar edifícios e suas intervenções na mesma ordem
-  // de profundidade. Construções posteriores podem ocultar
-  // partes de obras posicionadas atrás delas, como na cidade real.
+  // Desenhar edifícios e transformações na mesma ordem de profundidade.
+  // Equipamentos substituem seus edifícios no próprio ponto do percurso,
+  // preservando a oclusão natural pelos edifícios vizinhos.
+  // As praças continuam em camada própria, conforme a composição existente.
   for (let i = 0; i < PREDIOS.length; i++) {
     if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
-      // Os edifícios reservados são substituídos por praças em camada própria.
+      const transformacao = TRANSFORMACOES_URBANAS.find(
+        item => item.predio === i
+      );
+
+      if (transformacao && transformacao.grupo === "equipamentos") {
+        resultado += renderizarTransformacaoUrbana(i);
+      }
+
+      // Todos os edifícios transformados deixam de ser desenhados
+      // como construções comerciais.
       continue;
     }
+
     resultado += criarPredio(PREDIOS[i]);
+
     if (cidadeTransformada) {
       resultado += renderizarObraArquitetonica(i);
     }
