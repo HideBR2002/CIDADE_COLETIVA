@@ -1121,8 +1121,79 @@ const OBRAS_PROTOTIPO = [
     tipo: "galeria",
     predio: 47,
     paleta: ["#009ca6", "#625bd5", "#168fc0", "#ff8c42", "#ffbd43"]
+  },
+  {
+    id: "arte02",
+    tipo: "mosaico",
+    predio: 1,
+    paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte03",
+    tipo: "jardimVertical",
+    predio: 5,
+    paleta: ["#009ca6", "#168fc0", "#ffbd43", "#f50057", "#ffffff"]
+  },
+  {
+    id: "arte05",
+    tipo: "portal",
+    predio: 8,
+    paleta: ["#ff8c42", "#f50057", "#625bd5", "#ffbd43", "#ffffff"]
+  },
+  {
+    id: "arte06",
+    tipo: "relevo",
+    predio: 12,
+    paleta: ["#168fc0", "#009ca6", "#ffbd43", "#f50057", "#ffffff"]
+  },
+  {
+    id: "arte07",
+    tipo: "instalacaoLuminosa",
+    predio: 16,
+    paleta: ["#f50057", "#ffbd43", "#168fc0", "#625bd5", "#ffffff"]
+  },
+  {
+    id: "arte08",
+    tipo: "escadaria",
+    predio: 19,
+    paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"]
+  },
+  {
+    id: "arte09",
+    tipo: "jardimSuspenso",
+    predio: 23,
+    paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"]
+  },
+  {
+    id: "arte10",
+    tipo: "totem",
+    predio: 26,
+    paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte11",
+    tipo: "arcoCultural",
+    predio: 30,
+    paleta: ["#168fc0", "#f50057", "#ffbd43", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte12",
+    tipo: "esculturaSolar",
+    predio: 35,
+    paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte14",
+    tipo: "pavilhao",
+    predio: 39,
+    paleta: ["#009ca6", "#625bd5", "#ff8c42", "#ffbd43", "#ffffff"]
+  },
+  {
+    id: "arte15",
+    tipo: "bandeirolas",
+    predio: 45,
+    paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"]
   }
-
 ];
 
 
@@ -1135,11 +1206,11 @@ const IDS_PROTOTIPOS = new Set(
 );
 
 if (
-  OBRAS_PROTOTIPO.length !== 3 ||
-  IDS_PROTOTIPOS.size !== 3
+  OBRAS_PROTOTIPO.length !== 15 ||
+  IDS_PROTOTIPOS.size !== 15
 ) {
   throw new Error(
-    "Os três protótipos precisam ter identificadores únicos."
+    "As 15 intervenções arquitetônicas precisam ter identificadores únicos."
   );
 }
 
@@ -1165,9 +1236,15 @@ for (const obra of OBRAS_PROTOTIPO) {
     );
   }
 
-  if (
-    !["mural", "escultura", "galeria"].includes(obra.tipo)
-  ) {
+  const TIPOS_OBRAS_VALIDOS = [
+    "mural", "escultura", "galeria", "mosaico",
+    "jardimVertical", "portal", "relevo",
+    "instalacaoLuminosa", "escadaria", "jardimSuspenso",
+    "totem", "arcoCultural", "esculturaSolar",
+    "pavilhao", "bandeirolas"
+  ];
+
+  if (!TIPOS_OBRAS_VALIDOS.includes(obra.tipo)) {
     throw new Error(
       `Tipo de obra inválido: ${obra.tipo}.`
     );
@@ -2101,6 +2178,141 @@ function criarGaleriaAberta(predio, obra) {
 }
 
 
+function criarIntervencaoComplementar(predio, obra) {
+  const b = predio;
+  const [c1, c2, c3, c4, c5] = obra.paleta;
+  const cx = b.w / 2;
+  const topo = -8;
+  const base = b.d + 8;
+  const contorno = "#303030";
+
+  let desenho = "";
+
+  switch (obra.tipo) {
+    case "mosaico":
+      desenho = `
+        <g>
+          <polygon points="${cx-34},${topo} ${cx},${topo-19} ${cx+34},${topo} ${cx},${topo+19}" fill="${c1}" stroke="${contorno}" stroke-width="1.5"/>
+          <polygon points="${cx-34},${topo} ${cx},${topo+19} ${cx},${topo+52} ${cx-34},${topo+33}" fill="${c2}" stroke="${contorno}"/>
+          <polygon points="${cx},${topo+19} ${cx+34},${topo} ${cx+34},${topo+33} ${cx},${topo+52}" fill="${c3}" stroke="${contorno}"/>
+          <circle cx="${cx}" cy="${topo+16}" r="8" fill="${c4}"/>
+        </g>`;
+      break;
+
+    case "jardimVertical":
+      desenho = `
+        <g>
+          <rect x="8" y="${b.d/2+18}" width="${b.w/2-16}" height="${b.h*0.55}" rx="5" fill="#164f43" stroke="${contorno}" stroke-width="2"/>
+          <path d="M 18 ${b.d/2+35} Q 35 ${b.d/2+55} 22 ${b.d/2+75} T 30 ${b.d/2+115} M 42 ${b.d/2+30} Q 58 ${b.d/2+55} 43 ${b.d/2+85} T 58 ${b.d/2+130}" fill="none" stroke="${c1}" stroke-width="5"/>
+          <circle cx="24" cy="${b.d/2+42}" r="7" fill="${c3}"/><circle cx="48" cy="${b.d/2+72}" r="8" fill="${c4}"/><circle cx="28" cy="${b.d/2+112}" r="7" fill="${c2}"/>
+        </g>`;
+      break;
+
+    case "portal":
+      desenho = `
+        <g fill="none" stroke-linejoin="round">
+          <path d="M ${cx-42} ${topo+42} V ${topo-10} Q ${cx} ${topo-68} ${cx+42} ${topo-10} V ${topo+42}" stroke="${c1}" stroke-width="12"/>
+          <path d="M ${cx-25} ${topo+42} V ${topo+1} Q ${cx} ${topo-35} ${cx+25} ${topo+1} V ${topo+42}" stroke="${c2}" stroke-width="7"/>
+          <circle cx="${cx}" cy="${topo-15}" r="6" fill="${c3}" stroke="${contorno}"/>
+        </g>`;
+      break;
+
+    case "relevo":
+      desenho = `
+        <g>
+          <polygon points="8,${b.d/2+15} ${b.w/2-8},${b.d+5} ${b.w/2-8},${b.d+b.h-12} 8,${b.d/2+b.h-18}" fill="${c1}" stroke="${contorno}" stroke-width="2"/>
+          <path d="M 15 ${b.d/2+b.h*0.72} L 42 ${b.d/2+b.h*0.25} L 65 ${b.d/2+b.h*0.65} L 35 ${b.d/2+b.h*0.85} Z" fill="${c2}" stroke="${contorno}"/>
+          <circle cx="35" cy="${b.d/2+b.h*0.48}" r="11" fill="${c3}" stroke="${c5}" stroke-width="3"/>
+          <path d="M 12 ${b.d/2+b.h*0.32} L 62 ${b.d/2+b.h*0.62}" stroke="${c4}" stroke-width="5"/>
+        </g>`;
+      break;
+
+    case "instalacaoLuminosa":
+      desenho = `
+        <g>
+          <path d="M ${cx-40} ${topo+15} Q ${cx} ${topo-42} ${cx+40} ${topo+15}" fill="none" stroke="${c1}" stroke-width="7"/>
+          <path d="M ${cx-28} ${topo+10} L ${cx-28} ${topo+45} M ${cx} ${topo-3} L ${cx} ${topo+52} M ${cx+28} ${topo+10} L ${cx+28} ${topo+45}" stroke="${c2}" stroke-width="3"/>
+          <circle cx="${cx-28}" cy="${topo+48}" r="8" fill="${c3}" stroke="${contorno}"/><circle cx="${cx}" cy="${topo+55}" r="10" fill="${c4}" stroke="${contorno}"/><circle cx="${cx+28}" cy="${topo+48}" r="8" fill="${c5}" stroke="${contorno}"/>
+        </g>`;
+      break;
+
+    case "escadaria":
+      desenho = `
+        <g>
+          <path d="M ${cx-43} ${topo+44} H ${cx-20} V ${topo+30} H ${cx+2} V ${topo+16} H ${cx+24} V ${topo+2} H ${cx+44}" fill="none" stroke="${c1}" stroke-width="10" stroke-linejoin="miter"/>
+          <path d="M ${cx-43} ${topo+51} H ${cx+44}" stroke="${c2}" stroke-width="3"/>
+          <circle cx="${cx+31}" cy="${topo-8}" r="8" fill="${c3}"/>
+        </g>`;
+      break;
+
+    case "jardimSuspenso":
+      desenho = `
+        <g>
+          <path d="M ${cx-42} ${topo-8} Q ${cx} ${topo+22} ${cx+42} ${topo-8}" fill="none" stroke="${contorno}" stroke-width="3"/>
+          <path d="M ${cx-25} ${topo+3} V ${topo+29} M ${cx} ${topo+12} V ${topo+38} M ${cx+25} ${topo+3} V ${topo+29}" stroke="${c2}" stroke-width="2"/>
+          <path d="M ${cx-36} ${topo+29} Q ${cx-25} ${topo+14} ${cx-14} ${topo+29} Z M ${cx-11} ${topo+38} Q ${cx} ${topo+20} ${cx+11} ${topo+38} Z M ${cx+14} ${topo+29} Q ${cx+25} ${topo+14} ${cx+36} ${topo+29} Z" fill="${c1}" stroke="${contorno}"/>
+          <circle cx="${cx-25}" cy="${topo+20}" r="5" fill="${c3}"/><circle cx="${cx}" cy="${topo+29}" r="5" fill="${c4}"/><circle cx="${cx+25}" cy="${topo+20}" r="5" fill="${c5}"/>
+        </g>`;
+      break;
+
+    case "totem":
+      desenho = `
+        <g>
+          <polygon points="${cx},${topo-45} ${cx+23},${topo-32} ${cx+23},${topo+45} ${cx},${topo+58} ${cx-23},${topo+45} ${cx-23},${topo-32}" fill="${c1}" stroke="${contorno}" stroke-width="2"/>
+          <polygon points="${cx},${topo-45} ${cx+23},${topo-32} ${cx},${topo-19} ${cx-23},${topo-32}" fill="${c3}" stroke="${contorno}"/>
+          <circle cx="${cx}" cy="${topo+5}" r="12" fill="${c4}" stroke="${c5}" stroke-width="3"/>
+        </g>`;
+      break;
+
+    case "arcoCultural":
+      desenho = `
+        <g fill="none">
+          <path d="M ${cx-48} ${topo+48} V ${topo-8} Q ${cx} ${topo-76} ${cx+48} ${topo-8} V ${topo+48}" stroke="${c1}" stroke-width="10"/>
+          <path d="M ${cx-30} ${topo+48} V ${topo+1} Q ${cx} ${topo-43} ${cx+30} ${topo+1} V ${topo+48}" stroke="${c2}" stroke-width="7"/>
+          <path d="M ${cx-8} ${topo-41} L ${cx} ${topo-54} L ${cx+8} ${topo-41}" stroke="${c3}" stroke-width="5"/>
+        </g>`;
+      break;
+
+    case "esculturaSolar":
+      desenho = `
+        <g>
+          <circle cx="${cx}" cy="${topo-2}" r="22" fill="${c2}" stroke="${contorno}" stroke-width="2"/>
+          <circle cx="${cx}" cy="${topo-2}" r="10" fill="${c1}"/>
+          <path d="M ${cx} ${topo-38} V ${topo-29} M ${cx} ${topo+25} V ${topo+39} M ${cx-36} ${topo-2} H ${cx-27} M ${cx+27} ${topo-2} H ${cx+36} M ${cx-26} ${topo-28} L ${cx-20} ${topo-22} M ${cx+20} ${topo+18} L ${cx+26} ${topo+24} M ${cx+26} ${topo-28} L ${cx+20} ${topo-22} M ${cx-20} ${topo+18} L ${cx-26} ${topo+24}" stroke="${c3}" stroke-width="5" stroke-linecap="round"/>
+          <path d="M ${cx-28} ${topo+43} H ${cx+28}" stroke="${c4}" stroke-width="5"/>
+        </g>`;
+      break;
+
+    case "pavilhao":
+      desenho = `
+        <g>
+          <polygon points="${cx},${topo-38} ${cx+48},${topo-12} ${cx},${topo+14} ${cx-48},${topo-12}" fill="${c1}" stroke="${contorno}" stroke-width="2"/>
+          <path d="M ${cx-36} ${topo-7} V ${topo+52} M ${cx+36} ${topo-7} V ${topo+52} M ${cx} ${topo+12} V ${topo+58}" stroke="${c2}" stroke-width="6"/>
+          <path d="M ${cx-42} ${topo+52} H ${cx+42}" stroke="${c3}" stroke-width="7"/>
+          <circle cx="${cx}" cy="${topo-12}" r="8" fill="${c4}"/>
+        </g>`;
+      break;
+
+    case "bandeirolas":
+      desenho = `
+        <g>
+          <path d="M ${cx-48} ${topo-12} Q ${cx} ${topo+14} ${cx+48} ${topo-12}" fill="none" stroke="${contorno}" stroke-width="2.5"/>
+          <path d="M ${cx-34} ${topo-4} L ${cx-24} ${topo+28} L ${cx-14} ${topo-1} Z" fill="${c1}" stroke="${contorno}"/>
+          <path d="M ${cx-9} ${topo+5} L ${cx} ${topo+39} L ${cx+10} ${topo+5} Z" fill="${c2}" stroke="${contorno}"/>
+          <path d="M ${cx+16} ${topo-1} L ${cx+26} ${topo+28} L ${cx+36} ${topo-5} Z" fill="${c3}" stroke="${contorno}"/>
+          <circle cx="${cx}" cy="${topo-19}" r="5" fill="${c4}"/>
+        </g>`;
+      break;
+  }
+
+  return `
+    <g id="obra-${obra.id}" transform="translate(${b.x},${b.y})">
+      ${desenho}
+    </g>
+  `;
+}
+
+
 function renderizarObraArquitetonica(indicePredio) {
 
   if (!cidadeTransformada) return "";
@@ -2125,7 +2337,7 @@ function renderizarObraArquitetonica(indicePredio) {
     return criarGaleriaAberta(predio, obra);
   }
 
-  return "";
+  return criarIntervencaoComplementar(predio, obra);
 }
 
 
@@ -2389,11 +2601,8 @@ function montarIntervencoes() {
   /*
     CIDADE TRANSFORMADA:
 
-    Os três protótipos arquitetônicos são desenhados
-    individualmente dentro do loop de edifícios,
-    pela função renderizarObraArquitetonica().
-
-    As outras 12 obras serão integradas na Etapa B.
+    As 15 intervenções arquitetônicas são desenhadas
+    na camada própria pela função renderizarObraArquitetonica().
   */
 
   html += `</g>`;
