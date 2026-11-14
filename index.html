@@ -479,18 +479,31 @@ const PREDIOS = [
 
 // NOVO PLANO URBANO — mantém os índices usados pelas funcionalidades.
 (function aplicarNovoPlanoUrbano() {
+  // Os equipamentos ocupam lotes definidos da malha e não compartilham
+  // posições com os edifícios convencionais.
   const equipamentos = new Map([
-    [2,{x:275,y:205}],[7,{x:365,y:245}],[11,{x:305,y:315}],
-    [15,{x:825,y:75}],[18,{x:835,y:385}],
-    [22,{x:250,y:285}],[25,{x:390,y:315}],
-    [27,{x:690,y:205}],[33,{x:720,y:315}],[36,{x:545,y:415}]
+    [2,{x:260,y:188}],[7,{x:380,y:273}],[11,{x:260,y:358}],
+    [15,{x:860,y:103}],[18,{x:860,y:443}],
+    [22,{x:140,y:273}],[25,{x:380,y:358}],
+    [27,{x:620,y:188}],[33,{x:740,y:358}],[36,{x:500,y:443}]
   ]);
+
   const lotes=[];
-  for(let linha=0;linha<5;linha++){
-    for(let coluna=0;coluna<8;coluna++){
-      lotes.push({x:28+coluna*132,y:22+linha*98});
+  for(let linha=0;linha<6;linha++){
+    for(let coluna=0;coluna<9;coluna++){
+      const x=20+coluna*120;
+      const y=18+linha*85;
+      const reservado=[...equipamentos.values()].some(
+        equipamento=>equipamento.x===x&&equipamento.y===y
+      );
+      if(!reservado) lotes.push({x,y});
     }
   }
+
+  if(lotes.length<PREDIOS.length-equipamentos.size){
+    throw new Error("Não existem lotes suficientes para distribuir os edifícios.");
+  }
+
   let proximoLote=0;
   PREDIOS.forEach((predio,indice)=>{
     const posicao=equipamentos.get(indice)||lotes[proximoLote++];
@@ -499,7 +512,7 @@ const PREDIOS = [
     predio.w=Math.min(predio.w,104);
     predio.d=Math.min(predio.d,52);
   });
-})();
+})();;
 
 
 
