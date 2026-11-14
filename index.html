@@ -2778,7 +2778,13 @@ function montarIntervencoes() {
   if (!cidadeTransformada) {
 
     for (const anuncio of ANUNCIOS) {
-      if (pertenceAoQuadrante4(anuncio.x + anuncio.w / 2, anuncio.y + anuncio.h / 2)) continue;
+      const limitesAnuncio = [
+        [anuncio.x, anuncio.y],
+        [anuncio.x + anuncio.w, anuncio.y],
+        [anuncio.x + anuncio.w, anuncio.y + anuncio.h],
+        [anuncio.x, anuncio.y + anuncio.h]
+      ];
+      if (limitesAnuncio.some(([x, y]) => pertenceAoQuadrante4(x, y))) continue;
 
       if (anuncio.tipo === "painel") {
 
