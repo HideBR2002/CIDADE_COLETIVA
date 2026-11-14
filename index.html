@@ -1335,11 +1335,13 @@ function criarJanelas(b, lado) {
 // ======================================================
 
 const TRANSFORMACOES_URBANAS = [
-  // Cinco praças: quatro nos extremos e uma praça central.
-  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas" },
-  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas" },
-  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas" },
-  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas" },
+  // Quatro praças periféricas: implantação nas margens livres do enquadramento.
+  // predio identifica o edifício efetivamente substituído; posicao define o novo piso.
+  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -155, y: 275, w: 125, d: 76 } },
+  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 275, w: 125, d: 76 } },
+  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -155, y: 390, w: 125, d: 76 } },
+  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 390, w: 125, d: 76 } },
+  // A praça central mantém a implantação atual.
   { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
   // Cinco equipamentos coletivos de menor escala.
   { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos" },
@@ -1375,21 +1377,30 @@ for (const item of TRANSFORMACOES_URBANAS) {
 }
 
 function criarRedeEspacosPublicos() {
-  // A rede conecta somente as cinco praças: quatro periféricas à praça central.
+  // Percursos conectam as quatro praças periféricas à praça central.
   const pracas = TRANSFORMACOES_URBANAS.filter(item => item.grupo === "pracas");
   const central = pracas.find(item => item.tipo === "convivencia");
   const perifericas = pracas.filter(item => item !== central);
   if (!central || perifericas.length !== 4) return "";
   const ponto = item => {
+    if (item.posicao) {
+      return {
+        x: item.posicao.x + item.posicao.w / 2,
+        y: item.posicao.y + item.posicao.d / 2
+      };
+    }
     const b = PREDIOS[item.predio];
     return { x: b.x + b.w / 2, y: b.y + b.h + b.d / 2 };
   };
   const c = ponto(central);
   const linhas = perifericas.map(item => {
     const p = ponto(item);
-    const meioX = (p.x + c.x) / 2;
-    return '<path d="M ' + p.x + ' ' + p.y + ' L ' + meioX + ' ' + p.y +
-      ' L ' + meioX + ' ' + c.y + ' L ' + c.x + ' ' + c.y + '"/>';
+    const lado = p.x < c.x ? -1 : 1;
+    const corredorX = lado < 0 ? -115 : 1090;
+    const controleY = (p.y + c.y) / 2;
+    return '<path d="M ' + p.x + ' ' + p.y +
+      ' C ' + corredorX + ' ' + p.y + ', ' + corredorX + ' ' + controleY +
+      ', ' + c.x + ' ' + c.y + '"/>';
   }).join("");
   return '<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
     '<g stroke="#b9aa91" stroke-width="5" opacity=".24">' + linhas + '</g>' +
@@ -1476,7 +1487,20 @@ function renderizarTransformacaoUrbana(indicePredio) {
     item => item.predio === indicePredio
   );
   if (!transformacao) return "";
-  return criarEspacoColetivo(PREDIOS[indicePredio], transformacao);
+
+  const predioBase = PREDIOS[indicePredio];
+  // Praças periféricas usam implantação independente do lote de origem.
+  const geometria = transformacao.posicao
+    ? {
+        ...predioBase,
+        x: transformacao.posicao.x,
+        y: transformacao.posicao.y - predioBase.h,
+        w: transformacao.posicao.w,
+        d: transformacao.posicao.d
+      }
+    : predioBase;
+
+  return criarEspacoColetivo(geometria, transformacao);
 }
 
 
