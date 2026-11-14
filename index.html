@@ -1345,12 +1345,13 @@ const TRANSFORMACOES_URBANAS = [
   { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 975, y: 385, w: 125, d: 76 } },
   // A praça central mantém a implantação atual.
   { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
-  // Cinco equipamentos coletivos de menor escala.
-  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos" },
-  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos" },
-  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos" },
-  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos" },
-  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos" }
+  // Cinco equipamentos transferidos para áreas externas, junto às praças.
+  // As coordenadas representam o ponto de implantação no piso; cada peça tem lote próprio.
+  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos", posicao: { x: -165, y: 10, w: 78, d: 46 } },
+  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos", posicao: { x: 1120, y: 10, w: 78, d: 46 } },
+  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: -165, y: 390, w: 78, d: 46 } },
+  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos", posicao: { x: 1120, y: 390, w: 78, d: 46 } },
+  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: 1120, y: 475, w: 78, d: 46 } }
 ];
 
 const IDS_TRANSFORMACOES_URBANAS = new Set(
@@ -1479,10 +1480,17 @@ function criarEspacoColetivo(predio, transformacao) {
           '<path d="M ' + (x1+4) + ' ' + ((y1+y2)/2-h+3) + ' Q ' + cx + ' ' + (y1-h-4) + ' ' + (x2-4) + ' ' + ((y1+y2)/2-h+3) + '" fill="none" stroke="#f50057" stroke-width="2.5"/>');
   }
 
+  // Equipamentos recebem piso discreto, sem laterais elevadas:
+  // a implantação deve se integrar ao passeio e não parecer uma base branca.
+  const implantacao = transformacao.grupo === "equipamentos"
+    ? '<polygon points="' + topo.map(p => p.join(",")).join(" ") +
+      '" fill="#d8cbb5" stroke="#b5a78f" stroke-width="1" opacity=".72"/>'
+    : poligono(ladoE,"#cbbd9f","#9e9078") +
+      poligono(ladoD,"#b8a98e","#9e9078") +
+      poligono(topo,"#e7dcc4","#b5a78f");
+
   return '<g id="' + transformacao.id + '" transform="translate(' + b.x + ',' + baseY + ')">' +
-    poligono(ladoE,"#cbbd9f","#9e9078") +
-    poligono(ladoD,"#b8a98e","#9e9078") +
-    poligono(topo,"#e7dcc4","#b5a78f") +
+    implantacao +
     detalhes +
     '</g>';
 }
@@ -2817,22 +2825,11 @@ function montarCidade() {
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
 
-  // Desenhar edifícios e transformações na mesma ordem de profundidade.
-  // Equipamentos substituem seus edifícios no próprio ponto do percurso,
-  // preservando a oclusão natural pelos edifícios vizinhos.
-  // As praças continuam em camada própria, conforme a composição existente.
+  // Os edifícios transformados deixam de aparecer como construções comerciais.
+  // Os cinco equipamentos são desenhados em camada própria, nas áreas externas
+  // próximas às praças, evitando que fiquem encaixados entre os edifícios.
   for (let i = 0; i < PREDIOS.length; i++) {
     if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
-      const transformacao = TRANSFORMACOES_URBANAS.find(
-        item => item.predio === i
-      );
-
-      if (transformacao && transformacao.grupo === "equipamentos") {
-        resultado += renderizarTransformacaoUrbana(i);
-      }
-
-      // Todos os edifícios transformados deixam de ser desenhados
-      // como construções comerciais.
       continue;
     }
 
@@ -2848,6 +2845,14 @@ function montarCidade() {
     resultado += '<g id="camada-pracas-publicas">' +
       TRANSFORMACOES_URBANAS
         .filter(item => item.grupo === "pracas")
+        .map(item => renderizarTransformacaoUrbana(item.predio))
+        .join("") +
+      '</g>';
+
+    // Equipamentos culturais em posições externas e independentes dos lotes originais.
+    resultado += '<g id="camada-equipamentos-coletivos">' +
+      TRANSFORMACOES_URBANAS
+        .filter(item => item.grupo === "equipamentos")
         .map(item => renderizarTransformacaoUrbana(item.predio))
         .join("") +
       '</g>';
