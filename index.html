@@ -490,12 +490,19 @@ function pertenceAoQuadrante4(x, y) {
 }
 
 function predioPertenceAoQuadrante4(predio) {
-  // Em pontosEdificio, a altura h é projetada para baixo no SVG.
-  // Classificar pelo pé real da construção, e não pelo topo do lote,
-  // evita manter edifícios que avançam para dentro do quadrante 4.
-  const centroBaseX = predio.x + predio.w / 2;
-  const centroBaseY = predio.y + predio.d / 2 + predio.h;
-  return pertenceAoQuadrante4(centroBaseX, centroBaseY);
+  // A projeção isométrica ocupa toda a base do edifício.
+  // Se qualquer vértice da base entrar no quadrante 4, removemos
+  // o edifício inteiro para não deixar construções invadindo a área.
+  const verticesDaBase = [
+    [predio.x, predio.y + predio.h + predio.d / 2],
+    [predio.x + predio.w / 2, predio.y + predio.h],
+    [predio.x + predio.w, predio.y + predio.h + predio.d / 2],
+    [predio.x + predio.w / 2, predio.y + predio.h + predio.d]
+  ];
+
+  return verticesDaBase.some(([x, y]) =>
+    pertenceAoQuadrante4(x, y)
+  );
 }
 
 // NOVO PLANO URBANO — mantém os índices usados pelas funcionalidades.
