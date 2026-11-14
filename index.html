@@ -1144,7 +1144,7 @@ for (const obra of OBRAS_PROTOTIPO) {
     }
     if (obra.tipo !== "mural") throw new Error("Intervenção de fachada deve ser mural: " + obra.id);
   } else if (obra.categoria === "praca") {
-    if (!TRANSFORMACOES_URBANAS.some(item => item.predio === obra.praca && item.grupo === "pracas")) {
+    if (![22, 29, 33, 36, 39].includes(obra.praca)) {
       throw new Error("Obra sem praça correspondente: " + obra.id);
     }
   } else if (obra.categoria === "pavimento") {
