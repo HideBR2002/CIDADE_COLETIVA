@@ -2884,26 +2884,35 @@ function criarInfraestruturaUrbana() {
       <rect x="-10" y="-25" width="1120" height="700" fill="#e8edda"/>
       <!-- Praça triangular ocupa todo o espaço entre as duas ruas até a margem do rio -->
       <g id="praca-central">
-        <path d="M 525 222
+        <path d="M 525 252
           L 365 545
           L 675 545
           Z"
           fill="#477a4b" stroke="#d5e2c4" stroke-width="8"
           stroke-linejoin="round"/>
-        <path d="M 525 260 Q 505 350 525 425
-          M 525 425 Q 470 475 405 520
-          M 525 425 Q 580 475 635 520"
+        <path d="M 525 288 Q 505 365 525 438
+          M 525 438 Q 470 485 405 520
+          M 525 438 Q 580 485 635 520"
           fill="none" stroke="#e6d8b9" stroke-width="8"
           stroke-linecap="round"/>
-        <circle cx="525" cy="425" r="19" fill="#d7c49a"
+        <circle cx="525" cy="438" r="19" fill="#d7c49a"
           stroke="#f5eddd" stroke-width="5"/>
-        <circle cx="525" cy="425" r="7" fill="#8a6b55"/>
+        <circle cx="525" cy="438" r="7" fill="#8a6b55"/>
       </g>
       <!-- Duas ruas diagonais -->
-      <path d="M340 535 L525 205 L1085 20" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
-      <path d="M340 535 L525 205 L1085 20" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
-      <path d="M145 15 L525 205 L690 535" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
-      <path d="M145 15 L525 205 L690 535" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
+      <path d="M340 535 L525 235 L1085 20" fill="none" stroke="#80634f" stroke-width="32" stroke-linecap="round"/>
+      <path d="M340 535 L525 205 L1085 20" fill="none" stroke="#b18b6b" stroke-width="23" stroke-linecap="round"/>
+      <path d="M145 15 L525 235 L690 535" fill="none" stroke="#80634f" stroke-width="32" stroke-linecap="round"/>
+      <path d="M145 15 L525 205 L690 535" fill="none" stroke="#b18b6b" stroke-width="23" stroke-linecap="round"/>
+      <!-- Mini rotatória no encontro das duas ruas -->
+      <g id="mini-rotatoria" stroke-linejoin="round">
+        <circle cx="525" cy="235" r="22"
+          fill="#b18b6b" stroke="#80634f" stroke-width="2"/>
+        <circle cx="525" cy="235" r="15"
+          fill="#477a4b" stroke="#e6d8b9" stroke-width="3"/>
+        <circle cx="525" cy="235" r="4"
+          fill="#d7c49a"/>
+      </g>
       <!-- Margens verdes e rio passando abaixo da cidade -->
       <!-- Margens verdes: aproximadamente 1 cm em cada lado do rio -->
       <path d="M-20 522 C145 490 255 545 405 525 S670 505 815 535 S1000 560 1120 515"
