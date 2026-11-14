@@ -633,6 +633,21 @@ const ANUNCIOS = [
 
 ];
 
+// Reposicionamento dos anúncios para acompanhar os novos quarteirões.
+const POSICOES_ANUNCIOS_LAYOUT = [
+  [48, 92], [300, 82], [570, 82], [880, 255],
+  [92, 340], [345, 405], [655, 405], [900, 145],
+  [760, 82], [430, 18], [760, 18]
+];
+ANUNCIOS.forEach((anuncio, indice) => {
+  const posicao = POSICOES_ANUNCIOS_LAYOUT[indice];
+  if (posicao) {
+    anuncio.x = posicao[0];
+    anuncio.y = posicao[1];
+  }
+});
+
+
 // ======================================================
 // 3.1. MAPA DAS 20 PLACAS SUSPENSAS
 // PALAVRAS ENVIADAS PELO PÚBLICO
@@ -2831,10 +2846,10 @@ function montarCidade() {
     >
 
       <rect
-        x="0"
+        x="-20"
         y="-60"
-        width="1600"
-        height="720"
+        width="1140"
+        height="760"
         fill="#fffaf5"
       />
 
