@@ -1427,6 +1427,129 @@ function criarJanelas(b, lado) {
 // 10. DESENHAR PRÉDIO
 // ======================================================
 
+// ======================================================
+// 10.1. DEZ TRANSFORMAÇÕES URBANAS
+// SUBSTITUEM EDIFÍCIOS POR ESPAÇOS COLETIVOS
+// ======================================================
+
+const TRANSFORMACOES_URBANAS = [
+  { id: "urb01", predio: 2, tipo: "parque" },
+  { id: "urb02", predio: 7, tipo: "parque" },
+  { id: "urb03", predio: 11, tipo: "jardim" },
+  { id: "urb04", predio: 15, tipo: "museu" },
+  { id: "urb05", predio: 18, tipo: "museu" },
+  { id: "urb06", predio: 22, tipo: "praca" },
+  { id: "urb07", predio: 25, tipo: "praca" },
+  { id: "urb08", predio: 27, tipo: "biblioteca" },
+  { id: "urb09", predio: 33, tipo: "centroCultural" },
+  { id: "urb10", predio: 36, tipo: "convivencia" }
+];
+
+const IDS_TRANSFORMACOES_URBANAS = new Set(
+  TRANSFORMACOES_URBANAS.map(item => item.id)
+);
+const PREDIOS_TRANSFORMADOS = new Set(
+  TRANSFORMACOES_URBANAS.map(item => item.predio)
+);
+
+if (TRANSFORMACOES_URBANAS.length !== 10 ||
+    IDS_TRANSFORMACOES_URBANAS.size !== 10 ||
+    PREDIOS_TRANSFORMADOS.size !== 10) {
+  throw new Error("As dez transformações urbanas precisam ter IDs e prédios únicos.");
+}
+
+for (const item of TRANSFORMACOES_URBANAS) {
+  if (!PREDIOS[item.predio]) {
+    throw new Error(`Prédio inválido na transformação ${item.id}.`);
+  }
+  if (ESPACOS_PARTICIPATIVOS.some(p => p.predio === item.predio)) {
+    throw new Error(`Transformação ${item.id} conflita com uma placa participativa.`);
+  }
+  if (OBRAS_PROTOTIPO.some(o => o.predio === item.predio)) {
+    throw new Error(`Transformação ${item.id} conflita com uma obra artística.`);
+  }
+}
+
+function criarEspacoColetivo(predio, transformacao) {
+  const b = predio;
+  const w = b.w;
+  const d = b.d;
+  const cx = w / 2;
+  const topo = [[cx,0],[w,d/2],[cx,d],[0,d/2]];
+  const ladoEsquerdo = [[0,d/2],[cx,d],[cx,d+10],[0,d/2+10]];
+  const ladoDireito = [[cx,d],[w,d/2],[w,d/2+10],[cx,d+10]];
+  const base = `
+    <g id="${transformacao.id}" transform="translate(${b.x},${b.y})">
+      ${poligono(ladoEsquerdo,"#b6a98e","#665d4f")}
+      ${poligono(ladoDireito,"#95866f","#665d4f")}
+      ${poligono(topo,"#d8cda9","#665d4f")}
+  `;
+  let detalhes = "";
+
+  if (transformacao.tipo === "parque" || transformacao.tipo === "jardim") {
+    detalhes = `
+      <path d="M ${cx- w*0.34} ${d*0.52} Q ${cx} ${d*0.18} ${cx+w*0.31} ${d*0.52} Q ${cx} ${d*0.86} ${cx-w*0.34} ${d*0.52} Z"
+        fill="#e9d7a5" stroke="#b69b6c" stroke-width="1.5"/>
+      <g stroke="#6b5138" stroke-width="2">
+        <path d="M ${cx-w*0.25} ${d*0.45} v 17 M ${cx+w*0.22} ${d*0.48} v 17"/>
+      </g>
+      <g>
+        <circle cx="${cx-w*0.25}" cy="${d*0.39}" r="${Math.max(9,Math.min(14,w*0.14))}" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
+        <circle cx="${cx-w*0.31}" cy="${d*0.43}" r="7" fill="#1d9a6c"/>
+        <circle cx="${cx+w*0.22}" cy="${d*0.42}" r="${Math.max(8,Math.min(13,w*0.13))}" fill="#009ca6" stroke="#285b48" stroke-width="1.5"/>
+        <circle cx="${cx+w*0.28}" cy="${d*0.46}" r="7" fill="#1d9a6c"/>
+      </g>
+      <g fill="#f50057"><circle cx="${cx-5}" cy="${d*0.25}" r="3"/><circle cx="${cx+7}" cy="${d*0.73}" r="3"/></g>
+    `;
+  } else if (transformacao.tipo === "museu") {
+    detalhes = `
+      <polygon points="${cx},${d*0.08} ${w*0.88},${d*0.43} ${cx},${d*0.78} ${w*0.12},${d*0.43}"
+        fill="#f5eee0" stroke="#51483f" stroke-width="2"/>
+      <path d="M ${w*0.23} ${d*0.44} V ${d*0.79} M ${w*0.38} ${d*0.44} V ${d*0.86} M ${w*0.62} ${d*0.44} V ${d*0.86} M ${w*0.77} ${d*0.44} V ${d*0.79}"
+        stroke="#625bd5" stroke-width="5"/>
+      <path d="M ${w*0.18} ${d*0.82} H ${w*0.82}" stroke="#f50057" stroke-width="4"/>
+      <circle cx="${cx}" cy="${d*0.4}" r="5" fill="#ffbd43"/>
+    `;
+  } else if (transformacao.tipo === "praca") {
+    detalhes = `
+      <circle cx="${cx}" cy="${d*0.5}" r="${Math.min(15,w*0.16)}" fill="#168fc0" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="${cx}" cy="${d*0.5}" r="${Math.min(7,w*0.075)}" fill="#ffbd43"/>
+      <path d="M ${cx} ${d*0.5-15} V ${d*0.5-25} M ${cx-18} ${d*0.5} H ${cx-27} M ${cx+18} ${d*0.5} H ${cx+27}"
+        stroke="#168fc0" stroke-width="3" stroke-linecap="round"/>
+      <rect x="${w*0.13}" y="${d*0.68}" width="${w*0.2}" height="5" rx="2" fill="#8c5a35"/>
+      <rect x="${w*0.67}" y="${d*0.28}" width="${w*0.2}" height="5" rx="2" fill="#8c5a35"/>
+    `;
+  } else if (transformacao.tipo === "biblioteca") {
+    detalhes = `
+      <polygon points="${w*0.12},${d*0.4} ${cx},${d*0.12} ${w*0.88},${d*0.4}" fill="#625bd5" stroke="#51483f" stroke-width="2"/>
+      <rect x="${w*0.2}" y="${d*0.4}" width="${w*0.6}" height="${d*0.37}" fill="#f2e7d3" stroke="#51483f" stroke-width="2"/>
+      <rect x="${w*0.27}" y="${d*0.48}" width="${w*0.16}" height="${d*0.22}" fill="#168fc0" stroke="#51483f"/>
+      <rect x="${w*0.57}" y="${d*0.48}" width="${w*0.16}" height="${d*0.22}" fill="#009ca6" stroke="#51483f"/>
+      <rect x="${cx-7}" y="${d*0.58}" width="14" height="${d*0.19}" fill="#ffbd43" stroke="#51483f"/>
+    `;
+  } else {
+    detalhes = `
+      <polygon points="${w*0.12},${d*0.4} ${cx},${d*0.1} ${w*0.88},${d*0.4} ${cx},${d*0.7}"
+        fill="#ff8c42" stroke="#51483f" stroke-width="2"/>
+      <path d="M ${w*0.22} ${d*0.4} V ${d*0.83} M ${w*0.78} ${d*0.4} V ${d*0.83} M ${cx} ${d*0.7} V ${d*0.9}"
+        stroke="#625bd5" stroke-width="4"/>
+      <path d="M ${w*0.18} ${d*0.83} H ${w*0.82}" stroke="#009ca6" stroke-width="5"/>
+      <circle cx="${cx}" cy="${d*0.4}" r="6" fill="#ffbd43"/>
+    `;
+  }
+
+  return base + detalhes + "</g>";
+}
+
+function renderizarTransformacaoUrbana(indicePredio) {
+  const transformacao = TRANSFORMACOES_URBANAS.find(
+    item => item.predio === indicePredio
+  );
+  if (!transformacao) return "";
+  return criarEspacoColetivo(PREDIOS[indicePredio], transformacao);
+}
+
+
 function criarPredio(b) {
 
   const geometria = pontosEdificio(b);
@@ -2740,10 +2863,14 @@ function montarCidade() {
   // de profundidade. Construções posteriores podem ocultar
   // partes de obras posicionadas atrás delas, como na cidade real.
   for (let i = 0; i < PREDIOS.length; i++) {
-    resultado += criarPredio(PREDIOS[i]);
-
-    if (cidadeTransformada) {
-      resultado += renderizarObraArquitetonica(i);
+    if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
+      // Substituição real: o edifício original não é desenhado.
+      resultado += renderizarTransformacaoUrbana(i);
+    } else {
+      resultado += criarPredio(PREDIOS[i]);
+      if (cidadeTransformada) {
+        resultado += renderizarObraArquitetonica(i);
+      }
     }
   }
 
