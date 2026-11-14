@@ -483,9 +483,9 @@ const QUADRANTE_4 = { centro: { x: 525, y: 205 } };
 function pertenceAoQuadrante4(x, y) {
   const centro = QUADRANTE_4.centro;
   const limiteEsquerdo = centro.y +
-    ((455 - centro.y) / (centro.x - 15)) * (centro.x - x);
+    ((535 - centro.y) / (centro.x - 340)) * (centro.x - x);
   const limiteDireito = centro.y +
-    ((485 - centro.y) / (965 - centro.x)) * (x - centro.x);
+    ((535 - centro.y) / (690 - centro.x)) * (x - centro.x);
   return y >= (x <= centro.x ? limiteEsquerdo : limiteDireito);
 }
 
@@ -2845,7 +2845,7 @@ function criarInfraestruturaUrbana() {
     <g id="infraestrutura-urbana-nova" stroke-linejoin="round">
       <rect x="-10" y="-25" width="1120" height="700" fill="#e8edda"/>
       <!-- Praça maior centralizada e aproximada da margem do rio -->
-      <g id="praca-central" transform="translate(245 150) scale(0.85)">
+      <g id="praca-central" transform="translate(300 203) scale(0.67)">
         <path d="M150 245 C185 175 305 155 390 205 C475 250 480 345 405 390 C330 438 205 400 160 335 C140 300 135 270 150 245Z"
           fill="#477a4b" stroke="#d5e2c4" stroke-width="8"/>
         <path d="M205 295 Q300 205 410 300 M300 190 Q280 300 365 375"
@@ -2854,10 +2854,10 @@ function criarInfraestruturaUrbana() {
         <circle cx="300" cy="295" r="7" fill="#8a6b55"/>
       </g>
       <!-- Duas ruas diagonais -->
-      <path d="M15 455 L525 205 L1085 20" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
-      <path d="M15 455 L525 205 L1085 20" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
-      <path d="M145 15 L525 205 L965 485" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
-      <path d="M145 15 L525 205 L965 485" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
+      <path d="M340 535 L525 205 L1085 20" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
+      <path d="M340 535 L525 205 L1085 20" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
+      <path d="M145 15 L525 205 L690 535" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
+      <path d="M145 15 L525 205 L690 535" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
       <!-- Margens verdes e rio passando abaixo da cidade -->
       <path d="M-20 552 C145 520 255 575 405 555 S670 535 815 565 S1000 590 1120 545"
         fill="none" stroke="#9dc878" stroke-width="104" stroke-linecap="round"/>
