@@ -644,6 +644,54 @@ function validarPlanoBaixaDensidade() {
 }
 validarPlanoBaixaDensidade();
 
+// Edifícios complementares exclusivos da página inicial/comercial.
+// Não são adicionados ao estado transformado.
+const PREDIOS_COMPLEMENTARES_CIDADE_INICIAL = [
+  { x: 0,    y: 135, w: 45, d: 26, h: 65, cor: "#625bd5", janela: 0 },
+  { x: 330,  y: 165, w: 45, d: 26, h: 75, cor: "#ff8c42", janela: 1 },
+  { x: 20,   y: 375, w: 45, d: 26, h: 65, cor: "#009ca6", janela: 2 },
+  { x: 350,  y: 300, w: 45, d: 26, h: 70, cor: "#f50057", janela: 0 },
+  { x: 880,  y: 135, w: 45, d: 26, h: 65, cor: "#168fc0", janela: 1 },
+  { x: 650,  y: 235, w: 45, d: 26, h: 75, cor: "#ff5722", janela: 2 },
+  { x: 1078, y: 220, w: 35, d: 24, h: 65, cor: "#625bd5", janela: 0 },
+  { x: 660,  y: 345, w: 45, d: 26, h: 70, cor: "#009ca6", janela: 1 }
+];
+
+// Conferência geométrica dos complementos contra os 16 prédios-base.
+function validarPrediosComplementaresCidadeInicial() {
+  const base = [...PREDIOS_ATIVOS].map(indice => PREDIOS[indice]);
+  const todos = [...base, ...PREDIOS_COMPLEMENTARES_CIDADE_INICIAL];
+  for (let i = 0; i < PREDIOS_COMPLEMENTARES_CIDADE_INICIAL.length; i++) {
+    const p = PREDIOS_COMPLEMENTARES_CIDADE_INICIAL[i];
+    const baseInferior = p.y + p.h + p.d;
+    if (baseInferior > 480) {
+      throw new Error(`Edifício complementar ${i} invade a faixa protegida do rio.`);
+    }
+    const amostrasY = [p.y, Math.min(235, baseInferior), baseInferior];
+    if (p.x + p.w / 2 < 525) {
+      if (amostrasY.some(y => p.x + p.w + 18 > limiteRuaEsquerda(y))) {
+        throw new Error(`Edifício complementar ${i} invade a rua ou a praça.`);
+      }
+    } else if (amostrasY.some(y => p.x - 18 < limiteRuaDireita(y))) {
+      throw new Error(`Edifício complementar ${i} invade a rua ou a praça.`);
+    }
+    for (let j = 0; j < todos.length; j++) {
+      if (j >= base.length && j - base.length >= i) continue;
+      const outro = todos[j];
+      const sobrepoeX =
+        p.x < outro.x + outro.w + 8 &&
+        p.x + p.w + 8 > outro.x;
+      const sobrepoeY =
+        p.y < outro.y + outro.h + outro.d + 8 &&
+        p.y + p.h + p.d + 8 > outro.y;
+      if (sobrepoeX && sobrepoeY) {
+        throw new Error(`Edifício complementar ${i} sobrepõe outra construção.`);
+      }
+    }
+  }
+}
+validarPrediosComplementaresCidadeInicial();
+
 
 
 // ======================================================
@@ -3062,6 +3110,14 @@ function montarCidade() {
   // Quadrante superior, praça, ruas e faixa do rio permanecem livres.
   for (const indice of PREDIOS_ATIVOS) {
     resultado += criarPredio(PREDIOS[indice]);
+  }
+
+  // Complementos visuais somente na cidade inicial/comercial.
+  // A cidade transformada mantém exatamente os seus 16 edifícios-base.
+  if (!cidadeTransformada) {
+    for (const predio of PREDIOS_COMPLEMENTARES_CIDADE_INICIAL) {
+      resultado += criarPredio(predio);
+    }
   }
 
   // ==================================================
