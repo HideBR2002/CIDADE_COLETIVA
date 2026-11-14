@@ -1475,11 +1475,11 @@ function criarRedeEspacosPublicos() {
   const pontos = TRANSFORMACOES_URBANAS.map(item => {
     const b=PREDIOS[item.predio]; return [b.x+b.w/2,b.y+b.d/2];
   });
-  const path=pontos.map((p,i)=>\`\${i===0?"M":"L"} \${p[0]} \${p[1]}\`).join(" ");
-  return \`<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="\${path}" stroke="#b99d78" stroke-width="13" opacity=".48"/>
-    <path d="\${path}" stroke="#f2e5cc" stroke-width="8" stroke-dasharray="5 5"/>
-  </g>\`;
+  const path=pontos.map((p,i)=>`${i===0?"M":"L"} ${p[0]} ${p[1]}`).join(" ");
+  return `<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="${path}" stroke="#b99d78" stroke-width="13" opacity=".48"/>
+    <path d="${path}" stroke="#f2e5cc" stroke-width="8" stroke-dasharray="5 5"/>
+  </g>`;
 }
 
 function criarEspacoColetivo(predio, transformacao) {
@@ -1487,29 +1487,29 @@ function criarEspacoColetivo(predio, transformacao) {
   const topo = [[cx,0],[w,d/2],[cx,d],[0,d/2]];
   const ladoE = [[0,d/2],[cx,d],[cx,d+9],[0,d/2+9]];
   const ladoD = [[cx,d],[w,d/2],[w,d/2+9],[cx,d+9]];
-  const arvore = (x,y,k=0.72,cor="#16845f") => \`
-    <g transform="translate(\${x} \${y}) scale(\${k})">
+  const arvore = (x,y,k=0.72,cor="#16845f") => `
+    <g transform="translate(${x} ${y}) scale(${k})">
       <path d="M -2 0 V 12 H 2 V 0" fill="#8b5a36" stroke="#51483f" stroke-width="1"/>
-      <circle cy="-4" r="7" fill="\${cor}" stroke="#285b48" stroke-width="1"/>
+      <circle cy="-4" r="7" fill="${cor}" stroke="#285b48" stroke-width="1"/>
       <circle cx="-4" cy="0" r="4.5" fill="#1d9a6c"/><circle cx="4" cy="0" r="4.5" fill="#009ca6"/>
-    </g>\`;
-  const banco = (x,y) => \`<g transform="translate(\${x} \${y})"><path d="M -7 0 H 7" stroke="#8c5a35" stroke-width="3.5" stroke-linecap="round"/><path d="M -5 1 V 5 M 5 1 V 5" stroke="#51483f" stroke-width="1.2"/></g>\`;
+    </g>`;
+  const banco = (x,y) => `<g transform="translate(${x} ${y})"><path d="M -7 0 H 7" stroke="#8c5a35" stroke-width="3.5" stroke-linecap="round"/><path d="M -5 1 V 5 M 5 1 V 5" stroke="#51483f" stroke-width="1.2"/></g>`;
   let detalhes = "";
 
   if (transformacao.tipo === "parque" || transformacao.tipo === "jardim") {
-    detalhes = \`
-      <path d="M \${w*.16} \${d*.52} Q \${cx} \${d*.3} \${w*.84} \${d*.5}" fill="none" stroke="#ead9b8" stroke-width="5" stroke-linecap="round"/>
-      <path d="M \${cx} \${d*.16} Q \${cx-w*.08} \${d*.5} \${cx} \${d*.84}" fill="none" stroke="#f5e9d2" stroke-width="3"/>
-      \${arvore(w*.23,d*.42)}\${arvore(w*.76,d*.42,.72,"#009ca6")}\${arvore(cx,d*.72,.6)}
-      \${banco(w*.48,d*.25)}
-      <g fill="#f50057"><circle cx="\${w*.36}" cy="\${d*.72}" r="2"/><circle cx="\${w*.66}" cy="\${d*.3}" r="2"/></g>\`;
+    detalhes = `
+      <path d="M ${w*.16} ${d*.52} Q ${cx} ${d*.3} ${w*.84} ${d*.5}" fill="none" stroke="#ead9b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M ${cx} ${d*.16} Q ${cx-w*.08} ${d*.5} ${cx} ${d*.84}" fill="none" stroke="#f5e9d2" stroke-width="3"/>
+      ${arvore(w*.23,d*.42)}${arvore(w*.76,d*.42,.72,"#009ca6")}${arvore(cx,d*.72,.6)}
+      ${banco(w*.48,d*.25)}
+      <g fill="#f50057"><circle cx="${w*.36}" cy="${d*.72}" r="2"/><circle cx="${w*.66}" cy="${d*.3}" r="2"/></g>`;
   } else if (transformacao.tipo === "praca") {
-    detalhes = \`
-      <path d="M \${w*.15} \${d*.5} H \${w*.85} M \${cx} \${d*.16} V \${d*.84}" stroke="#c6b99f" stroke-width="2" stroke-dasharray="3 3"/>
-      <circle cx="\${cx}" cy="\${d*.5}" r="\${Math.min(12,w*.13)}" fill="#168fc0" stroke="#fffaf0" stroke-width="2"/>
-      <circle cx="\${cx}" cy="\${d*.5}" r="4" fill="#ffbd43"/>
-      \${banco(w*.25,d*.52)}\${banco(w*.75,d*.48)}
-      \${arvore(w*.2,d*.27,.55)}\${arvore(w*.8,d*.72,.55,"#009ca6")}\`;
+    detalhes = `
+      <path d="M ${w*.15} ${d*.5} H ${w*.85} M ${cx} ${d*.16} V ${d*.84}" stroke="#c6b99f" stroke-width="2" stroke-dasharray="3 3"/>
+      <circle cx="${cx}" cy="${d*.5}" r="${Math.min(12,w*.13)}" fill="#168fc0" stroke="#fffaf0" stroke-width="2"/>
+      <circle cx="${cx}" cy="${d*.5}" r="4" fill="#ffbd43"/>
+      ${banco(w*.25,d*.52)}${banco(w*.75,d*.48)}
+      ${arvore(w*.2,d*.27,.55)}${arvore(w*.8,d*.72,.55,"#009ca6")}`;
   } else {
     // Pavilhão baixo com cobertura, paredes e fachada apoiados no terreno.
     const x1=w*.22, x2=w*.78, y1=d*.28, y2=d*.7, h=transformacao.tipo==="biblioteca"?22:19;
@@ -1518,22 +1518,22 @@ function criarEspacoColetivo(predio, transformacao) {
     const paredeE=[gb,gl,left,back], paredeD=[gb,gr,right,back], paredeF=[gl,gf,front,left];
     const teto=transformacao.tipo==="museu"?"#625bd5":transformacao.tipo==="biblioteca"?"#009ca6":"#ff8c42";
     const fachada=transformacao.tipo==="museu"?"#f2e8d6":"#f7dfc8";
-    detalhes = \`
-      \${poligono(paredeE,"#c7b89f","#51483f")}\${poligono(paredeD,"#a99a85","#51483f")}
-      \${poligono(paredeF,fachada,"#51483f")}\${poligono([back,right,front,left],teto,"#51483f")}
-      <path d="M \${cx-5} \${y2-h+5} V \${y2-2}" stroke="#168fc0" stroke-width="5"/>
-      <path d="M \${x1+7} \${(y1+y2)/2-h+7} V \${(y1+y2)/2-2} M \${x2-7} \${(y1+y2)/2-h+7} V \${(y1+y2)/2-2}" stroke="#009ca6" stroke-width="3"/>
-      <path d="M \${cx-8} \${y2+1} H \${cx+8}" stroke="#ffbd43" stroke-width="3"/>
-      \${transformacao.tipo==="museu"?\`<circle cx="\${cx}" cy="\${y1-h+7}" r="3" fill="#ffbd43"/><path d="M \${cx-13} \${y1-h+4} H \${cx+13}" stroke="#f50057" stroke-width="2"/>\`:""}
-      \${transformacao.tipo==="biblioteca"?\`<rect x="\${cx-12}" y="\${y1-h+4}" width="24" height="5" rx="1" fill="#ffbd43"/><path d="M \${cx-9} \${y1-h+11} V \${y1-h+16} M \${cx} \${y1-h+11} V \${y1-h+16} M \${cx+9} \${y1-h+11} V \${y1-h+16}" stroke="#625bd5" stroke-width="2"/>\`:""}
-      \${transformacao.tipo==="centroCultural"?\`<path d="M \${x1+4} \${(y1+y2)/2-h+3} Q \${cx} \${y1-h-8} \${x2-4} \${(y1+y2)/2-h+3}" fill="none" stroke="#f50057" stroke-width="3"/>\`:""}\`;
+    detalhes = `
+      ${poligono(paredeE,"#c7b89f","#51483f")}${poligono(paredeD,"#a99a85","#51483f")}
+      ${poligono(paredeF,fachada,"#51483f")}${poligono([back,right,front,left],teto,"#51483f")}
+      <path d="M ${cx-5} ${y2-h+5} V ${y2-2}" stroke="#168fc0" stroke-width="5"/>
+      <path d="M ${x1+7} ${(y1+y2)/2-h+7} V ${(y1+y2)/2-2} M ${x2-7} ${(y1+y2)/2-h+7} V ${(y1+y2)/2-2}" stroke="#009ca6" stroke-width="3"/>
+      <path d="M ${cx-8} ${y2+1} H ${cx+8}" stroke="#ffbd43" stroke-width="3"/>
+      ${transformacao.tipo==="museu"?`<circle cx="${cx}" cy="${y1-h+7}" r="3" fill="#ffbd43"/><path d="M ${cx-13} ${y1-h+4} H ${cx+13}" stroke="#f50057" stroke-width="2"/>`:""}
+      ${transformacao.tipo==="biblioteca"?`<rect x="${cx-12}" y="${y1-h+4}" width="24" height="5" rx="1" fill="#ffbd43"/><path d="M ${cx-9} ${y1-h+11} V ${y1-h+16} M ${cx} ${y1-h+11} V ${y1-h+16} M ${cx+9} ${y1-h+11} V ${y1-h+16}" stroke="#625bd5" stroke-width="2"/>`:""}
+      ${transformacao.tipo==="centroCultural"?`<path d="M ${x1+4} ${(y1+y2)/2-h+3} Q ${cx} ${y1-h-8} ${x2-4} ${(y1+y2)/2-h+3}" fill="none" stroke="#f50057" stroke-width="3"/>`:""}`;
   }
 
-  return \`
-    <g id="\${transformacao.id}" transform="translate(\${b.x},\${b.y})">
-      \${poligono(ladoE,"#b6a98e","#665d4f")}\${poligono(ladoD,"#95866f","#665d4f")}
-      \${poligono(topo,"#d8cda9","#665d4f")}\${detalhes}
-    </g>\`;
+  return `
+    <g id="${transformacao.id}" transform="translate(${b.x},${b.y})">
+      ${poligono(ladoE,"#b6a98e","#665d4f")}${poligono(ladoD,"#95866f","#665d4f")}
+      ${poligono(topo,"#d8cda9","#665d4f")}${detalhes}
+    </g>`;
 }
 
 
