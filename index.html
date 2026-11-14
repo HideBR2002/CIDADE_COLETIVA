@@ -2628,6 +2628,9 @@ function criarEspacoPublico() {
         fill="#eadfd1" stroke="#c8b9a8" stroke-width="2"/>
       <path d="M -5 574 H 1060 M -5 590 H 1060"
         stroke="#c9b9a7" stroke-width="1.5" stroke-dasharray="9 9" opacity="0.8"/>
+      <path d="M 185 558 V 606 M 390 558 V 606 M 590 558 V 606 M 790 558 V 606"
+        stroke="#d3c4b3" stroke-width="1.2" opacity="0.75"/>
+      <path d="M -5 601 H 1060" stroke="#bcae9e" stroke-width="2" opacity="0.7"/>
 
       <!-- Canteiros frontais -->
       <g>
@@ -2684,16 +2687,20 @@ function criarEspacoPublico() {
         </g>
       </g>
 
-      <!-- Postes de iluminação nas bordas -->
-      <g fill="none" stroke="#51483f" stroke-width="4" stroke-linecap="round">
-        <path d="M -35 420 V 505 Q -35 515 -25 515 H -12"/>
-        <path d="M 1070 420 V 505 Q 1070 515 1060 515 H 1047"/>
+      <!-- Iluminação pública com braços e luminárias -->
+      <g stroke="#51483f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M -35 420 V 505 Q -35 515 -25 515" fill="none"/>
+        <path d="M -35 425 Q -35 408 -20 408 H -5" fill="none"/>
+        <path d="M 1070 420 V 505 Q 1070 515 1060 515" fill="none"/>
+        <path d="M 1070 425 Q 1070 408 1055 408 H 1040" fill="none"/>
       </g>
       <g fill="#ffbd43" stroke="#51483f" stroke-width="2">
-        <circle cx="-12" cy="515" r="9"/><circle cx="1047" cy="515" r="9"/>
+        <path d="M -8 402 Q 2 402 4 410 L 0 418 H -18 L -22 410 Q -20 402 -8 402 Z"/>
+        <path d="M 1043 402 Q 1033 402 1031 410 L 1035 418 H 1053 L 1057 410 Q 1055 402 1043 402 Z"/>
+        <circle cx="-25" cy="515" r="5"/><circle cx="1060" cy="515" r="5"/>
       </g>
-      <g fill="#fff2bd" opacity="0.35">
-        <circle cx="-12" cy="515" r="18"/><circle cx="1047" cy="515" r="18"/>
+      <g fill="#fff2bd" opacity="0.24">
+        <ellipse cx="-8" cy="420" rx="24" ry="15"/><ellipse cx="1043" cy="420" rx="24" ry="15"/>
       </g>
     </g>
   `;
@@ -2705,7 +2712,7 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 -60 1600 720"
+      viewBox="0 -60 1600 770"
       role="img"
       aria-label="Cidade Coletiva"
     >
