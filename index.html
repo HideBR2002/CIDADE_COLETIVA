@@ -1338,9 +1338,9 @@ const TRANSFORMACOES_URBANAS = [
   // Quatro praças periféricas: implantação nas margens livres do enquadramento.
   // predio identifica o edifício efetivamente substituído; posicao define o novo piso.
   { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -155, y: 275, w: 125, d: 76 } },
-  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 275, w: 125, d: 76 } },
+  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 1055, y: 275, w: 125, d: 76 } },
   { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -155, y: 390, w: 125, d: 76 } },
-  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 390, w: 125, d: 76 } },
+  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 1055, y: 390, w: 125, d: 76 } },
   // A praça central mantém a implantação atual.
   { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
   // Cinco equipamentos coletivos de menor escala.
@@ -1401,7 +1401,7 @@ function criarRedeEspacosPublicos() {
   const linhas = perifericas.map(item => {
     const p = ponto(item);
     const lado = p.x < c.x ? -1 : 1;
-    const corredorX = lado < 0 ? -115 : 1090;
+    const corredorX = lado < 0 ? -115 : 1150;
     const controleY = (p.y + c.y) / 2;
     return '<path d="M ' + p.x + ' ' + p.y +
       ' C ' + corredorX + ' ' + p.y + ', ' + corredorX + ' ' + controleY +
