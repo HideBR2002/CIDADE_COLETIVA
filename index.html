@@ -548,14 +548,15 @@ const PREDIOS_QUADRANTE_4 = new Set(
   }, [])
 );
 
-// Oito edifícios das extremidades saem somente da página antes da transformação.
-const PREDIOS_REMOVIDOS_CIDADE_ORIGINAL = new Set([
-  41, 42, 43, 44, // quatro edifícios inferiores do lado esquerdo, junto ao rio
-  45, 46, 47, 48  // quatro edifícios inferiores do lado direito, junto ao rio
+// Quatro edifícios das extremidades inferiores são removidos permanentemente
+// nos dois estados da cidade, após a distribuição definida em aplicarNovoPlanoUrbano().
+const PREDIOS_REMOVIDOS_JUNTO_AO_RIO = new Set([
+  41, 42, 45, 46
 ]);
 
-// Dois edifícios inferiores do lado direito são removidos em qualquer estado.
-const PREDIOS_REMOVIDOS_JUNTO_AO_RIO = new Set([46, 48]);;
+// O edifício 37 é uma ancoragem adicional autorizada para preservar uma
+// referência artística. Sua posição e dimensões originais não são alteradas.
+const PREDIOS_LIBERADOS_PARA_REFERENCIAS = new Set([37]);
 
 
 
@@ -723,9 +724,9 @@ const ESPACOS_PARTICIPATIVOS = [
   { id: "ad23", predio: 40, dx: 0, dy: 0 },
 
   // CAMADA INFERIOR — 4 placas
-  { id: "ad24", predio: 41, dx: 0, dy: 0 },
+  { id: "ad24", predio: 4, dx: 0, dy: 0 },
   { id: "ad25", predio: 43, dx: 0, dy: 0 },
-  { id: "ad26", predio: 46, dx: 0, dy: 0 },
+  { id: "ad26", predio: 14, dx: 0, dy: 0 },
   { id: "ad27", predio: 48, dx: 0, dy: 0 }
 
 ];
@@ -1203,7 +1204,7 @@ const OBRAS_PROTOTIPO = [
   {
     id: "arte01",
     tipo: "mural",
-    predio: 42,
+    predio: 29,
     paleta: ["#009ca6", "#168fc0", "#f50057", "#ff8c42", "#ffbd43"]
   },
   {
@@ -1287,7 +1288,7 @@ const OBRAS_PROTOTIPO = [
   {
     id: "arte15",
     tipo: "bandeirolas",
-    predio: 45,
+    predio: 37,
     paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"]
   }
 ];
@@ -1316,7 +1317,23 @@ const PREDIOS_RESERVADOS_POR_PLACAS = new Set(
   )
 );
 
+const PREDIOS_RESERVADOS_POR_OBRAS = new Set(
+  OBRAS_PROTOTIPO.map(obra => obra.predio)
+);
+
+if (PREDIOS_RESERVADOS_POR_OBRAS.size !== OBRAS_PROTOTIPO.length) {
+  throw new Error("Duas intervenções artísticas não podem ocupar o mesmo edifício.");
+}
+
 for (const obra of OBRAS_PROTOTIPO) {
+
+  if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(obra.predio)) {
+    throw new Error(`A obra ${obra.id} referencia um edifício removido junto ao rio.`);
+  }
+
+  if (PREDIOS_TRANSFORMADOS.has(obra.predio)) {
+    throw new Error(`A obra ${obra.id} referencia um edifício substituído por transformação urbana.`);
+  }
 
   if (!PREDIOS[obra.predio]) {
     throw new Error(
@@ -2939,9 +2956,11 @@ function montarCidade() {
   // de profundidade. Construções posteriores podem ocultar
   // partes de obras posicionadas atrás delas, como na cidade real.
   for (let i = 0; i < PREDIOS.length; i++) {
-    if (PREDIOS_QUADRANTE_4.has(i)) continue;
+    if (
+      PREDIOS_QUADRANTE_4.has(i) &&
+      !PREDIOS_LIBERADOS_PARA_REFERENCIAS.has(i)
+    ) continue;
     if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(i)) continue;
-    if (!cidadeTransformada && PREDIOS_REMOVIDOS_CIDADE_ORIGINAL.has(i)) continue;
     if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
       // Substituição real: o edifício original não é desenhado.
       resultado += renderizarTransformacaoUrbana(i);
@@ -2978,7 +2997,11 @@ function montarCidade() {
     `;
 
     for (const posicao of ESPACOS_PARTICIPATIVOS) {
-      if (PREDIOS_QUADRANTE_4.has(posicao.predio)) continue;
+      if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(posicao.predio)) continue;
+      if (
+        PREDIOS_QUADRANTE_4.has(posicao.predio) &&
+        !PREDIOS_LIBERADOS_PARA_REFERENCIAS.has(posicao.predio)
+      ) continue;
 
       const contribuicao = contribuicoes.find(
         item =>
