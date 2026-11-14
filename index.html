@@ -1470,76 +1470,72 @@ for (const item of TRANSFORMACOES_URBANAS) {
   }
 }
 
+function criarRedeEspacosPublicos() {
+  // Percurso coletivo sob a malha construída; só aparece nos intervalos livres.
+  const pontos = TRANSFORMACOES_URBANAS.map(item => {
+    const b=PREDIOS[item.predio]; return [b.x+b.w/2,b.y+b.d/2];
+  });
+  const path=pontos.map((p,i)=>\`\${i===0?"M":"L"} \${p[0]} \${p[1]}\`).join(" ");
+  return \`<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="\${path}" stroke="#b99d78" stroke-width="13" opacity=".48"/>
+    <path d="\${path}" stroke="#f2e5cc" stroke-width="8" stroke-dasharray="5 5"/>
+  </g>\`;
+}
+
 function criarEspacoColetivo(predio, transformacao) {
-  const b = predio;
-  const w = b.w;
-  const d = b.d;
-  const cx = w / 2;
+  const b = predio, w = b.w, d = b.d, cx = w/2;
   const topo = [[cx,0],[w,d/2],[cx,d],[0,d/2]];
-  const ladoEsquerdo = [[0,d/2],[cx,d],[cx,d+10],[0,d/2+10]];
-  const ladoDireito = [[cx,d],[w,d/2],[w,d/2+10],[cx,d+10]];
-  const base = `
-    <g id="${transformacao.id}" transform="translate(${b.x},${b.y})">
-      ${poligono(ladoEsquerdo,"#b6a98e","#665d4f")}
-      ${poligono(ladoDireito,"#95866f","#665d4f")}
-      ${poligono(topo,"#d8cda9","#665d4f")}
-  `;
+  const ladoE = [[0,d/2],[cx,d],[cx,d+9],[0,d/2+9]];
+  const ladoD = [[cx,d],[w,d/2],[w,d/2+9],[cx,d+9]];
+  const arvore = (x,y,k=0.72,cor="#16845f") => \`
+    <g transform="translate(\${x} \${y}) scale(\${k})">
+      <path d="M -2 0 V 12 H 2 V 0" fill="#8b5a36" stroke="#51483f" stroke-width="1"/>
+      <circle cy="-4" r="7" fill="\${cor}" stroke="#285b48" stroke-width="1"/>
+      <circle cx="-4" cy="0" r="4.5" fill="#1d9a6c"/><circle cx="4" cy="0" r="4.5" fill="#009ca6"/>
+    </g>\`;
+  const banco = (x,y) => \`<g transform="translate(\${x} \${y})"><path d="M -7 0 H 7" stroke="#8c5a35" stroke-width="3.5" stroke-linecap="round"/><path d="M -5 1 V 5 M 5 1 V 5" stroke="#51483f" stroke-width="1.2"/></g>\`;
   let detalhes = "";
 
   if (transformacao.tipo === "parque" || transformacao.tipo === "jardim") {
-    detalhes = `
-      <path d="M ${cx- w*0.34} ${d*0.52} Q ${cx} ${d*0.18} ${cx+w*0.31} ${d*0.52} Q ${cx} ${d*0.86} ${cx-w*0.34} ${d*0.52} Z"
-        fill="#e9d7a5" stroke="#b69b6c" stroke-width="1.5"/>
-      <g stroke="#6b5138" stroke-width="2">
-        <path d="M ${cx-w*0.25} ${d*0.45} v 17 M ${cx+w*0.22} ${d*0.48} v 17"/>
-      </g>
-      <g>
-        <circle cx="${cx-w*0.25}" cy="${d*0.39}" r="${Math.max(9,Math.min(14,w*0.14))}" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
-        <circle cx="${cx-w*0.31}" cy="${d*0.43}" r="7" fill="#1d9a6c"/>
-        <circle cx="${cx+w*0.22}" cy="${d*0.42}" r="${Math.max(8,Math.min(13,w*0.13))}" fill="#009ca6" stroke="#285b48" stroke-width="1.5"/>
-        <circle cx="${cx+w*0.28}" cy="${d*0.46}" r="7" fill="#1d9a6c"/>
-      </g>
-      <g fill="#f50057"><circle cx="${cx-5}" cy="${d*0.25}" r="3"/><circle cx="${cx+7}" cy="${d*0.73}" r="3"/></g>
-    `;
-  } else if (transformacao.tipo === "museu") {
-    detalhes = `
-      <polygon points="${cx},${d*0.08} ${w*0.88},${d*0.43} ${cx},${d*0.78} ${w*0.12},${d*0.43}"
-        fill="#f5eee0" stroke="#51483f" stroke-width="2"/>
-      <path d="M ${w*0.23} ${d*0.44} V ${d*0.79} M ${w*0.38} ${d*0.44} V ${d*0.86} M ${w*0.62} ${d*0.44} V ${d*0.86} M ${w*0.77} ${d*0.44} V ${d*0.79}"
-        stroke="#625bd5" stroke-width="5"/>
-      <path d="M ${w*0.18} ${d*0.82} H ${w*0.82}" stroke="#f50057" stroke-width="4"/>
-      <circle cx="${cx}" cy="${d*0.4}" r="5" fill="#ffbd43"/>
-    `;
+    detalhes = \`
+      <path d="M \${w*.16} \${d*.52} Q \${cx} \${d*.3} \${w*.84} \${d*.5}" fill="none" stroke="#ead9b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M \${cx} \${d*.16} Q \${cx-w*.08} \${d*.5} \${cx} \${d*.84}" fill="none" stroke="#f5e9d2" stroke-width="3"/>
+      \${arvore(w*.23,d*.42)}\${arvore(w*.76,d*.42,.72,"#009ca6")}\${arvore(cx,d*.72,.6)}
+      \${banco(w*.48,d*.25)}
+      <g fill="#f50057"><circle cx="\${w*.36}" cy="\${d*.72}" r="2"/><circle cx="\${w*.66}" cy="\${d*.3}" r="2"/></g>\`;
   } else if (transformacao.tipo === "praca") {
-    detalhes = `
-      <circle cx="${cx}" cy="${d*0.5}" r="${Math.min(15,w*0.16)}" fill="#168fc0" stroke="#ffffff" stroke-width="2"/>
-      <circle cx="${cx}" cy="${d*0.5}" r="${Math.min(7,w*0.075)}" fill="#ffbd43"/>
-      <path d="M ${cx} ${d*0.5-15} V ${d*0.5-25} M ${cx-18} ${d*0.5} H ${cx-27} M ${cx+18} ${d*0.5} H ${cx+27}"
-        stroke="#168fc0" stroke-width="3" stroke-linecap="round"/>
-      <rect x="${w*0.13}" y="${d*0.68}" width="${w*0.2}" height="5" rx="2" fill="#8c5a35"/>
-      <rect x="${w*0.67}" y="${d*0.28}" width="${w*0.2}" height="5" rx="2" fill="#8c5a35"/>
-    `;
-  } else if (transformacao.tipo === "biblioteca") {
-    detalhes = `
-      <polygon points="${w*0.12},${d*0.4} ${cx},${d*0.12} ${w*0.88},${d*0.4}" fill="#625bd5" stroke="#51483f" stroke-width="2"/>
-      <rect x="${w*0.2}" y="${d*0.4}" width="${w*0.6}" height="${d*0.37}" fill="#f2e7d3" stroke="#51483f" stroke-width="2"/>
-      <rect x="${w*0.27}" y="${d*0.48}" width="${w*0.16}" height="${d*0.22}" fill="#168fc0" stroke="#51483f"/>
-      <rect x="${w*0.57}" y="${d*0.48}" width="${w*0.16}" height="${d*0.22}" fill="#009ca6" stroke="#51483f"/>
-      <rect x="${cx-7}" y="${d*0.58}" width="14" height="${d*0.19}" fill="#ffbd43" stroke="#51483f"/>
-    `;
+    detalhes = \`
+      <path d="M \${w*.15} \${d*.5} H \${w*.85} M \${cx} \${d*.16} V \${d*.84}" stroke="#c6b99f" stroke-width="2" stroke-dasharray="3 3"/>
+      <circle cx="\${cx}" cy="\${d*.5}" r="\${Math.min(12,w*.13)}" fill="#168fc0" stroke="#fffaf0" stroke-width="2"/>
+      <circle cx="\${cx}" cy="\${d*.5}" r="4" fill="#ffbd43"/>
+      \${banco(w*.25,d*.52)}\${banco(w*.75,d*.48)}
+      \${arvore(w*.2,d*.27,.55)}\${arvore(w*.8,d*.72,.55,"#009ca6")}\`;
   } else {
-    detalhes = `
-      <polygon points="${w*0.12},${d*0.4} ${cx},${d*0.1} ${w*0.88},${d*0.4} ${cx},${d*0.7}"
-        fill="#ff8c42" stroke="#51483f" stroke-width="2"/>
-      <path d="M ${w*0.22} ${d*0.4} V ${d*0.83} M ${w*0.78} ${d*0.4} V ${d*0.83} M ${cx} ${d*0.7} V ${d*0.9}"
-        stroke="#625bd5" stroke-width="4"/>
-      <path d="M ${w*0.18} ${d*0.83} H ${w*0.82}" stroke="#009ca6" stroke-width="5"/>
-      <circle cx="${cx}" cy="${d*0.4}" r="6" fill="#ffbd43"/>
-    `;
+    // Pavilhão baixo com cobertura, paredes e fachada apoiados no terreno.
+    const x1=w*.22, x2=w*.78, y1=d*.28, y2=d*.7, h=transformacao.tipo==="biblioteca"?22:19;
+    const back=[cx,y1-h], left=[x1,(y1+y2)/2-h], front=[cx,y2-h], right=[x2,(y1+y2)/2-h];
+    const gb=[cx,y1], gl=[x1,(y1+y2)/2], gf=[cx,y2], gr=[x2,(y1+y2)/2];
+    const paredeE=[gb,gl,left,back], paredeD=[gb,gr,right,back], paredeF=[gl,gf,front,left];
+    const teto=transformacao.tipo==="museu"?"#625bd5":transformacao.tipo==="biblioteca"?"#009ca6":"#ff8c42";
+    const fachada=transformacao.tipo==="museu"?"#f2e8d6":"#f7dfc8";
+    detalhes = \`
+      \${poligono(paredeE,"#c7b89f","#51483f")}\${poligono(paredeD,"#a99a85","#51483f")}
+      \${poligono(paredeF,fachada,"#51483f")}\${poligono([back,right,front,left],teto,"#51483f")}
+      <path d="M \${cx-5} \${y2-h+5} V \${y2-2}" stroke="#168fc0" stroke-width="5"/>
+      <path d="M \${x1+7} \${(y1+y2)/2-h+7} V \${(y1+y2)/2-2} M \${x2-7} \${(y1+y2)/2-h+7} V \${(y1+y2)/2-2}" stroke="#009ca6" stroke-width="3"/>
+      <path d="M \${cx-8} \${y2+1} H \${cx+8}" stroke="#ffbd43" stroke-width="3"/>
+      \${transformacao.tipo==="museu"?\`<circle cx="\${cx}" cy="\${y1-h+7}" r="3" fill="#ffbd43"/><path d="M \${cx-13} \${y1-h+4} H \${cx+13}" stroke="#f50057" stroke-width="2"/>\`:""}
+      \${transformacao.tipo==="biblioteca"?\`<rect x="\${cx-12}" y="\${y1-h+4}" width="24" height="5" rx="1" fill="#ffbd43"/><path d="M \${cx-9} \${y1-h+11} V \${y1-h+16} M \${cx} \${y1-h+11} V \${y1-h+16} M \${cx+9} \${y1-h+11} V \${y1-h+16}" stroke="#625bd5" stroke-width="2"/>\`:""}
+      \${transformacao.tipo==="centroCultural"?\`<path d="M \${x1+4} \${(y1+y2)/2-h+3} Q \${cx} \${y1-h-8} \${x2-4} \${(y1+y2)/2-h+3}" fill="none" stroke="#f50057" stroke-width="3"/>\`:""}\`;
   }
 
-  return base + detalhes + "</g>";
+  return \`
+    <g id="\${transformacao.id}" transform="translate(\${b.x},\${b.y})">
+      \${poligono(ladoE,"#b6a98e","#665d4f")}\${poligono(ladoD,"#95866f","#665d4f")}
+      \${poligono(topo,"#d8cda9","#665d4f")}\${detalhes}
+    </g>\`;
 }
+
 
 function renderizarTransformacaoUrbana(indicePredio) {
   const transformacao = TRANSFORMACOES_URBANAS.find(
@@ -2856,6 +2852,10 @@ function montarCidade() {
   `;
 
   // ==================================================
+  if (cidadeTransformada) {
+    resultado += criarRedeEspacosPublicos();
+  }
+
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
 
