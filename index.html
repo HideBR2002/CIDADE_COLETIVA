@@ -1331,10 +1331,6 @@ for (const obra of OBRAS_PROTOTIPO) {
     throw new Error(`A obra ${obra.id} referencia um edifício removido junto ao rio.`);
   }
 
-  if (PREDIOS_TRANSFORMADOS.has(obra.predio)) {
-    throw new Error(`A obra ${obra.id} referencia um edifício substituído por transformação urbana.`);
-  }
-
   if (!PREDIOS[obra.predio]) {
     throw new Error(
       `Edifício inexistente para a obra ${obra.id}.`
@@ -1564,6 +1560,16 @@ const IDS_TRANSFORMACOES_URBANAS = new Set(
 const PREDIOS_TRANSFORMADOS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.predio)
 );
+
+// As obras não podem apontar para prédios removidos ou substituídos.
+for (const obra of OBRAS_PROTOTIPO) {
+  if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(obra.predio)) {
+    throw new Error(`A obra ${obra.id} referencia um edifício removido junto ao rio.`);
+  }
+  if (PREDIOS_TRANSFORMADOS.has(obra.predio)) {
+    throw new Error(`A obra ${obra.id} referencia um edifício substituído por transformação urbana.`);
+  }
+}
 
 if (TRANSFORMACOES_URBANAS.length !== 10 ||
     IDS_TRANSFORMACOES_URBANAS.size !== 10 ||
