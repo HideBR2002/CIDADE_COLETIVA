@@ -40,7 +40,7 @@ header p {
 
 
 .cidade-container {
-  width: min(1800px, 98%);
+  width: min(1600px, 98%);
   margin: 10px auto;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1104,57 +1104,152 @@ for (const arte of MANIFESTACOES_ARTISTICAS) {
  // ======================================================
 
 const OBRAS_PROTOTIPO = [
-  // Cinco murais integrados às fachadas, em edifícios não reservados.
-  { id: "arte01", categoria: "fachada", tipo: "mural", predio: 1, paleta: ["#009ca6", "#168fc0", "#f50057", "#ff8c42", "#ffbd43"] },
-  { id: "arte02", categoria: "fachada", tipo: "mural", predio: 5, paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte03", categoria: "fachada", tipo: "mural", predio: 8, paleta: ["#009ca6", "#168fc0", "#ffbd43", "#f50057", "#ffffff"] },
-  { id: "arte04", categoria: "fachada", tipo: "mural", predio: 12, paleta: ["#ff8c42", "#f50057", "#625bd5", "#ffbd43", "#ffffff"] },
-  { id: "arte05", categoria: "fachada", tipo: "mural", predio: 16, paleta: ["#168fc0", "#009ca6", "#ffbd43", "#f50057", "#ffffff"] },
-
-  // Cinco equipamentos artísticos de uso público nos intervalos dos percursos:
-  // coreto, biblioteca de rua, portal de entrada, totem e painel de memória.
-  { id: "arte06", categoria: "instalacao", tipo: "coreto", x: -12, y: 48, escala: 0.43, paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte07", categoria: "instalacao", tipo: "bibliotecaRua", x: 1037, y: 48, escala: 0.42, paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"] },
-  { id: "arte08", categoria: "instalacao", tipo: "portalEntrada", x: -12, y: 421, escala: 0.43, paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"] },
-  { id: "arte09", categoria: "instalacao", tipo: "totemOrientacao", x: 1037, y: 421, escala: 0.42, paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte10", categoria: "instalacao", tipo: "painelMemoria", x: 505, y: 512, escala: 0.42, paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"] },
-
-  // Cinco mosaicos planos, embutidos visualmente no passeio frontal.
-  // Mosaicos afastados das fachadas e posicionados antes do passeio frontal.
-  { id: "arte11", categoria: "pavimento", x: 145, y: 588, cor: "#009ca6" },
-  { id: "arte12", categoria: "pavimento", x: 335, y: 588, cor: "#625bd5" },
-  { id: "arte13", categoria: "pavimento", x: 525, y: 588, cor: "#f50057" },
-  { id: "arte14", categoria: "pavimento", x: 715, y: 588, cor: "#ff8c42" },
-  { id: "arte15", categoria: "pavimento", x: 905, y: 588, cor: "#168fc0" }
+  {
+    id: "arte01",
+    tipo: "mural",
+    predio: 42,
+    paleta: ["#009ca6", "#168fc0", "#f50057", "#ff8c42", "#ffbd43"]
+  },
+  {
+    id: "arte04",
+    tipo: "escultura",
+    predio: 44,
+    paleta: ["#168fc0", "#009ca6", "#f50057", "#ff8c42", "#ffbd43"]
+  },
+  {
+    id: "arte13",
+    tipo: "galeria",
+    predio: 47,
+    paleta: ["#009ca6", "#625bd5", "#168fc0", "#ff8c42", "#ffbd43"]
+  },
+  {
+    id: "arte02",
+    tipo: "mosaico",
+    predio: 1,
+    paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte03",
+    tipo: "jardimVertical",
+    predio: 5,
+    paleta: ["#009ca6", "#168fc0", "#ffbd43", "#f50057", "#ffffff"]
+  },
+  {
+    id: "arte05",
+    tipo: "portal",
+    predio: 8,
+    paleta: ["#ff8c42", "#f50057", "#625bd5", "#ffbd43", "#ffffff"]
+  },
+  {
+    id: "arte06",
+    tipo: "relevo",
+    predio: 12,
+    paleta: ["#168fc0", "#009ca6", "#ffbd43", "#f50057", "#ffffff"]
+  },
+  {
+    id: "arte07",
+    tipo: "instalacaoLuminosa",
+    predio: 16,
+    paleta: ["#f50057", "#ffbd43", "#168fc0", "#625bd5", "#ffffff"]
+  },
+  {
+    id: "arte08",
+    tipo: "escadaria",
+    predio: 19,
+    paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"]
+  },
+  {
+    id: "arte09",
+    tipo: "jardimSuspenso",
+    predio: 23,
+    paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"]
+  },
+  {
+    id: "arte10",
+    tipo: "totem",
+    predio: 26,
+    paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte11",
+    tipo: "arcoCultural",
+    predio: 30,
+    paleta: ["#168fc0", "#f50057", "#ffbd43", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte12",
+    tipo: "esculturaSolar",
+    predio: 35,
+    paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"]
+  },
+  {
+    id: "arte14",
+    tipo: "pavilhao",
+    predio: 39,
+    paleta: ["#009ca6", "#625bd5", "#ff8c42", "#ffbd43", "#ffffff"]
+  },
+  {
+    id: "arte15",
+    tipo: "bandeirolas",
+    predio: 45,
+    paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"]
+  }
 ];
 
 
 // ======================================================
-// VALIDAÇÃO DAS 15 INTERVENÇÕES ARTÍSTICAS
+// VALIDAÇÃO DOS PROTÓTIPOS
 // ======================================================
 
-const IDS_PROTOTIPOS = new Set(OBRAS_PROTOTIPO.map(obra => obra.id));
-if (OBRAS_PROTOTIPO.length !== 15 || IDS_PROTOTIPOS.size !== 15) {
-  throw new Error("As 15 intervenções artísticas precisam ter identificadores únicos.");
+const IDS_PROTOTIPOS = new Set(
+  OBRAS_PROTOTIPO.map(obra => obra.id)
+);
+
+if (
+  OBRAS_PROTOTIPO.length !== 15 ||
+  IDS_PROTOTIPOS.size !== 15
+) {
+  throw new Error(
+    "As 15 intervenções arquitetônicas precisam ter identificadores únicos."
+  );
 }
 
-const PREDIOS_RESERVADOS_POR_PLACAS = new Set(ESPACOS_PARTICIPATIVOS.map(posicao => posicao.predio));
+const PREDIOS_RESERVADOS_POR_PLACAS = new Set(
+  ESPACOS_PARTICIPATIVOS.map(
+    posicao => posicao.predio
+  )
+);
+
 for (const obra of OBRAS_PROTOTIPO) {
-  if (obra.categoria === "fachada") {
-    if (!PREDIOS[obra.predio] || PREDIOS_RESERVADOS_POR_PLACAS.has(obra.predio)) {
-      throw new Error("Posição de fachada inválida ou reservada para placa: " + obra.id);
-    }
-    if (obra.tipo !== "mural") throw new Error("Intervenção de fachada deve ser mural: " + obra.id);
-  } else if (obra.categoria === "instalacao") {
-    if (![obra.x, obra.y, obra.escala].every(Number.isFinite) ||
-        !["coreto", "bibliotecaRua", "portalEntrada", "totemOrientacao", "painelMemoria"].includes(obra.tipo)) {
-      throw new Error("Implantação artística inválida: " + obra.id);
-    }
-  } else if (obra.categoria === "pavimento") {
-    if (![obra.x, obra.y].every(Number.isFinite)) throw new Error("Coordenada inválida: " + obra.id);
-  } else {
-    throw new Error("Categoria artística inválida: " + obra.id);
+
+  if (!PREDIOS[obra.predio]) {
+    throw new Error(
+      `Edifício inexistente para a obra ${obra.id}.`
+    );
   }
+
+  if (
+    PREDIOS_RESERVADOS_POR_PLACAS.has(obra.predio)
+  ) {
+    throw new Error(
+      `O edifício da obra ${obra.id} está reservado para uma placa participativa.`
+    );
+  }
+
+  const TIPOS_OBRAS_VALIDOS = [
+    "mural", "escultura", "galeria", "mosaico",
+    "jardimVertical", "portal", "relevo",
+    "instalacaoLuminosa", "escadaria", "jardimSuspenso",
+    "totem", "arcoCultural", "esculturaSolar",
+    "pavilhao", "bandeirolas"
+  ];
+
+  if (!TIPOS_OBRAS_VALIDOS.includes(obra.tipo)) {
+    throw new Error(
+      `Tipo de obra inválido: ${obra.tipo}.`
+    );
+  }
+
 }
 
 // ======================================================
@@ -1338,29 +1433,21 @@ function criarJanelas(b, lado) {
 // ======================================================
 
 const TRANSFORMACOES_URBANAS = [
-  // Quatro praças periféricas nos quatro quadrantes da cidade.
-  // A praça central funciona como nó de conexão dos quatro percursos.
-  { id: "urb01", predio: 22, tipo: "praca", grupo: "pracas", posicao: { x: -115, y: 12, w: 125, d: 76 } },
-  { id: "urb02", predio: 29, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 12, w: 125, d: 76 } },
-  { id: "urb03", predio: 33, tipo: "praca", grupo: "pracas", posicao: { x: -115, y: 385, w: 125, d: 76 } },
-  { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 1015, y: 385, w: 125, d: 76 } },
-  // A praça central mantém a implantação atual.
-  { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
-  // Equipamentos alinhados verticalmente com as praças periféricas.
-  // Lateral esquerda: um equipamento abaixo de cada praça.
-  // Lateral direita: um abaixo da praça superior e dois abaixo da inferior.
-  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos", posicao: { x: -91.5, y: 105, w: 78, d: 46 } },
-  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos", posicao: { x: 1038.5, y: 105, w: 78, d: 46 } },
-  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: -91.5, y: 470, w: 78, d: 46 } },
-  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos", posicao: { x: 1038.5, y: 470, w: 78, d: 46 } },
-  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: 1038.5, y: 530, w: 78, d: 46 } }
+  { id: "urb01", predio: 2, tipo: "parque" },
+  { id: "urb02", predio: 7, tipo: "parque" },
+  { id: "urb03", predio: 11, tipo: "jardim" },
+  { id: "urb04", predio: 15, tipo: "museu" },
+  { id: "urb05", predio: 18, tipo: "museu" },
+  { id: "urb06", predio: 22, tipo: "praca" },
+  { id: "urb07", predio: 25, tipo: "praca" },
+  { id: "urb08", predio: 27, tipo: "biblioteca" },
+  { id: "urb09", predio: 33, tipo: "centroCultural" },
+  { id: "urb10", predio: 36, tipo: "convivencia" }
 ];
 
 const IDS_TRANSFORMACOES_URBANAS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.id)
 );
-// As dez transformações substituem os edifícios de origem no modo coletivo:
-// cinco praças e cinco equipamentos culturais.
 const PREDIOS_TRANSFORMADOS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.predio)
 );
@@ -1368,7 +1455,7 @@ const PREDIOS_TRANSFORMADOS = new Set(
 if (TRANSFORMACOES_URBANAS.length !== 10 ||
     IDS_TRANSFORMACOES_URBANAS.size !== 10 ||
     PREDIOS_TRANSFORMADOS.size !== 10) {
-  throw new Error("Devem existir dez transformações cadastradas e dez edifícios substituídos por espaços coletivos.");
+  throw new Error("As dez transformações urbanas precisam ter IDs e prédios únicos.");
 }
 
 for (const item of TRANSFORMACOES_URBANAS) {
@@ -1384,117 +1471,69 @@ for (const item of TRANSFORMACOES_URBANAS) {
 }
 
 function criarRedeEspacosPublicos() {
-  // Quatro percursos diretos: cada praça periférica se conecta à praça central.
-  const pracas = TRANSFORMACOES_URBANAS.filter(item => item.grupo === "pracas");
-  const central = pracas.find(item => item.tipo === "convivencia");
-  const perifericas = pracas.filter(item => item !== central);
-  if (!central || perifericas.length !== 4) return "";
-
-  const ponto = item => {
-    if (item.posicao) {
-      return {
-        x: item.posicao.x + item.posicao.w / 2,
-        y: item.posicao.y + item.posicao.d / 2
-      };
-    }
-    const b = PREDIOS[item.predio];
-    return { x: b.x + b.w / 2, y: b.y + b.h + b.d / 2 };
-  };
-
-  const c = ponto(central);
-  const linhas = perifericas.map(item => {
-    const p = ponto(item);
-    const mx = (p.x + c.x) / 2;
-    const my = (p.y + c.y) / 2;
-    return '<path d="M ' + p.x + ' ' + p.y +
-      ' Q ' + mx + ' ' + my + ' ' + c.x + ' ' + c.y + '"/>';
-  }).join("");
-
-  return '<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
-    '<g stroke="#b9aa91" stroke-width="13" opacity=".58">' + linhas + '</g>' +
-    '<g stroke="#f7edda" stroke-width="8" opacity=".98">' + linhas + '</g>' +
-    '<g stroke="#c9b99d" stroke-width="1.5" stroke-dasharray="5 8" opacity=".9">' + linhas + '</g>' +
-    '</g>';
+  // Percurso coletivo sob a malha construída; só aparece nos intervalos livres.
+  const pontos = TRANSFORMACOES_URBANAS.map(item => {
+    const b=PREDIOS[item.predio]; return [b.x+b.w/2,b.y+b.d/2];
+  });
+  const path=pontos.map((p,i)=>\`\${i===0?"M":"L"} \${p[0]} \${p[1]}\`).join(" ");
+  return \`<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="\${path}" stroke="#b99d78" stroke-width="13" opacity=".48"/>
+    <path d="\${path}" stroke="#f2e5cc" stroke-width="8" stroke-dasharray="5 5"/>
+  </g>\`;
 }
 
 function criarEspacoColetivo(predio, transformacao) {
-  const b = predio;
-  const w = b.w, d = b.d, cx = w / 2;
-  // Implantação no nível térreo: base do edifício removido.
-  const baseY = b.y + b.h;
+  const b = predio, w = b.w, d = b.d, cx = w/2;
   const topo = [[cx,0],[w,d/2],[cx,d],[0,d/2]];
-  const ladoE = [[0,d/2],[cx,d],[cx,d+3],[0,d/2+3]];
-  const ladoD = [[cx,d],[w,d/2],[w,d/2+3],[cx,d+3]];
-  const caminho = (d) => '<path d="' + d + '" fill="none" stroke="#f7edda" stroke-width="3.5" stroke-linecap="round"/>';
-  const arvore = (x,y,r=5) => '<g transform="translate(' + x + ' ' + y + ')">' +
-    '<path d="M -1 0 V 8" stroke="#805638" stroke-width="2"/>' +
-    '<circle cy="-3" r="' + r + '" fill="#16845f" stroke="#285b48" stroke-width=".8"/>' +
-    '<circle cx="-3" cy="-1" r="' + (r*.62) + '" fill="#1d9a6c"/>' +
-    '<circle cx="3" cy="-1" r="' + (r*.62) + '" fill="#009ca6"/></g>';
-  const banco = (x,y) => '<g transform="translate(' + x + ' ' + y + ')">' +
-    '<path d="M -6 0 H 6 M -4 1 V 5 M 4 1 V 5" stroke="#805638" stroke-width="2.5" stroke-linecap="round"/></g>';
-
+  const ladoE = [[0,d/2],[cx,d],[cx,d+9],[0,d/2+9]];
+  const ladoD = [[cx,d],[w,d/2],[w,d/2+9],[cx,d+9]];
+  const arvore = (x,y,k=0.72,cor="#16845f") => \`
+    <g transform="translate(\${x} \${y}) scale(\${k})">
+      <path d="M -2 0 V 12 H 2 V 0" fill="#8b5a36" stroke="#51483f" stroke-width="1"/>
+      <circle cy="-4" r="7" fill="\${cor}" stroke="#285b48" stroke-width="1"/>
+      <circle cx="-4" cy="0" r="4.5" fill="#1d9a6c"/><circle cx="4" cy="0" r="4.5" fill="#009ca6"/>
+    </g>\`;
+  const banco = (x,y) => \`<g transform="translate(\${x} \${y})"><path d="M -7 0 H 7" stroke="#8c5a35" stroke-width="3.5" stroke-linecap="round"/><path d="M -5 1 V 5 M 5 1 V 5" stroke="#51483f" stroke-width="1.2"/></g>\`;
   let detalhes = "";
 
   if (transformacao.tipo === "parque" || transformacao.tipo === "jardim") {
-    detalhes =
-      caminho('M ' + (w*.2) + ' ' + (d*.56) + ' Q ' + cx + ' ' + (d*.2) + ' ' + (w*.8) + ' ' + (d*.48)) +
-      caminho('M ' + cx + ' ' + (d*.15) + ' Q ' + (w*.38) + ' ' + (d*.55) + ' ' + (cx+4) + ' ' + (d*.86)) +
-      arvore(w*.22,d*.43,5) + arvore(w*.76,d*.42,5) + arvore(cx,d*.77,4) +
-      banco(w*.48,d*.28) +
-      '<g fill="#f50057"><circle cx="' + (w*.37) + '" cy="' + (d*.75) + '" r="1.8"/><circle cx="' + (w*.65) + '" cy="' + (d*.28) + '" r="1.8"/></g>';
+    detalhes = \`
+      <path d="M \${w*.16} \${d*.52} Q \${cx} \${d*.3} \${w*.84} \${d*.5}" fill="none" stroke="#ead9b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M \${cx} \${d*.16} Q \${cx-w*.08} \${d*.5} \${cx} \${d*.84}" fill="none" stroke="#f5e9d2" stroke-width="3"/>
+      \${arvore(w*.23,d*.42)}\${arvore(w*.76,d*.42,.72,"#009ca6")}\${arvore(cx,d*.72,.6)}
+      \${banco(w*.48,d*.25)}
+      <g fill="#f50057"><circle cx="\${w*.36}" cy="\${d*.72}" r="2"/><circle cx="\${w*.66}" cy="\${d*.3}" r="2"/></g>\`;
   } else if (transformacao.tipo === "praca") {
-    detalhes =
-      '<path d="M ' + (w*.18) + ' ' + (d*.5) + ' H ' + (w*.82) + ' M ' + cx + ' ' + (d*.18) + ' V ' + (d*.82) + '" stroke="#c4b69e" stroke-width="1.4" stroke-dasharray="3 3"/>' +
-      '<circle cx="' + cx + '" cy="' + (d*.5) + '" r="' + Math.min(7,w*.075) + '" fill="#168fc0" stroke="#fffaf0" stroke-width="1.5"/>' +
-      '<circle cx="' + cx + '" cy="' + (d*.5) + '" r="2.5" fill="#ffbd43"/>' +
-      banco(w*.25,d*.54) + banco(w*.75,d*.46) +
-      arvore(w*.18,d*.27,4) + arvore(w*.82,d*.73,4);
-  } else if (transformacao.tipo === "convivencia") {
-    // Praça central: piso contínuo, fonte, canteiros e mobiliário.
-    detalhes =
-      '<path d="M ' + (w*.12) + ' ' + (d*.5) + ' H ' + (w*.88) + ' M ' + cx + ' ' + (d*.12) + ' V ' + (d*.88) + '" stroke="#c2b59e" stroke-width="2" stroke-dasharray="5 5"/>' +
-      '<path d="M ' + (w*.2) + ' ' + (d*.25) + ' L ' + (w*.8) + ' ' + (d*.75) + ' M ' + (w*.2) + ' ' + (d*.75) + ' L ' + (w*.8) + ' ' + (d*.25) + '" stroke="#f8f0e3" stroke-width="4" stroke-linecap="round"/>' +
-      '<circle cx="' + cx + '" cy="' + (d*.5) + '" r="' + (Math.min(w,d)*.16) + '" fill="#168fc0" stroke="#fffaf0" stroke-width="3"/>' +
-      '<circle cx="' + cx + '" cy="' + (d*.5) + '" r="' + (Math.min(w,d)*.075) + '" fill="#ffbd43"/>' +
-      '<ellipse cx="' + (w*.22) + '" cy="' + (d*.27) + '" rx="' + (w*.09) + '" ry="' + (d*.12) + '" fill="#16845f"/>' +
-      '<ellipse cx="' + (w*.78) + '" cy="' + (d*.73) + '" rx="' + (w*.09) + '" ry="' + (d*.12) + '" fill="#16845f"/>' +
-      arvore(w*.22,d*.27,7) + arvore(w*.78,d*.73,7) +
-      banco(w*.5,d*.18) + banco(w*.5,d*.82);
+    detalhes = \`
+      <path d="M \${w*.15} \${d*.5} H \${w*.85} M \${cx} \${d*.16} V \${d*.84}" stroke="#c6b99f" stroke-width="2" stroke-dasharray="3 3"/>
+      <circle cx="\${cx}" cy="\${d*.5}" r="\${Math.min(12,w*.13)}" fill="#168fc0" stroke="#fffaf0" stroke-width="2"/>
+      <circle cx="\${cx}" cy="\${d*.5}" r="4" fill="#ffbd43"/>
+      \${banco(w*.25,d*.52)}\${banco(w*.75,d*.48)}
+      \${arvore(w*.2,d*.27,.55)}\${arvore(w*.8,d*.72,.55,"#009ca6")}\`;
   } else {
-    // Museu, biblioteca e centro cultural: pavilhão compacto apoiado no piso.
-    const x1=w*.25, x2=w*.75, y1=d*.28, y2=d*.72, h=Math.min(17,w*.18);
-    const roof=[[cx,y1-h],[x2,(y1+y2)/2-h],[cx,y2-h],[x1,(y1+y2)/2-h]];
-    const wallLeft=[[cx,y1],[x1,(y1+y2)/2],[x1,(y1+y2)/2-h],[cx,y1-h]];
-    const wallRight=[[cx,y1],[x2,(y1+y2)/2],[x2,(y1+y2)/2-h],[cx,y1-h]];
-    const wallFront=[[x1,(y1+y2)/2],[cx,y2],[cx,y2-h],[x1,(y1+y2)/2-h]];
-    const corTeto = transformacao.tipo === "museu" ? "#625bd5" :
-      transformacao.tipo === "biblioteca" ? "#009ca6" : "#ff8c42";
-    const pol = (pts,fill) => poligono(pts,fill,"#51483f");
-    detalhes =
-      pol(wallLeft,"#b9aa91") + pol(wallRight,"#a5967e") + pol(wallFront,"#f3dfc5") + pol(roof,corTeto) +
-      '<path d="M ' + (cx-4) + ' ' + (y2-h+3) + ' V ' + (y2-1) + '" stroke="#168fc0" stroke-width="4"/>' +
-      '<path d="M ' + (x1+5) + ' ' + (y1-h+5) + ' V ' + ((y1+y2)/2-2) + ' M ' + (x2-5) + ' ' + (y1-h+5) + ' V ' + ((y1+y2)/2-2) + '" stroke="#009ca6" stroke-width="2.5"/>' +
-      (transformacao.tipo === "museu" ?
-        '<circle cx="' + cx + '" cy="' + (y1-h+5) + '" r="2.5" fill="#ffbd43"/>' :
-        transformacao.tipo === "biblioteca" ?
-          '<path d="M ' + (cx-7) + ' ' + (y1-h+4) + ' H ' + (cx+7) + ' M ' + (cx-5) + ' ' + (y1-h+7) + ' V ' + (y1-h+11) + ' M ' + cx + ' ' + (y1-h+7) + ' V ' + (y1-h+11) + ' M ' + (cx+5) + ' ' + (y1-h+7) + ' V ' + (y1-h+11) + '" stroke="#ffbd43" stroke-width="2"/>' :
-          '<path d="M ' + (x1+4) + ' ' + ((y1+y2)/2-h+3) + ' Q ' + cx + ' ' + (y1-h-4) + ' ' + (x2-4) + ' ' + ((y1+y2)/2-h+3) + '" fill="none" stroke="#f50057" stroke-width="2.5"/>');
+    // Pavilhão baixo com cobertura, paredes e fachada apoiados no terreno.
+    const x1=w*.22, x2=w*.78, y1=d*.28, y2=d*.7, h=transformacao.tipo==="biblioteca"?22:19;
+    const back=[cx,y1-h], left=[x1,(y1+y2)/2-h], front=[cx,y2-h], right=[x2,(y1+y2)/2-h];
+    const gb=[cx,y1], gl=[x1,(y1+y2)/2], gf=[cx,y2], gr=[x2,(y1+y2)/2];
+    const paredeE=[gb,gl,left,back], paredeD=[gb,gr,right,back], paredeF=[gl,gf,front,left];
+    const teto=transformacao.tipo==="museu"?"#625bd5":transformacao.tipo==="biblioteca"?"#009ca6":"#ff8c42";
+    const fachada=transformacao.tipo==="museu"?"#f2e8d6":"#f7dfc8";
+    detalhes = \`
+      \${poligono(paredeE,"#c7b89f","#51483f")}\${poligono(paredeD,"#a99a85","#51483f")}
+      \${poligono(paredeF,fachada,"#51483f")}\${poligono([back,right,front,left],teto,"#51483f")}
+      <path d="M \${cx-5} \${y2-h+5} V \${y2-2}" stroke="#168fc0" stroke-width="5"/>
+      <path d="M \${x1+7} \${(y1+y2)/2-h+7} V \${(y1+y2)/2-2} M \${x2-7} \${(y1+y2)/2-h+7} V \${(y1+y2)/2-2}" stroke="#009ca6" stroke-width="3"/>
+      <path d="M \${cx-8} \${y2+1} H \${cx+8}" stroke="#ffbd43" stroke-width="3"/>
+      \${transformacao.tipo==="museu"?\`<circle cx="\${cx}" cy="\${y1-h+7}" r="3" fill="#ffbd43"/><path d="M \${cx-13} \${y1-h+4} H \${cx+13}" stroke="#f50057" stroke-width="2"/>\`:""}
+      \${transformacao.tipo==="biblioteca"?\`<rect x="\${cx-12}" y="\${y1-h+4}" width="24" height="5" rx="1" fill="#ffbd43"/><path d="M \${cx-9} \${y1-h+11} V \${y1-h+16} M \${cx} \${y1-h+11} V \${y1-h+16} M \${cx+9} \${y1-h+11} V \${y1-h+16}" stroke="#625bd5" stroke-width="2"/>\`:""}
+      \${transformacao.tipo==="centroCultural"?\`<path d="M \${x1+4} \${(y1+y2)/2-h+3} Q \${cx} \${y1-h-8} \${x2-4} \${(y1+y2)/2-h+3}" fill="none" stroke="#f50057" stroke-width="3"/>\`:""}\`;
   }
 
-  // Equipamentos recebem piso discreto, sem laterais elevadas:
-  // a implantação deve se integrar ao passeio e não parecer uma base branca.
-  const implantacao = transformacao.grupo === "equipamentos"
-    ? '<polygon points="' + topo.map(p => p.join(",")).join(" ") +
-      '" fill="#d8cbb5" stroke="#b5a78f" stroke-width="1" opacity=".72"/>'
-    : poligono(ladoE,"#cbbd9f","#9e9078") +
-      poligono(ladoD,"#b8a98e","#9e9078") +
-      poligono(topo,"#e7dcc4","#b5a78f");
-
-  return '<g id="' + transformacao.id + '" transform="translate(' + b.x + ',' + baseY + ')">' +
-    implantacao +
-    detalhes +
-    '</g>';
+  return \`
+    <g id="\${transformacao.id}" transform="translate(\${b.x},\${b.y})">
+      \${poligono(ladoE,"#b6a98e","#665d4f")}\${poligono(ladoD,"#95866f","#665d4f")}
+      \${poligono(topo,"#d8cda9","#665d4f")}\${detalhes}
+    </g>\`;
 }
 
 
@@ -1503,20 +1542,7 @@ function renderizarTransformacaoUrbana(indicePredio) {
     item => item.predio === indicePredio
   );
   if (!transformacao) return "";
-
-  const predioBase = PREDIOS[indicePredio];
-  // Praças periféricas usam implantação independente do lote de origem.
-  const geometria = transformacao.posicao
-    ? {
-        ...predioBase,
-        x: transformacao.posicao.x,
-        y: transformacao.posicao.y - predioBase.h,
-        w: transformacao.posicao.w,
-        d: transformacao.posicao.d
-      }
-    : predioBase;
-
-  return criarEspacoColetivo(geometria, transformacao);
+  return criarEspacoColetivo(PREDIOS[indicePredio], transformacao);
 }
 
 
@@ -2407,112 +2433,46 @@ function criarIntervencaoComplementar(predio, obra) {
 
 
 function renderizarObraArquitetonica(indicePredio) {
+
   if (!cidadeTransformada) return "";
-  const obra = OBRAS_PROTOTIPO.find(item => item.categoria === "fachada" && item.predio === indicePredio);
+
+  const obra = OBRAS_PROTOTIPO.find(
+    item => item.predio === indicePredio
+  );
+
   if (!obra) return "";
-  return criarMuralArquitetonico(PREDIOS[indicePredio], obra);
+
+  const predio = PREDIOS[indicePredio];
+
+  if (obra.tipo === "mural") {
+    return criarMuralArquitetonico(predio, obra);
+  }
+
+  if (obra.tipo === "escultura") {
+    return criarEsculturaGeometrica(predio, obra);
+  }
+
+  if (obra.tipo === "galeria") {
+    return criarGaleriaAberta(predio, obra);
+  }
+
+  return criarIntervencaoComplementar(predio, obra);
 }
 
-function renderizarInstalacoesIndependentes() {
-  if (!cidadeTransformada) return "";
 
-  return OBRAS_PROTOTIPO.filter(item => item.categoria === "instalacao").map(obra => {
-    const [c1,c2,c3,c4,c5] = obra.paleta;
-    const x=obra.x, y=obra.y, sc=obra.escala;
-    let desenho = "";
 
-    if (obra.tipo === "coreto") {
-      // Coreto de bairro: cobertura, pilares e pequeno palco.
-      desenho = `
-        <ellipse cx="0" cy="9" rx="48" ry="10" fill="#51483f" opacity=".15"/>
-        <polygon points="-42,5 0,-12 42,5 0,22" fill="#d9cbb2" stroke="#51483f" stroke-width="2"/>
-        <path d="M -30,2 V -35 M -10,10 V -27 M 10,10 V -27 M 30,2 V -35" stroke="${c2}" stroke-width="5"/>
-        <polygon points="0,-78 49,-52 0,-27 -49,-52" fill="${c1}" stroke="#51483f" stroke-width="2"/>
-        <path d="M -49,-52 L 0,-27 L 0,-18 L -49,-43 Z" fill="${c3}"/>
-        <path d="M 0,-27 L 49,-52 L 49,-43 L 0,-18 Z" fill="${c4}"/>
-        <path d="M -15,-1 H 15" stroke="${c5}" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="0" cy="-4" r="4" fill="${c3}"/>
-      `;
-    } else if (obra.tipo === "bibliotecaRua") {
-      // Biblioteca de rua: armário de troca de livros com prateleiras visíveis.
-      desenho = `
-        <ellipse cx="0" cy="8" rx="38" ry="8" fill="#51483f" opacity=".14"/>
-        <polygon points="-32,-1 0,-15 32,-1 0,12" fill="#d9cbb2" stroke="#51483f" stroke-width="1.5"/>
-        <path d="M -25,-4 V -53 L 0,-65 L 25,-53 V -4" fill="${c1}" stroke="#51483f" stroke-width="2"/>
-        <path d="M -25,-35 L 0,-23 L 25,-35 M -25,-19 L 0,-7 L 25,-19" fill="none" stroke="#fffaf0" stroke-width="3"/>
-        <path d="M -18,-42 L -12,-45 L -12,-31 L -18,-28 Z M -8,-47 L -2,-50 L -2,-27 L -8,-24 Z M 4,-48 L 10,-45 L 10,-29 L 4,-32 Z M 14,-43 L 20,-40 L 20,-24 L 14,-27 Z" fill="${c3}" stroke="#51483f" stroke-width=".8"/>
-        <path d="M -4,-18 V 5" stroke="${c2}" stroke-width="2"/>
-        <circle cx="0" cy="-10" r="2" fill="${c5}"/>
-        <path d="M -31,-54 L 0,-70 L 31,-54" fill="none" stroke="${c4}" stroke-width="5" stroke-linecap="round"/>
-      `;
-    } else if (obra.tipo === "portalEntrada") {
-      // Portal de boas-vindas, marcando a entrada do percurso coletivo.
-      desenho = `
-        <ellipse cx="0" cy="8" rx="39" ry="8" fill="#51483f" opacity=".14"/>
-        <path d="M -31,8 V -29 Q -31,-67 0,-67 Q 31,-67 31,-29 V 8" fill="none" stroke="${c1}" stroke-width="11" stroke-linejoin="round"/>
-        <path d="M -16,8 V -28 Q -16,-49 0,-49 Q 16,-49 16,-28 V 8" fill="none" stroke="${c2}" stroke-width="6"/>
-        <rect x="-27" y="-72" width="54" height="15" rx="3" fill="${c3}" stroke="#51483f" stroke-width="1.5"/>
-        <path d="M -19,-64 H 19" stroke="#fffaf0" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M -31,8 H 31" stroke="${c4}" stroke-width="5" stroke-linecap="round"/>
-        <circle cx="0" cy="-64" r="3" fill="${c5}"/>
-      `;
-    } else if (obra.tipo === "totemOrientacao") {
-      // Totem cívico com placa de direção e mapa esquemático.
-      desenho = `
-        <ellipse cx="0" cy="9" rx="30" ry="8" fill="#51483f" opacity=".15"/>
-        <polygon points="-24,5 0,-7 24,5 0,17" fill="#d9cbb2" stroke="#51483f" stroke-width="1.5"/>
-        <path d="M -5,8 V -52 L 0,-57 L 5,-52 V 8 Z" fill="${c2}" stroke="#51483f" stroke-width="1.5"/>
-        <rect x="-31" y="-68" width="62" height="27" rx="3" fill="${c1}" stroke="#51483f" stroke-width="2"/>
-        <path d="M -22,-60 H 18 M -22,-52 H 7" stroke="#fffaf0" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M 10,-57 L 20,-57 L 15,-62 M 20,-57 L 15,-52" fill="none" stroke="${c3}" stroke-width="2"/>
-        <circle cx="0" cy="-30" r="5" fill="${c4}" stroke="#fffaf0" stroke-width="1.5"/>
-        <path d="M 0,-25 V -14" stroke="${c5}" stroke-width="2.5"/>
-      `;
-    } else if (obra.tipo === "painelMemoria") {
-      // Tríptico expositivo para registrar imagens e histórias do bairro.
-      desenho = `
-        <ellipse cx="0" cy="8" rx="48" ry="9" fill="#51483f" opacity=".14"/>
-        <path d="M -36,5 V -48 M 0,8 V -55 M 36,5 V -48" stroke="#805638" stroke-width="4"/>
-        <rect x="-49" y="-65" width="31" height="43" rx="2" fill="${c1}" stroke="#51483f" stroke-width="2"/>
-        <rect x="-15" y="-72" width="31" height="48" rx="2" fill="${c2}" stroke="#51483f" stroke-width="2"/>
-        <rect x="18" y="-65" width="31" height="43" rx="2" fill="${c3}" stroke="#51483f" stroke-width="2"/>
-        <rect x="-44" y="-59" width="21" height="18" fill="#fffaf0" stroke="${c5}" stroke-width="1.5"/>
-        <path d="M -42,-44 L -35,-53 L -28,-46" fill="none" stroke="${c4}" stroke-width="2"/>
-        <rect x="-10" y="-66" width="21" height="19" fill="#fffaf0" stroke="${c5}" stroke-width="1.5"/>
-        <circle cx="0" cy="-57" r="6" fill="${c4}"/>
-        <rect x="23" y="-59" width="21" height="18" fill="#fffaf0" stroke="${c5}" stroke-width="1.5"/>
-        <path d="M 25,-44 L 33,-53 L 42,-45" fill="none" stroke="${c4}" stroke-width="2"/>
-        <path d="M -49,-65 H 49" stroke="${c5}" stroke-width="2"/>
-      `;
-    }
+// ======================================================
+// 15.1. PLACAS SUSPENSAS PARA PALAVRAS
+// CABOS E CORPOS EM CAMADAS INDEPENDENTES
+// ======================================================
 
-    return '<g id="' + obra.id + '" role="img" aria-label="' + obra.tipo +
-      '" transform="translate(' + x + ' ' + y + ') scale(' + sc + ')">' +
-      desenho + '</g>';
-  }).join("");
-}
-
-function renderizarArteDoPavimento() {
-  if (!cidadeTransformada) return "";
-
-  return OBRAS_PROTOTIPO.filter(item => item.categoria === "pavimento").map(obra =>
-    '<g id="' + obra.id + '" role="img" aria-label="Mosaico artístico embutido no passeio" transform="translate(' + obra.x + ' ' + obra.y + ')">' +
-      // Peça plana: sem laterais, sombra ou relevo de pedestal.
-      '<polygon points="0,-16 31,0 0,16 -31,0" fill="#cfc2aa" stroke="#9e9078" stroke-width="1.2"/>' +
-      '<polygon points="0,-12 24,0 0,12 -24,0" fill="' + obra.cor + '" stroke="#fffaf0" stroke-width="1"/>' +
-      '<path d="M 0,-12 L 0,12 M -24,0 H 24 M -12,-6 L 0,0 L 12,-6 M -12,6 L 0,0 L 12,6" fill="none" stroke="#fffaf0" stroke-width="1.6" opacity=".95"/>' +
-      '<polygon points="0,-6 12,0 0,6 -12,0" fill="#ffbd43" stroke="#fffaf0" stroke-width="1"/>' +
-      '<circle cx="0" cy="0" r="2" fill="#fffaf0"/>' +
-    '</g>'
-  ).join("");
-}
-
+// DISTRIBUIR MENSAGENS EM ATÉ TRÊS LINHAS
 
 function quebrarTextoPlaca(texto, limite = 17) {
 
   const palavras = String(texto || "")
     .trim()
-    .split(/\s+/)
+      .split(/\s+/)
     .filter(Boolean);
 
   if (!palavras.length) {
@@ -2777,25 +2737,92 @@ function montarIntervencoes() {
 // ======================================================
 
 function criarEspacoPublico() {
-  // Passeio frontal recuado para abrir uma faixa de respiro entre fachadas,
-  // mosaicos e circulação; mobiliário acompanha o deslocamento do passeio.
-  const arvore = (x,y,escala=1) => '<g transform="translate(' + x + ' ' + y + ') scale(' + escala + ')">' +
-    '<path d="M -3 5 V 31 H 3 V 5" fill="#8b5a36" stroke="#51483f" stroke-width="1.5"/>' +
-    '<circle cy="0" r="17" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>' +
-    '<circle cx="-11" cy="7" r="10" fill="#1d9a6c"/><circle cx="11" cy="7" r="10" fill="#009ca6"/>' +
-    '<rect x="-14" y="29" width="28" height="7" rx="3" fill="#c77d45" stroke="#684d3b" stroke-width="1.4"/></g>';
+  // Mobiliário e paisagismo nas margens livres da composição.
+  // Coordenadas locais do grupo SVG; não ocupam prédios nem placas.
+  return `
+    <g id="espaco-publico-cidade" stroke-linejoin="round">
 
-  return '<g id="espaco-publico-cidade" stroke-linejoin="round">' +
-    '<rect x="12" y="620" width="1030" height="35" rx="6" fill="#eee4d7" stroke="#cbbba8" stroke-width="1.4"/>' +
-    '<path d="M 22 632 H 1032 M 22 644 H 1032" stroke="#cdbfae" stroke-width="1" stroke-dasharray="7 8"/>' +
-    '<g fill="#c77d45" stroke="#805638" stroke-width="1.5">' +
-      '<rect x="105" y="625" width="58" height="22" rx="6"/><rect x="480" y="625" width="66" height="22" rx="6"/><rect x="875" y="625" width="58" height="22" rx="6"/>' +
-    '</g>' +
-    '<g fill="#16845f"><path d="M 111 638 Q 121 619 132 638 Q 143 619 157 638 Z"/><path d="M 487 638 Q 500 618 512 638 Q 526 618 539 638 Z"/><path d="M 881 638 Q 893 619 905 638 Q 918 619 928 638 Z"/></g>' +
-    '<g fill="#ffbd43"><circle cx="125" cy="630" r="3.5"/><circle cx="515" cy="630" r="3.5"/><circle cx="900" cy="630" r="3.5"/></g>' +
-    '<g stroke="#805638" stroke-width="3" stroke-linecap="round"><path d="M 290 632 H 332 M 295 632 V 646 M 327 632 V 646 M 700 632 H 742 M 705 632 V 646 M 737 632 V 646"/></g>' +
-    arvore(38,485,.78) + arvore(1015,485,.78) +
-    '</g>';
+      <!-- Passeio frontal, abaixo da linha dos edifícios -->
+      <rect x="-12" y="558" width="1080" height="48" rx="8"
+        fill="#eadfd1" stroke="#c8b9a8" stroke-width="2"/>
+      <path d="M -5 574 H 1060 M -5 590 H 1060"
+        stroke="#c9b9a7" stroke-width="1.5" stroke-dasharray="9 9" opacity="0.8"/>
+      <path d="M 185 558 V 606 M 390 558 V 606 M 590 558 V 606 M 790 558 V 606"
+        stroke="#d3c4b3" stroke-width="1.2" opacity="0.75"/>
+      <path d="M -5 601 H 1060" stroke="#bcae9e" stroke-width="2" opacity="0.7"/>
+
+      <!-- Canteiros frontais -->
+      <g>
+        <rect x="72" y="565" width="92" height="29" rx="8" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        <path d="M 82 579 Q 94 559 106 579 Q 119 555 132 579 Q 145 560 155 579 Z" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
+        <circle cx="101" cy="573" r="5" fill="#ffbd43"/><circle cx="133" cy="572" r="5" fill="#f50057"/>
+
+        <rect x="455" y="565" width="104" height="29" rx="8" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        <path d="M 466 579 Q 479 557 492 579 Q 507 555 520 579 Q 536 559 548 579 Z" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
+        <circle cx="488" cy="572" r="5" fill="#ffbd43"/><circle cx="523" cy="571" r="5" fill="#625bd5"/>
+
+        <rect x="850" y="565" width="100" height="29" rx="8" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        <path d="M 860 579 Q 874 557 887 579 Q 902 555 916 579 Q 932 559 940 579 Z" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
+        <circle cx="883" cy="572" r="5" fill="#f50057"/><circle cx="914" cy="572" r="5" fill="#ffbd43"/>
+      </g>
+
+      <!-- Bancos do passeio -->
+      <g stroke="#51483f" stroke-width="2">
+        <g transform="translate(270 574)">
+          <path d="M 0 0 H 68 M 5 0 V 14 M 63 0 V 14" stroke="#8c5a35" stroke-width="7"/>
+          <path d="M 8 4 V 17 M 60 4 V 17" stroke="#51483f" stroke-width="3"/>
+        </g>
+        <g transform="translate(690 574)">
+          <path d="M 0 0 H 68 M 5 0 V 14 M 63 0 V 14" stroke="#8c5a35" stroke-width="7"/>
+          <path d="M 8 4 V 17 M 60 4 V 17" stroke="#51483f" stroke-width="3"/>
+        </g>
+      </g>
+
+      <!-- Árvores nas laterais externas -->
+      <g>
+        <g transform="translate(-105 250)">
+          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
+          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
+          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
+          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        </g>
+        <g transform="translate(1145 270)">
+          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
+          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
+          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
+          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        </g>
+        <g transform="translate(-105 430) scale(0.82)">
+          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
+          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
+          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
+          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        </g>
+        <g transform="translate(1145 455) scale(0.82)">
+          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
+          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
+          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
+          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
+        </g>
+      </g>
+
+      <!-- Iluminação pública com braços e luminárias -->
+      <g stroke="#51483f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M -35 420 V 505 Q -35 515 -25 515" fill="none"/>
+        <path d="M -35 425 Q -35 408 -20 408 H -5" fill="none"/>
+        <path d="M 1070 420 V 505 Q 1070 515 1060 515" fill="none"/>
+        <path d="M 1070 425 Q 1070 408 1055 408 H 1040" fill="none"/>
+      </g>
+      <g fill="#ffbd43" stroke="#51483f" stroke-width="2">
+        <path d="M -8 402 Q 2 402 4 410 L 0 418 H -18 L -22 410 Q -20 402 -8 402 Z"/>
+        <path d="M 1043 402 Q 1033 402 1031 410 L 1035 418 H 1053 L 1057 410 Q 1055 402 1043 402 Z"/>
+        <circle cx="-25" cy="515" r="5"/><circle cx="1060" cy="515" r="5"/>
+      </g>
+      <g fill="#fff2bd" opacity="0.24">
+        <ellipse cx="-8" cy="420" rx="24" ry="15"/><ellipse cx="1043" cy="420" rx="24" ry="15"/>
+      </g>
+    </g>
+  `;
 }
 
 
@@ -2804,7 +2831,7 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 -60 1800 820"
+      viewBox="0 -60 1600 770"
       role="img"
       aria-label="Cidade Coletiva"
     >
@@ -2812,57 +2839,44 @@ function montarCidade() {
       <rect
         x="0"
         y="-60"
-        width="1800"
-        height="820"
+        width="1600"
+        height="720"
         fill="#fffaf5"
       />
 
       <g
         id="conteudo-cidade"
-        transform="translate(316 0) scale(1.12)"
+        transform="translate(216 0) scale(1.12)"
       >
 
   `;
 
   // ==================================================
+  if (cidadeTransformada) {
+    resultado += criarRedeEspacosPublicos();
+  }
+
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
 
-  // Os edifícios transformados deixam de aparecer como construções comerciais.
-  // Os cinco equipamentos são desenhados em camada própria, nas áreas externas
-  // próximas às praças, evitando que fiquem encaixados entre os edifícios.
+  // Desenhar edifícios e suas intervenções na mesma ordem
+  // de profundidade. Construções posteriores podem ocultar
+  // partes de obras posicionadas atrás delas, como na cidade real.
   for (let i = 0; i < PREDIOS.length; i++) {
     if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
-      continue;
-    }
-
-    resultado += criarPredio(PREDIOS[i]);
-
-    if (cidadeTransformada) {
-      resultado += renderizarObraArquitetonica(i);
+      // Substituição real: o edifício original não é desenhado.
+      resultado += renderizarTransformacaoUrbana(i);
+    } else {
+      resultado += criarPredio(PREDIOS[i]);
+      if (cidadeTransformada) {
+        resultado += renderizarObraArquitetonica(i);
+      }
     }
   }
 
+  // Complementos de paisagismo e mobiliário apenas na
+  // cidade transformada; preserva prédios e placas.
   if (cidadeTransformada) {
-    // Praças em primeiro plano, sem ocultação pela massa construída.
-    resultado += '<g id="camada-pracas-publicas">' +
-      TRANSFORMACOES_URBANAS
-        .filter(item => item.grupo === "pracas")
-        .map(item => renderizarTransformacaoUrbana(item.predio))
-        .join("") +
-      '</g>';
-
-    // Equipamentos culturais em posições externas e independentes dos lotes originais.
-    resultado += '<g id="camada-equipamentos-coletivos">' +
-      TRANSFORMACOES_URBANAS
-        .filter(item => item.grupo === "equipamentos")
-        .map(item => renderizarTransformacaoUrbana(item.predio))
-        .join("") +
-      '</g>';
-
-    // Esculturas compactas implantadas nas áreas de convivência.
-    resultado += renderizarInstalacoesIndependentes();
-    resultado += renderizarArteDoPavimento();
     resultado += criarEspacoPublico();
   }
 
