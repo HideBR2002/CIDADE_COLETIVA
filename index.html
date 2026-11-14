@@ -1354,8 +1354,13 @@ const TRANSFORMACOES_URBANAS = [
 const IDS_TRANSFORMACOES_URBANAS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.id)
 );
+// Somente as cinco praças substituem edifícios. Os cinco equipamentos
+// menores permanecem cadastrados no plano, mas não são renderizados sobre
+// os lotes: sua implantação visual será tratada como estruturas independentes.
 const PREDIOS_TRANSFORMADOS = new Set(
-  TRANSFORMACOES_URBANAS.map(item => item.predio)
+  TRANSFORMACOES_URBANAS
+    .filter(item => item.grupo === "pracas")
+    .map(item => item.predio)
 );
 
 if (TRANSFORMACOES_URBANAS.length !== 10 ||
