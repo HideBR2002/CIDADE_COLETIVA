@@ -746,6 +746,12 @@ if (IDS_ESPACOS_PARTICIPATIVOS.size !== 20) {
 
 for (const posicao of ESPACOS_PARTICIPATIVOS) {
 
+  if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(posicao.predio)) {
+    throw new Error(
+      `A placa ${posicao.id} referencia um edifício removido junto ao rio.`
+    );
+  }
+
   if (!PREDIOS[posicao.predio]) {
     throw new Error(
       `Prédio inexistente na placa ${posicao.id}.`
