@@ -541,6 +541,25 @@ function predioPertenceAoQuadrante4(predio) {
     predio.d=Math.min(predio.d,52);
   });
 })();
+
+// NOVA OCUPAÇÃO — BAIXA DENSIDADE, DISTRIBUIÇÃO ORGÂNICA.
+// Mantém os índices originais para preservar referências do projeto.
+// Somente estes oito edifícios serão renderizados.
+const PLANO_BAIXA_DENSIDADE = new Map([
+  [0,  { x: 20,  y: 115, w: 78, d: 40, h: 135 }],
+  [1,  { x: 125, y: 130, w: 75, d: 40, h: 145 }],
+  [3,  { x: 210, y: 270, w: 70, d: 40, h: 130 }],
+  [4,  { x: 300, y: 285, w: 70, d: 40, h: 130 }],
+  [6,  { x: 855, y: 125, w: 75, d: 40, h: 135 }],
+  [8,  { x: 950, y: 140, w: 75, d: 40, h: 145 }],
+  [9,  { x: 675, y: 275, w: 70, d: 40, h: 135 }],
+  [10, { x: 770, y: 290, w: 70, d: 40, h: 140 }]
+]);
+for (const [indice, dimensoes] of PLANO_BAIXA_DENSIDADE) {
+  Object.assign(PREDIOS[indice], dimensoes);
+}
+const PREDIOS_ATIVOS = new Set(PLANO_BAIXA_DENSIDADE.keys());
+
 const PREDIOS_QUADRANTE_4 = new Set(
   PREDIOS.reduce((indices, predio, indice) => {
     if (predioPertenceAoQuadrante4(predio)) indices.push(indice);
@@ -554,9 +573,65 @@ const PREDIOS_REMOVIDOS_JUNTO_AO_RIO = new Set([
   41, 42, 45, 46
 ]);
 
-// O edifício 37 é uma ancoragem adicional autorizada para preservar uma
-// referência artística. Sua posição e dimensões originais não são alteradas.
-const PREDIOS_LIBERADOS_PARA_REFERENCIAS = new Set([37]);
+// O edifício 37 era uma ancoragem excepcional do plano anterior.
+// Não faz parte da nova ocupação de baixa densidade.
+const PREDIOS_LIBERADOS_PARA_REFERENCIAS = new Set();
+
+// Valida a ocupação inteira contra as ruas, o quadrante superior,
+// a praça e a faixa de proteção do rio.
+function limiteRuaEsquerda(y) {
+  return y <= 235
+    ? 145 + (y - 15) * (380 / 220)
+    : 525 - (y - 235) * (185 / 300);
+}
+function limiteRuaDireita(y) {
+  return y <= 235
+    ? 1085 + (y - 20) * (-560 / 215)
+    : 525 + (y - 235) * (165 / 300);
+}
+function validarPlanoBaixaDensidade() {
+  if (PREDIOS_ATIVOS.size !== 8) {
+    throw new Error("O plano de baixa densidade deve conter oito edifícios.");
+  }
+  const edificios = [...PREDIOS_ATIVOS].map(indice => ({
+    indice, ...PREDIOS[indice],
+    direita: PREDIOS[indice].x + PREDIOS[indice].w,
+    baseInferior: PREDIOS[indice].y + PREDIOS[indice].h + PREDIOS[indice].d
+  }));
+  for (const p of edificios) {
+    if (p.baseInferior > 480) {
+      throw new Error(`O edifício ${p.indice} invade a faixa de proteção do rio.`);
+    }
+    const amostrasY = [p.y, Math.min(235, p.baseInferior), p.baseInferior];
+    if (p.x + p.w / 2 < 525) {
+      for (const y of amostrasY) {
+        if (p.direita + 18 > limiteRuaEsquerda(y)) {
+          throw new Error(`O edifício ${p.indice} invade a rua ou a área central.`);
+        }
+      }
+    } else {
+      for (const y of amostrasY) {
+        if (p.x - 18 < limiteRuaDireita(y)) {
+          throw new Error(`O edifício ${p.indice} invade a rua ou a área central.`);
+        }
+      }
+    }
+  }
+  for (let i = 0; i < edificios.length; i++) {
+    for (let j = i + 1; j < edificios.length; j++) {
+      const a = edificios[i], b = edificios[j], folga = 8;
+      const sobrepoeX = a.x < b.direita + folga && a.direita + folga > b.x;
+      const sobrepoeY = a.y < b.baseInferior + folga && a.baseInferior + folga > b.y;
+      if (sobrepoeX && sobrepoeY) {
+        throw new Error(`Sobreposição entre os edifícios ${a.indice} e ${b.indice}.`);
+      }
+    }
+  }
+  if ([...PREDIOS_ATIVOS].some(indice => PREDIOS_QUADRANTE_4.has(indice))) {
+    throw new Error("Um edifício foi alocado na praça ou no quadrante inferior.");
+  }
+}
+validarPlanoBaixaDensidade();
 
 
 
@@ -2972,11 +3047,11 @@ function montarCidade() {
 
   resultado += criarInfraestruturaUrbana();
 
-  // 1. CAMADA DE EDIFÍCIOS — TEMPORARIAMENTE VAZIA
-  // Todos os prédios, transformações arquitetônicas e obras
-  // ancoradas nas fachadas foram retirados da renderização.
-  // A geometria original permanece apenas como referência de dados
-  // para a reconstrução futura, sem desenhar qualquer edifício.
+  // 1. EDIFÍCIOS — oito posições verificadas, quatro em cada lateral.
+  // Quadrante superior, praça, ruas e faixa do rio permanecem livres.
+  for (const indice of PREDIOS_ATIVOS) {
+    resultado += criarPredio(PREDIOS[indice]);
+  }
 
   // ==================================================
   // 2. PUBLICIDADE COMERCIAL
