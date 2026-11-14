@@ -1120,11 +1120,12 @@ const OBRAS_PROTOTIPO = [
   { id: "arte10", categoria: "instalacao", tipo: "painelMemoria", x: 505, y: 512, escala: 0.42, paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"] },
 
   // Cinco mosaicos planos, embutidos visualmente no passeio frontal.
-  { id: "arte11", categoria: "pavimento", x: 145, y: 548, cor: "#009ca6" },
-  { id: "arte12", categoria: "pavimento", x: 335, y: 548, cor: "#625bd5" },
-  { id: "arte13", categoria: "pavimento", x: 525, y: 548, cor: "#f50057" },
-  { id: "arte14", categoria: "pavimento", x: 715, y: 548, cor: "#ff8c42" },
-  { id: "arte15", categoria: "pavimento", x: 905, y: 548, cor: "#168fc0" }
+  // Mosaicos afastados das fachadas e posicionados antes do passeio frontal.
+  { id: "arte11", categoria: "pavimento", x: 145, y: 588, cor: "#009ca6" },
+  { id: "arte12", categoria: "pavimento", x: 335, y: 588, cor: "#625bd5" },
+  { id: "arte13", categoria: "pavimento", x: 525, y: 588, cor: "#f50057" },
+  { id: "arte14", categoria: "pavimento", x: 715, y: 588, cor: "#ff8c42" },
+  { id: "arte15", categoria: "pavimento", x: 905, y: 588, cor: "#168fc0" }
 ];
 
 
@@ -1345,13 +1346,14 @@ const TRANSFORMACOES_URBANAS = [
   { id: "urb04", predio: 39, tipo: "praca", grupo: "pracas", posicao: { x: 975, y: 385, w: 125, d: 76 } },
   // A praça central mantém a implantação atual.
   { id: "urb05", predio: 36, tipo: "convivencia", grupo: "pracas" },
-  // Cinco equipamentos transferidos para áreas externas, junto às praças.
-  // As coordenadas representam o ponto de implantação no piso; cada peça tem lote próprio.
-  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos", posicao: { x: -165, y: 10, w: 78, d: 46 } },
-  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos", posicao: { x: 1120, y: 10, w: 78, d: 46 } },
-  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: -165, y: 390, w: 78, d: 46 } },
-  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos", posicao: { x: 1120, y: 390, w: 78, d: 46 } },
-  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: 1120, y: 475, w: 78, d: 46 } }
+  // Equipamentos alinhados verticalmente com as praças periféricas.
+  // Lateral esquerda: um equipamento abaixo de cada praça.
+  // Lateral direita: um abaixo da praça superior e dois abaixo da inferior.
+  { id: "urb06", predio: 2, tipo: "museu", grupo: "equipamentos", posicao: { x: -51.5, y: 105, w: 78, d: 46 } },
+  { id: "urb07", predio: 7, tipo: "biblioteca", grupo: "equipamentos", posicao: { x: 998.5, y: 105, w: 78, d: 46 } },
+  { id: "urb08", predio: 11, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: -51.5, y: 470, w: 78, d: 46 } },
+  { id: "urb09", predio: 15, tipo: "museu", grupo: "equipamentos", posicao: { x: 998.5, y: 470, w: 78, d: 46 } },
+  { id: "urb10", predio: 18, tipo: "centroCultural", grupo: "equipamentos", posicao: { x: 998.5, y: 530, w: 78, d: 46 } }
 ];
 
 const IDS_TRANSFORMACOES_URBANAS = new Set(
@@ -2775,7 +2777,8 @@ function montarIntervencoes() {
 // ======================================================
 
 function criarEspacoPublico() {
-  // Passeio frontal mais discreto, alinhado à largura real da cidade.
+  // Passeio frontal recuado para abrir uma faixa de respiro entre fachadas,
+  // mosaicos e circulação; mobiliário acompanha o deslocamento do passeio.
   const arvore = (x,y,escala=1) => '<g transform="translate(' + x + ' ' + y + ') scale(' + escala + ')">' +
     '<path d="M -3 5 V 31 H 3 V 5" fill="#8b5a36" stroke="#51483f" stroke-width="1.5"/>' +
     '<circle cy="0" r="17" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>' +
@@ -2783,14 +2786,14 @@ function criarEspacoPublico() {
     '<rect x="-14" y="29" width="28" height="7" rx="3" fill="#c77d45" stroke="#684d3b" stroke-width="1.4"/></g>';
 
   return '<g id="espaco-publico-cidade" stroke-linejoin="round">' +
-    '<rect x="12" y="558" width="1030" height="35" rx="6" fill="#eee4d7" stroke="#cbbba8" stroke-width="1.4"/>' +
-    '<path d="M 22 570 H 1032 M 22 582 H 1032" stroke="#cdbfae" stroke-width="1" stroke-dasharray="7 8"/>' +
+    '<rect x="12" y="620" width="1030" height="35" rx="6" fill="#eee4d7" stroke="#cbbba8" stroke-width="1.4"/>' +
+    '<path d="M 22 632 H 1032 M 22 644 H 1032" stroke="#cdbfae" stroke-width="1" stroke-dasharray="7 8"/>' +
     '<g fill="#c77d45" stroke="#805638" stroke-width="1.5">' +
-      '<rect x="105" y="563" width="58" height="22" rx="6"/><rect x="480" y="563" width="66" height="22" rx="6"/><rect x="875" y="563" width="58" height="22" rx="6"/>' +
+      '<rect x="105" y="625" width="58" height="22" rx="6"/><rect x="480" y="625" width="66" height="22" rx="6"/><rect x="875" y="625" width="58" height="22" rx="6"/>' +
     '</g>' +
-    '<g fill="#16845f"><path d="M 111 576 Q 121 557 132 576 Q 143 557 157 576 Z"/><path d="M 487 576 Q 500 556 512 576 Q 526 556 539 576 Z"/><path d="M 881 576 Q 893 557 905 576 Q 918 557 928 576 Z"/></g>' +
-    '<g fill="#ffbd43"><circle cx="125" cy="568" r="3.5"/><circle cx="515" cy="568" r="3.5"/><circle cx="900" cy="568" r="3.5"/></g>' +
-    '<g stroke="#805638" stroke-width="3" stroke-linecap="round"><path d="M 290 570 H 332 M 295 570 V 584 M 327 570 V 584 M 700 570 H 742 M 705 570 V 584 M 737 570 V 584"/></g>' +
+    '<g fill="#16845f"><path d="M 111 638 Q 121 619 132 638 Q 143 619 157 638 Z"/><path d="M 487 638 Q 500 618 512 638 Q 526 618 539 638 Z"/><path d="M 881 638 Q 893 619 905 638 Q 918 619 928 638 Z"/></g>' +
+    '<g fill="#ffbd43"><circle cx="125" cy="630" r="3.5"/><circle cx="515" cy="630" r="3.5"/><circle cx="900" cy="630" r="3.5"/></g>' +
+    '<g stroke="#805638" stroke-width="3" stroke-linecap="round"><path d="M 290 632 H 332 M 295 632 V 646 M 327 632 V 646 M 700 632 H 742 M 705 632 V 646 M 737 632 V 646"/></g>' +
     arvore(38,485,.78) + arvore(1015,485,.78) +
     '</g>';
 }
