@@ -477,6 +477,31 @@ const PREDIOS = [
 
 ];
 
+// NOVO PLANO URBANO — mantém os índices usados pelas funcionalidades.
+(function aplicarNovoPlanoUrbano() {
+  const equipamentos = new Map([
+    [2,{x:275,y:205}],[7,{x:365,y:245}],[11,{x:305,y:315}],
+    [15,{x:825,y:75}],[18,{x:835,y:385}],
+    [22,{x:250,y:285}],[25,{x:390,y:315}],
+    [27,{x:690,y:205}],[33,{x:720,y:315}],[36,{x:545,y:415}]
+  ]);
+  const lotes=[];
+  for(let linha=0;linha<5;linha++){
+    for(let coluna=0;coluna<8;coluna++){
+      lotes.push({x:28+coluna*132,y:22+linha*98});
+    }
+  }
+  let proximoLote=0;
+  PREDIOS.forEach((predio,indice)=>{
+    const posicao=equipamentos.get(indice)||lotes[proximoLote++];
+    predio.x=posicao.x;
+    predio.y=posicao.y;
+    predio.w=Math.min(predio.w,104);
+    predio.d=Math.min(predio.d,52);
+  });
+})();
+
+
 
 // ======================================================
 // 3. PUBLICIDADE COMERCIAL ORIGINAL
@@ -667,25 +692,25 @@ for (const posicao of ESPACOS_PARTICIPATIVOS) {
 const MAPA_INTERVENCOES = [
 
   // FAIXA 1
-  { id: "arte01", x: 0,   y: 88, w: 130, h: 36, faixa: 1, coluna: 1 },
-  { id: "arte02", x: 220, y: 88, w: 130, h: 36, faixa: 1, coluna: 2 },
-  { id: "arte03", x: 440, y: 88, w: 130, h: 36, faixa: 1, coluna: 3 },
-  { id: "arte04", x: 660, y: 88, w: 130, h: 36, faixa: 1, coluna: 4 },
-  { id: "arte05", x: 880, y: 88, w: 130, h: 36, faixa: 1, coluna: 5 },
+  { id: "arte01", x: 35, y: 65, w: 130, h: 36, faixa: 1, coluna: 1 },
+  { id: "arte02", x: 245, y: 65, w: 130, h: 36, faixa: 1, coluna: 2 },
+  { id: "arte03", x: 455, y: 65, w: 130, h: 36, faixa: 1, coluna: 3 },
+  { id: "arte04", x: 665, y: 65, w: 130, h: 36, faixa: 1, coluna: 4 },
+  { id: "arte05", x: 875, y: 65, w: 130, h: 36, faixa: 1, coluna: 5 },
 
   // FAIXA 2
-  { id: "arte06", x: 0,   y: 174, w: 130, h: 36, faixa: 2, coluna: 1 },
-  { id: "arte07", x: 220, y: 174, w: 130, h: 36, faixa: 2, coluna: 2 },
-  { id: "arte08", x: 440, y: 174, w: 130, h: 36, faixa: 2, coluna: 3 },
-  { id: "arte09", x: 660, y: 174, w: 130, h: 36, faixa: 2, coluna: 4 },
-  { id: "arte10", x: 880, y: 174, w: 130, h: 36, faixa: 2, coluna: 5 },
+  { id: "arte06", x: 35, y: 220, w: 130, h: 36, faixa: 2, coluna: 1 },
+  { id: "arte07", x: 245, y: 220, w: 130, h: 36, faixa: 2, coluna: 2 },
+  { id: "arte08", x: 455, y: 220, w: 130, h: 36, faixa: 2, coluna: 3 },
+  { id: "arte09", x: 665, y: 220, w: 130, h: 36, faixa: 2, coluna: 4 },
+  { id: "arte10", x: 875, y: 220, w: 130, h: 36, faixa: 2, coluna: 5 },
 
   // FAIXA 3
-  { id: "arte11", x: 0,   y: 268, w: 130, h: 36, faixa: 3, coluna: 1 },
-  { id: "arte12", x: 220, y: 268, w: 130, h: 36, faixa: 3, coluna: 2 },
-  { id: "arte13", x: 440, y: 268, w: 130, h: 36, faixa: 3, coluna: 3 },
-  { id: "arte14", x: 660, y: 268, w: 130, h: 36, faixa: 3, coluna: 4 },
-  { id: "arte15", x: 880, y: 268, w: 130, h: 36, faixa: 3, coluna: 5 }
+  { id: "arte11", x: 35, y: 375, w: 130, h: 36, faixa: 3, coluna: 1 },
+  { id: "arte12", x: 245, y: 375, w: 130, h: 36, faixa: 3, coluna: 2 },
+  { id: "arte13", x: 455, y: 375, w: 130, h: 36, faixa: 3, coluna: 3 },
+  { id: "arte14", x: 665, y: 375, w: 130, h: 36, faixa: 3, coluna: 4 },
+  { id: "arte15", x: 875, y: 375, w: 130, h: 36, faixa: 3, coluna: 5 }
 
 ];
 
@@ -1471,15 +1496,8 @@ for (const item of TRANSFORMACOES_URBANAS) {
 }
 
 function criarRedeEspacosPublicos() {
-  // Percurso coletivo sob a malha construída; só aparece nos intervalos livres.
-  const pontos = TRANSFORMACOES_URBANAS.map(item => {
-    const b=PREDIOS[item.predio]; return [b.x+b.w/2,b.y+b.d/2];
-  });
-  const path=pontos.map((p,i)=>`${i===0?"M":"L"} ${p[0]} ${p[1]}`).join(" ");
-  return `<g id="rede-pedestre-coletiva" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="${path}" stroke="#b99d78" stroke-width="13" opacity=".48"/>
-    <path d="${path}" stroke="#f2e5cc" stroke-width="8" stroke-dasharray="5 5"/>
-  </g>`;
+  // As conexões viárias são desenhadas pela infraestrutura do novo plano.
+  return "";
 }
 
 function criarEspacoColetivo(predio, transformacao) {
@@ -2736,93 +2754,56 @@ function montarIntervencoes() {
 // OBRAS INTEGRADAS À PROFUNDIDADE ARQUITETÔNICA
 // ======================================================
 
-function criarEspacoPublico() {
-  // Mobiliário e paisagismo nas margens livres da composição.
-  // Coordenadas locais do grupo SVG; não ocupam prédios nem placas.
+
+function criarInfraestruturaUrbana() {
+  let arvoresMargem="";
+  for(let i=0;i<24;i++){
+    const x=24+i*46;
+    const ySuperior=535+Math.sin(i*0.72)*13;
+    const yInferior=650+Math.cos(i*0.61)*12;
+    const escala=i%3===0?1.05:0.82;
+    arvoresMargem+=`
+      <g transform="translate(${x} ${ySuperior}) scale(${escala})">
+        <path d="M -2 2 V 15" stroke="#76513a" stroke-width="4"/>
+        <circle cy="-2" r="10" fill="#477a4b"/><circle cx="-7" cy="2" r="6" fill="#6b9b50"/><circle cx="7" cy="3" r="6" fill="#3d7045"/>
+      </g>
+      <g transform="translate(${x+18} ${yInferior}) scale(${escala})">
+        <path d="M -2 2 V 15" stroke="#76513a" stroke-width="4"/>
+        <circle cy="-2" r="10" fill="#477a4b"/><circle cx="-7" cy="2" r="6" fill="#6b9b50"/><circle cx="7" cy="3" r="6" fill="#3d7045"/>
+      </g>`;
+  }
   return `
-    <g id="espaco-publico-cidade" stroke-linejoin="round">
+    <g id="infraestrutura-urbana-nova" stroke-linejoin="round">
+      <rect x="-10" y="-25" width="1120" height="700" fill="#e8edda"/>
+      <!-- Praça maior -->
+      <path d="M150 245 C185 175 305 155 390 205 C475 250 480 345 405 390 C330 438 205 400 160 335 C140 300 135 270 150 245Z"
+        fill="#477a4b" stroke="#d5e2c4" stroke-width="8"/>
+      <path d="M205 295 Q300 205 410 300 M300 190 Q280 300 365 375"
+        fill="none" stroke="#e6d8b9" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="300" cy="295" r="20" fill="#d7c49a" stroke="#f5eddd" stroke-width="5"/>
+      <circle cx="300" cy="295" r="7" fill="#8a6b55"/>
+      <!-- Duas ruas diagonais -->
+      <path d="M15 455 L525 205 L1085 20" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
+      <path d="M15 455 L525 205 L1085 20" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
+      <path d="M145 15 L525 205 L965 485" fill="none" stroke="#80634f" stroke-width="34" stroke-linecap="round"/>
+      <path d="M145 15 L525 205 L965 485" fill="none" stroke="#b18b6b" stroke-width="25" stroke-linecap="round"/>
+      <!-- Margens verdes e rio passando abaixo da cidade -->
+      <path d="M-20 552 C145 520 255 575 405 555 S670 535 815 565 S1000 590 1120 545"
+        fill="none" stroke="#9dc878" stroke-width="104" stroke-linecap="round"/>
+      <path d="M-20 570 C145 538 255 593 405 573 S670 553 815 583 S1000 608 1120 563"
+        fill="none" stroke="#075b8f" stroke-width="76" stroke-linecap="round"/>
+      <path d="M-20 566 C145 534 255 589 405 569 S670 549 815 579 S1000 604 1120 559"
+        fill="none" stroke="#258fc2" stroke-width="62" stroke-linecap="round"/>
+      <path d="M30 558 Q105 545 170 558 M480 565 Q550 550 615 565 M850 580 Q930 590 1000 580"
+        fill="none" stroke="#9bd8e8" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+      ${arvoresMargem}
+    </g>`;
+}
 
-      <!-- Passeio frontal, abaixo da linha dos edifícios -->
-      <rect x="-12" y="558" width="1080" height="48" rx="8"
-        fill="#eadfd1" stroke="#c8b9a8" stroke-width="2"/>
-      <path d="M -5 574 H 1060 M -5 590 H 1060"
-        stroke="#c9b9a7" stroke-width="1.5" stroke-dasharray="9 9" opacity="0.8"/>
-      <path d="M 185 558 V 606 M 390 558 V 606 M 590 558 V 606 M 790 558 V 606"
-        stroke="#d3c4b3" stroke-width="1.2" opacity="0.75"/>
-      <path d="M -5 601 H 1060" stroke="#bcae9e" stroke-width="2" opacity="0.7"/>
 
-      <!-- Canteiros frontais -->
-      <g>
-        <rect x="72" y="565" width="92" height="29" rx="8" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        <path d="M 82 579 Q 94 559 106 579 Q 119 555 132 579 Q 145 560 155 579 Z" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
-        <circle cx="101" cy="573" r="5" fill="#ffbd43"/><circle cx="133" cy="572" r="5" fill="#f50057"/>
-
-        <rect x="455" y="565" width="104" height="29" rx="8" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        <path d="M 466 579 Q 479 557 492 579 Q 507 555 520 579 Q 536 559 548 579 Z" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
-        <circle cx="488" cy="572" r="5" fill="#ffbd43"/><circle cx="523" cy="571" r="5" fill="#625bd5"/>
-
-        <rect x="850" y="565" width="100" height="29" rx="8" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        <path d="M 860 579 Q 874 557 887 579 Q 902 555 916 579 Q 932 559 940 579 Z" fill="#16845f" stroke="#285b48" stroke-width="1.5"/>
-        <circle cx="883" cy="572" r="5" fill="#f50057"/><circle cx="914" cy="572" r="5" fill="#ffbd43"/>
-      </g>
-
-      <!-- Bancos do passeio -->
-      <g stroke="#51483f" stroke-width="2">
-        <g transform="translate(270 574)">
-          <path d="M 0 0 H 68 M 5 0 V 14 M 63 0 V 14" stroke="#8c5a35" stroke-width="7"/>
-          <path d="M 8 4 V 17 M 60 4 V 17" stroke="#51483f" stroke-width="3"/>
-        </g>
-        <g transform="translate(690 574)">
-          <path d="M 0 0 H 68 M 5 0 V 14 M 63 0 V 14" stroke="#8c5a35" stroke-width="7"/>
-          <path d="M 8 4 V 17 M 60 4 V 17" stroke="#51483f" stroke-width="3"/>
-        </g>
-      </g>
-
-      <!-- Árvores nas laterais externas -->
-      <g>
-        <g transform="translate(-105 250)">
-          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
-          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
-          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
-          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        </g>
-        <g transform="translate(1145 270)">
-          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
-          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
-          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
-          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        </g>
-        <g transform="translate(-105 430) scale(0.82)">
-          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
-          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
-          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
-          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        </g>
-        <g transform="translate(1145 455) scale(0.82)">
-          <path d="M -5 38 L -5 92 H 7 L 7 38 Z" fill="#8b5a36" stroke="#51483f" stroke-width="2"/>
-          <circle cx="0" cy="15" r="30" fill="#16845f" stroke="#285b48" stroke-width="2"/>
-          <circle cx="-19" cy="28" r="17" fill="#1d9a6c"/><circle cx="19" cy="28" r="17" fill="#009ca6"/>
-          <rect x="-23" y="88" width="46" height="13" rx="5" fill="#c77d45" stroke="#684d3b" stroke-width="2"/>
-        </g>
-      </g>
-
-      <!-- Iluminação pública com braços e luminárias -->
-      <g stroke="#51483f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M -35 420 V 505 Q -35 515 -25 515" fill="none"/>
-        <path d="M -35 425 Q -35 408 -20 408 H -5" fill="none"/>
-        <path d="M 1070 420 V 505 Q 1070 515 1060 515" fill="none"/>
-        <path d="M 1070 425 Q 1070 408 1055 408 H 1040" fill="none"/>
-      </g>
-      <g fill="#ffbd43" stroke="#51483f" stroke-width="2">
-        <path d="M -8 402 Q 2 402 4 410 L 0 418 H -18 L -22 410 Q -20 402 -8 402 Z"/>
-        <path d="M 1043 402 Q 1033 402 1031 410 L 1035 418 H 1053 L 1057 410 Q 1055 402 1043 402 Z"/>
-        <circle cx="-25" cy="515" r="5"/><circle cx="1060" cy="515" r="5"/>
-      </g>
-      <g fill="#fff2bd" opacity="0.24">
-        <ellipse cx="-8" cy="420" rx="24" ry="15"/><ellipse cx="1043" cy="420" rx="24" ry="15"/>
-      </g>
-    </g>
-  `;
+function criarEspacoPublico() {
+  // Paisagismo e rio são desenhados pela infraestrutura territorial.
+  return "";
 }
 
 
@@ -2831,7 +2812,7 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 -60 1600 770"
+      viewBox="-20 -60 1140 760"
       role="img"
       aria-label="Cidade Coletiva"
     >
@@ -2846,7 +2827,7 @@ function montarCidade() {
 
       <g
         id="conteudo-cidade"
-        transform="translate(216 0) scale(1.12)"
+        transform="translate(0 0) scale(1)"
       >
 
   `;
@@ -2855,6 +2836,8 @@ function montarCidade() {
   if (cidadeTransformada) {
     resultado += criarRedeEspacosPublicos();
   }
+
+  resultado += criarInfraestruturaUrbana();
 
   // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
   // ==================================================
