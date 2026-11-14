@@ -647,14 +647,24 @@ validarPlanoBaixaDensidade();
 // Edifícios complementares exclusivos da página inicial/comercial.
 // Não são adicionados ao estado transformado.
 const PREDIOS_COMPLEMENTARES_CIDADE_INICIAL = [
-  { x: 0,    y: 135, w: 45, d: 26, h: 65, cor: "#625bd5", janela: 0 },
-  { x: 330,  y: 165, w: 45, d: 26, h: 75, cor: "#ff8c42", janela: 1 },
-  { x: 20,   y: 375, w: 45, d: 26, h: 65, cor: "#009ca6", janela: 2 },
-  { x: 350,  y: 300, w: 45, d: 26, h: 70, cor: "#f50057", janela: 0 },
-  { x: 880,  y: 135, w: 45, d: 26, h: 65, cor: "#168fc0", janela: 1 },
-  { x: 650,  y: 235, w: 45, d: 26, h: 75, cor: "#ff5722", janela: 2 },
+  { x: 0, y: 135, w: 45, d: 26, h: 65, cor: "#625bd5", janela: 0 },
+  { x: 330, y: 165, w: 45, d: 26, h: 75, cor: "#ff8c42", janela: 1 },
+  { x: 20, y: 375, w: 45, d: 26, h: 65, cor: "#009ca6", janela: 2 },
+  { x: 350, y: 300, w: 45, d: 26, h: 70, cor: "#f50057", janela: 0 },
+  { x: 880, y: 135, w: 45, d: 26, h: 65, cor: "#168fc0", janela: 1 },
+  { x: 650, y: 235, w: 45, d: 26, h: 75, cor: "#ff5722", janela: 2 },
   { x: 1078, y: 220, w: 35, d: 24, h: 65, cor: "#625bd5", janela: 0 },
-  { x: 660,  y: 345, w: 45, d: 26, h: 70, cor: "#009ca6", janela: 1 }
+  { x: 660, y: 345, w: 45, d: 26, h: 70, cor: "#009ca6", janela: 1 },
+  // Quatro novos edifícios à esquerda.
+  { x: 55, y: 170, w: 36, d: 20, h: 50, cor: "#ff8c42", janela: 1 },
+  { x: 400, y: 200, w: 36, d: 20, h: 50, cor: "#168fc0", janela: 2 },
+  { x: 75, y: 405, w: 36, d: 20, h: 50, cor: "#625bd5", janela: 0 },
+  { x: 280, y: 275, w: 36, d: 20, h: 50, cor: "#f50057", janela: 1 },
+  // Quatro novos edifícios à direita.
+  { x: 880, y: 330, w: 36, d: 20, h: 50, cor: "#009ca6", janela: 2 },
+  { x: 930, y: 400, w: 36, d: 20, h: 50, cor: "#ff5722", janela: 0 },
+  { x: 1050, y: 400, w: 36, d: 20, h: 50, cor: "#168fc0", janela: 1 },
+  { x: 880, y: 410, w: 36, d: 20, h: 50, cor: "#ff8c42", janela: 2 }
 ];
 
 // Conferência geométrica dos complementos contra os 16 prédios-base.
@@ -692,7 +702,30 @@ function validarPrediosComplementaresCidadeInicial() {
 }
 validarPrediosComplementaresCidadeInicial();
 
+// Duas estruturas industriais exclusivas da cidade inicial.
+// Posicionadas na faixa superior, fora dos corredores viários.
+const INDUSTRIAS_CIDADE_INICIAL = [
+  { x: 250, y: -28, w: 86, h: 52, d: 30, cor: "#9aa9a3", lateral: "#71847d" },
+  { x: 920, y: -28, w: 86, h: 52, d: 30, cor: "#c2a17d", lateral: "#8b735c" }
+];
 
+function criarIndustria(ind) {
+  const { x, y, w, h, d, cor, lateral } = ind;
+  return `
+    <g transform="translate(${x} ${y})">
+      <rect x="-3" y="8" width="${w+d/2+6}" height="${h+18}" fill="#000000" opacity=".12"/>
+      <path d="M 0 12 L ${d/2} 0 L ${w+d/2} 0 L ${w} 12 Z" fill="#d5ded8" stroke="#4e5c56" stroke-width="2"/>
+      <path d="M ${w} 12 L ${w+d/2} 0 L ${w+d/2} ${h} L ${w} ${h+12} Z" fill="${lateral}" stroke="#4e5c56" stroke-width="2"/>
+      <rect x="0" y="12" width="${w}" height="${h}" fill="${cor}" stroke="#4e5c56" stroke-width="2"/>
+      <rect x="10" y="25" width="23" height="19" fill="#168fc0" stroke="#4e5c56" stroke-width="1.5"/>
+      <rect x="41" y="25" width="23" height="19" fill="#168fc0" stroke="#4e5c56" stroke-width="1.5"/>
+      <rect x="12" y="49" width="62" height="15" fill="#66756e" stroke="#4e5c56" stroke-width="1.5"/>
+      <rect x="${w-24}" y="-25" width="13" height="37" fill="#9a6550" stroke="#4e4038" stroke-width="2"/>
+      <rect x="${w-27}" y="-28" width="19" height="5" fill="#6f5145" stroke="#4e4038" stroke-width="1.5"/>
+      <path d="M ${w-17} -29 Q ${w-28} -43 ${w-17} -50 Q ${w-7} -43 ${w-17} -29 Z" fill="#9ba39f" opacity=".55"/>
+    </g>
+  `;
+}
 
 // ======================================================
 // 3. PUBLICIDADE COMERCIAL ORIGINAL
@@ -3117,6 +3150,9 @@ function montarCidade() {
   if (!cidadeTransformada) {
     for (const predio of PREDIOS_COMPLEMENTARES_CIDADE_INICIAL) {
       resultado += criarPredio(predio);
+    }
+    for (const industria of INDUSTRIAS_CIDADE_INICIAL) {
+      resultado += criarIndustria(industria);
     }
   }
 
