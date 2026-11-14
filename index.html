@@ -2961,34 +2961,11 @@ function montarCidade() {
 
   resultado += criarInfraestruturaUrbana();
 
-  // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
-  // ==================================================
-
-  // Desenhar edifícios e suas intervenções na mesma ordem
-  // de profundidade. Construções posteriores podem ocultar
-  // partes de obras posicionadas atrás delas, como na cidade real.
-  for (let i = 0; i < PREDIOS.length; i++) {
-    if (
-      PREDIOS_QUADRANTE_4.has(i) &&
-      !PREDIOS_LIBERADOS_PARA_REFERENCIAS.has(i)
-    ) continue;
-    if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(i)) continue;
-    if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
-      // Substituição real: o edifício original não é desenhado.
-      resultado += renderizarTransformacaoUrbana(i);
-    } else {
-      resultado += criarPredio(PREDIOS[i]);
-      if (cidadeTransformada) {
-        resultado += renderizarObraArquitetonica(i);
-      }
-    }
-  }
-
-  // Complementos de paisagismo e mobiliário apenas na
-  // cidade transformada; preserva prédios e placas.
-  if (cidadeTransformada) {
-    resultado += criarEspacoPublico();
-  }
+  // 1. CAMADA DE EDIFÍCIOS — TEMPORARIAMENTE VAZIA
+  // Todos os prédios, transformações arquitetônicas e obras
+  // ancoradas nas fachadas foram retirados da renderização.
+  // A geometria original permanece apenas como referência de dados
+  // para a reconstrução futura, sem desenhar qualquer edifício.
 
   // ==================================================
   // 2. PUBLICIDADE COMERCIAL
@@ -2997,41 +2974,9 @@ function montarCidade() {
 
   resultado += montarIntervencoes();
 
-  // ==================================================
-  // 3. PLACAS PARTICIPATIVAS
-  // PRIMEIRO PLANO — 20 POSIÇÕES PRESERVADAS
-  // ==================================================
-
-  if (cidadeTransformada) {
-
-    resultado += `
-      <g id="camada-placas-suspensas">
-    `;
-
-    for (const posicao of ESPACOS_PARTICIPATIVOS) {
-      if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(posicao.predio)) continue;
-      if (
-        PREDIOS_QUADRANTE_4.has(posicao.predio) &&
-        !PREDIOS_LIBERADOS_PARA_REFERENCIAS.has(posicao.predio)
-      ) continue;
-
-      const contribuicao = contribuicoes.find(
-        item =>
-          String(item.id) === String(posicao.id)
-      );
-
-      resultado += criarPlacaSuspensa(
-        posicao,
-        contribuicao
-      );
-
-    }
-
-    resultado += `
-      </g>
-    `;
-
-  }
+  // 3. PLACAS PARTICIPATIVAS — TEMPORARIAMENTE OCULTAS
+  // As placas eram ancoradas nos edifícios removidos.
+  // Serão recolocadas somente após a reconstrução da camada de prédios.
 
   // ==================================================
   // 4. FINALIZAR SVG
