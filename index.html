@@ -1365,8 +1365,8 @@ const PREDIOS_TRANSFORMADOS = new Set(
 
 if (TRANSFORMACOES_URBANAS.length !== 10 ||
     IDS_TRANSFORMACOES_URBANAS.size !== 10 ||
-    PREDIOS_TRANSFORMADOS.size !== 10) {
-  throw new Error("As dez transformações urbanas precisam ter IDs e prédios únicos.");
+    PREDIOS_TRANSFORMADOS.size !== 5) {
+  throw new Error("Devem existir dez transformações cadastradas e cinco edifícios substituídos pelas praças.");
 }
 
 for (const item of TRANSFORMACOES_URBANAS) {
