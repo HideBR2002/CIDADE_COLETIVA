@@ -1114,11 +1114,11 @@ const OBRAS_PROTOTIPO = [
   // Cinco estruturas artísticas independentes, implantadas nos intervalos
   // entre os espaços públicos; não ficam sobre telhados nem dentro das praças.
   // Cinco instalações posicionadas nos intervalos dos percursos entre praças.
-  { id: "arte06", categoria: "instalacao", tipo: "aneis", x: 245, y: 285, escala: 0.58, paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte07", categoria: "instalacao", tipo: "pavilhao", x: 765, y: 285, escala: 0.56, paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"] },
-  { id: "arte08", categoria: "instalacao", tipo: "portal", x: 245, y: 455, escala: 0.58, paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"] },
-  { id: "arte09", categoria: "instalacao", tipo: "vertical", x: 765, y: 455, escala: 0.55, paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"] },
-  { id: "arte10", categoria: "instalacao", tipo: "modular", x: 505, y: 390, escala: 0.56, paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"] },
+  { id: "arte06", categoria: "instalacao", tipo: "aneis", x: -12, y: 48, escala: 0.43, paleta: ["#f50057", "#168fc0", "#ffbd43", "#009ca6", "#ffffff"] },
+  { id: "arte07", categoria: "instalacao", tipo: "pavilhao", x: 1037, y: 48, escala: 0.42, paleta: ["#ff8c42", "#009ca6", "#625bd5", "#ffbd43", "#ffffff"] },
+  { id: "arte08", categoria: "instalacao", tipo: "portal", x: -12, y: 421, escala: 0.43, paleta: ["#009ca6", "#ffbd43", "#168fc0", "#f50057", "#ffffff"] },
+  { id: "arte09", categoria: "instalacao", tipo: "vertical", x: 1037, y: 421, escala: 0.42, paleta: ["#625bd5", "#f50057", "#ffbd43", "#009ca6", "#ffffff"] },
+  { id: "arte10", categoria: "instalacao", tipo: "modular", x: 505, y: 512, escala: 0.42, paleta: ["#ff8c42", "#ffbd43", "#625bd5", "#009ca6", "#ffffff"] },
 
   // Cinco mosaicos maiores, assentados no passeio frontal.
   { id: "arte11", categoria: "pavimento", x: 145, y: 548, cor: "#009ca6" },
@@ -2806,23 +2806,25 @@ function montarCidade() {
   // partes de obras posicionadas atrás delas, como na cidade real.
   for (let i = 0; i < PREDIOS.length; i++) {
     if (cidadeTransformada && PREDIOS_TRANSFORMADOS.has(i)) {
-      // Substituição real: o edifício original não é desenhado.
-      resultado += renderizarTransformacaoUrbana(i);
-    } else {
-      resultado += criarPredio(PREDIOS[i]);
-      if (cidadeTransformada) {
-        resultado += renderizarObraArquitetonica(i);
-      }
+      // Os edifícios reservados são substituídos por praças em camada própria.
+      continue;
+    }
+    resultado += criarPredio(PREDIOS[i]);
+    if (cidadeTransformada) {
+      resultado += renderizarObraArquitetonica(i);
     }
   }
 
-  // Rede de caminhos em primeiro plano conecta as quatro praças à central.
   if (cidadeTransformada) {
-    resultado += criarRedeEspacosPublicos();
-  }
+    // Praças em primeiro plano, sem ocultação pela massa construída.
+    resultado += '<g id="camada-pracas-publicas">' +
+      TRANSFORMACOES_URBANAS
+        .filter(item => item.grupo === "pracas")
+        .map(item => renderizarTransformacaoUrbana(item.predio))
+        .join("") +
+      '</g>';
 
-  // Instalações artísticas implantadas nos intervalos dos caminhos.
-  if (cidadeTransformada) {
+    // Esculturas compactas implantadas nas áreas de convivência.
     resultado += renderizarInstalacoesIndependentes();
     resultado += renderizarArteDoPavimento();
     resultado += criarEspacoPublico();
