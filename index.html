@@ -38,10 +38,12 @@ header p {
   font-size: 13px;
 }
 
+
 .cidade-container {
-  width: min(1100px, 98%);
+  width: min(1600px, 98%);
   margin: 10px auto;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 8px;
   background: #fffaf5;
   box-shadow: 0 8px 30px #00000012;
@@ -50,8 +52,10 @@ header p {
 #cidade svg {
   display: block;
   width: 100%;
+  min-width: 1100px;
   height: auto;
 }
+
 
 .controles {
   text-align: center;
@@ -653,6 +657,86 @@ for (const posicao of ESPACOS_PARTICIPATIVOS) {
 
 }
 
+
+// ======================================================
+// 3.2. MAPA DAS 15 INTERVENÇÕES ARTÍSTICAS
+// CINCO COLUNAS × TRÊS FAIXAS
+// POSIÇÕES INDEPENDENTES DE ANÚNCIOS E PLACAS
+// ======================================================
+
+const MAPA_INTERVENCOES = [
+
+  // FAIXA 1
+  { id: "arte01", x: 0,   y: 88, w: 130, h: 36, faixa: 1, coluna: 1 },
+  { id: "arte02", x: 220, y: 88, w: 130, h: 36, faixa: 1, coluna: 2 },
+  { id: "arte03", x: 440, y: 88, w: 130, h: 36, faixa: 1, coluna: 3 },
+  { id: "arte04", x: 660, y: 88, w: 130, h: 36, faixa: 1, coluna: 4 },
+  { id: "arte05", x: 880, y: 88, w: 130, h: 36, faixa: 1, coluna: 5 },
+
+  // FAIXA 2
+  { id: "arte06", x: 0,   y: 174, w: 130, h: 36, faixa: 2, coluna: 1 },
+  { id: "arte07", x: 220, y: 174, w: 130, h: 36, faixa: 2, coluna: 2 },
+  { id: "arte08", x: 440, y: 174, w: 130, h: 36, faixa: 2, coluna: 3 },
+  { id: "arte09", x: 660, y: 174, w: 130, h: 36, faixa: 2, coluna: 4 },
+  { id: "arte10", x: 880, y: 174, w: 130, h: 36, faixa: 2, coluna: 5 },
+
+  // FAIXA 3
+  { id: "arte11", x: 0,   y: 268, w: 130, h: 36, faixa: 3, coluna: 1 },
+  { id: "arte12", x: 220, y: 268, w: 130, h: 36, faixa: 3, coluna: 2 },
+  { id: "arte13", x: 440, y: 268, w: 130, h: 36, faixa: 3, coluna: 3 },
+  { id: "arte14", x: 660, y: 268, w: 130, h: 36, faixa: 3, coluna: 4 },
+  { id: "arte15", x: 880, y: 268, w: 130, h: 36, faixa: 3, coluna: 5 }
+
+];
+
+// ======================================================
+// VALIDAÇÃO DO MAPA ARTÍSTICO
+// ======================================================
+
+if (MAPA_INTERVENCOES.length !== 15) {
+  throw new Error(
+    "O mapa artístico precisa conter exatamente 15 posições."
+  );
+}
+
+const IDS_MAPA_INTERVENCOES = new Set(
+  MAPA_INTERVENCOES.map(item => item.id)
+);
+
+if (IDS_MAPA_INTERVENCOES.size !== 15) {
+  throw new Error(
+    "Existem identificadores duplicados no mapa artístico."
+  );
+}
+
+for (const posicao of MAPA_INTERVENCOES) {
+
+  if (
+    !posicao.id ||
+    !Number.isFinite(posicao.x) ||
+    !Number.isFinite(posicao.y) ||
+    !Number.isFinite(posicao.w) ||
+    !Number.isFinite(posicao.h) ||
+    posicao.w <= 0 ||
+    posicao.h <= 0
+  ) {
+    throw new Error(
+      `Posição artística inválida: ${posicao.id || "sem identificador"}.`
+    );
+  }
+
+  if (
+    posicao.x < 0 ||
+    posicao.y < -60 ||
+    posicao.x + posicao.w > 1100 ||
+    posicao.y + posicao.h > 610
+  ) {
+    throw new Error(
+      `Intervenção fora dos limites da cidade: ${posicao.id}.`
+    );
+  }
+}
+
 // ======================================================
 // 4. MANIFESTAÇÕES CULTURAIS
 // ======================================================
@@ -784,6 +868,333 @@ const MANIFESTACOES = [
 ];
 
 
+// ======================================================
+// 4.1. MANIFESTAÇÕES ARTÍSTICAS — 15 INTERVENÇÕES
+// CONTEÚDO INDEPENDENTE DA PUBLICIDADE COMERCIAL
+// ======================================================
+
+const MANIFESTACOES_ARTISTICAS = [
+
+  {
+    id: "arte01",
+    titulo: "A CIDADE",
+    subtitulo: "É DE TODOS",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "geometrico",
+    simbolo: "★"
+  },
+
+  {
+    id: "arte02",
+    titulo: "CONEXÕES",
+    subtitulo: "CRIAR LAÇOS",
+    fundo: "#625bd5",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "tipografia",
+    simbolo: "♥"
+  },
+
+  {
+    id: "arte03",
+    titulo: "DIVERSIDADE",
+    subtitulo: "NOS FORTALECE",
+    fundo: "#ffb078",
+    texto: "#282828",
+    destaque: "#009ca6",
+    estilo: "abstrato",
+    simbolo: "✳"
+  },
+
+  {
+    id: "arte04",
+    titulo: "MAIS CULTURA",
+    subtitulo: "MAIS CIDADE",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "poesia",
+    simbolo: "✦"
+  },
+
+  {
+    id: "arte05",
+    titulo: "PERTENCER",
+    subtitulo: "É PARTICIPAR",
+    fundo: "#168fc0",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "tipografia",
+    simbolo: "♥"
+  },
+
+  {
+    id: "arte06",
+    titulo: "IMAGINAR",
+    subtitulo: "OUTROS FUTUROS",
+    fundo: "#ff8c42",
+    texto: "#282828",
+    destaque: "#625bd5",
+    estilo: "abstrato",
+    simbolo: "✳"
+  },
+
+  {
+    id: "arte07",
+    titulo: "OCUPAR",
+    subtitulo: "TRANSFORMAR",
+    fundo: "#625bd5",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "geometrico",
+    simbolo: "★"
+  },
+
+  {
+    id: "arte08",
+    titulo: "VOZES",
+    subtitulo: "EM MOVIMENTO",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "poesia",
+    simbolo: "♥"
+  },
+
+  {
+    id: "arte09",
+    titulo: "JUNTOS",
+    subtitulo: "SOMOS CIDADE",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "geometrico",
+    simbolo: "✦"
+  },
+
+  {
+    id: "arte10",
+    titulo: "ARTE VIVA",
+    subtitulo: "NAS RUAS",
+    fundo: "#ffbd43",
+    texto: "#282828",
+    destaque: "#f50057",
+    estilo: "abstrato",
+    simbolo: "✳"
+  },
+
+  {
+    id: "arte11",
+    titulo: "LIBERDADE",
+    subtitulo: "DE EXPRESSÃO",
+    fundo: "#168fc0",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "tipografia",
+    simbolo: "★"
+  },
+
+  {
+    id: "arte12",
+    titulo: "CUIDAR",
+    subtitulo: "DO QUE É NOSSO",
+    fundo: "#009ca6",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "poesia",
+    simbolo: "♥"
+  },
+
+  {
+    id: "arte13",
+    titulo: "ENCONTROS",
+    subtitulo: "GERAM MUDANÇAS",
+    fundo: "#f50057",
+    texto: "#ffffff",
+    destaque: "#ffbd43",
+    estilo: "abstrato",
+    simbolo: "✳"
+  },
+
+  {
+    id: "arte14",
+    titulo: "NOVAS IDEIAS",
+    subtitulo: "NOVOS CAMINHOS",
+    fundo: "#625bd5",
+    texto: "#ffffff",
+    destaque: "#ffb078",
+    estilo: "geometrico",
+    simbolo: "✦"
+  },
+
+  {
+    id: "arte15",
+    titulo: "NOSSA CIDADE",
+    subtitulo: "NOSSA CRIAÇÃO",
+    fundo: "#ff8c42",
+    texto: "#282828",
+    destaque: "#009ca6",
+    estilo: "tipografia",
+    simbolo: "♥"
+  }
+
+];
+
+
+// ======================================================
+// VALIDAÇÃO DAS 15 MANIFESTAÇÕES ARTÍSTICAS
+// ======================================================
+
+if (MANIFESTACOES_ARTISTICAS.length !== 15) {
+  throw new Error(
+    "Devem existir exatamente 15 manifestações artísticas."
+  );
+}
+
+const IDS_MANIFESTACOES_ARTISTICAS = new Set(
+  MANIFESTACOES_ARTISTICAS.map(item => item.id)
+);
+
+if (IDS_MANIFESTACOES_ARTISTICAS.size !== 15) {
+  throw new Error(
+    "Existem IDs duplicados nas manifestações artísticas."
+  );
+}
+
+const ESTILOS_ARTISTICOS_VALIDOS = [
+  "geometrico",
+  "tipografia",
+  "abstrato",
+  "poesia"
+];
+
+for (const arte of MANIFESTACOES_ARTISTICAS) {
+
+  if (!IDS_MAPA_INTERVENCOES.has(arte.id)) {
+    throw new Error(
+      `Não existe posição no mapa para ${arte.id}.`
+    );
+  }
+
+  if (!ESTILOS_ARTISTICOS_VALIDOS.includes(arte.estilo)) {
+    throw new Error(
+      `Estilo artístico inválido em ${arte.id}.`
+    );
+  }
+
+  if (
+    !arte.titulo ||
+    !arte.fundo ||
+    !arte.texto ||
+    !arte.destaque
+  ) {
+    throw new Error(
+      `Dados incompletos na manifestação ${arte.id}.`
+    );
+  }
+
+}
+
+
+ // ======================================================
+ // 4.2. PROTÓTIPOS DE ARTE INTEGRADA À ARQUITETURA
+ // ETAPA A — POSIÇÕES REVISADAS
+ // ======================================================
+
+const OBRAS_PROTOTIPO = [
+
+  {
+    id: "arte01",
+    tipo: "mural",
+    predio: 42,
+    paleta: [
+      "#009ca6",
+      "#168fc0",
+      "#f50057",
+      "#ff8c42",
+      "#ffbd43"
+    ]
+  },
+
+  {
+    id: "arte04",
+    tipo: "escultura",
+    predio: 44,
+    paleta: [
+      "#168fc0",
+      "#009ca6",
+      "#f50057",
+      "#ff8c42",
+      "#ffbd43"
+    ]
+  },
+
+  {
+    id: "arte13",
+    tipo: "galeria",
+    predio: 47,
+    paleta: [
+      "#009ca6",
+      "#625bd5",
+      "#168fc0",
+      "#ff8c42",
+      "#ffbd43"
+    ]
+  }
+
+];
+
+
+// ======================================================
+// VALIDAÇÃO DOS PROTÓTIPOS
+// ======================================================
+
+const IDS_PROTOTIPOS = new Set(
+  OBRAS_PROTOTIPO.map(obra => obra.id)
+);
+
+if (
+  OBRAS_PROTOTIPO.length !== 3 ||
+  IDS_PROTOTIPOS.size !== 3
+) {
+  throw new Error(
+    "Os três protótipos precisam ter identificadores únicos."
+  );
+}
+
+const PREDIOS_RESERVADOS_POR_PLACAS = new Set(
+  ESPACOS_PARTICIPATIVOS.map(
+    posicao => posicao.predio
+  )
+);
+
+for (const obra of OBRAS_PROTOTIPO) {
+
+  if (!PREDIOS[obra.predio]) {
+    throw new Error(
+      `Edifício inexistente para a obra ${obra.id}.`
+    );
+  }
+
+  if (
+    PREDIOS_RESERVADOS_POR_PLACAS.has(obra.predio)
+  ) {
+    throw new Error(
+      `O edifício da obra ${obra.id} está reservado para uma placa participativa.`
+    );
+  }
+
+  if (
+    !["mural", "escultura", "galeria"].includes(obra.tipo)
+  ) {
+    throw new Error(
+      `Tipo de obra inválido: ${obra.tipo}.`
+    );
+  }
+
+}
 
 // ======================================================
 // 5. ESTADO DA CIDADE
@@ -1205,25 +1616,48 @@ function criarLetreiro(ad) {
 }
 
 
-// ======================================================
-// 15. DESENHAR MANIFESTAÇÃO CULTURAL
-// ======================================================
 
+ // ======================================================
+ // 15. DESENHAR MANIFESTAÇÃO CULTURAL
+ // VERSÃO ADAPTADA ÀS ÁREAS DE 130 × 32
+ // ======================================================
 
 function criarManifestacao(ad, cultura) {
 
-  const {x, y, w, h} = ad;
+  const { x, y, w, h } = ad;
 
-  const titulo = cultura.titulo || "";
-  const subtitulo = cultura.subtitulo || "";
-  const fundo = cultura.fundo;
-  const texto = cultura.texto;
-  const destaque = cultura.destaque;
+  const titulo = escaparXML(cultura.titulo || "");
+  const subtitulo = escaparXML(cultura.subtitulo || "");
+
+  const fundo = cultura.fundo || "#009ca6";
+  const texto = cultura.texto || "#ffffff";
+  const destaque = cultura.destaque || "#ffbd43";
+
+  const centroX = x + w / 2;
+
+  // Ajustar tipografia ao comprimento dos textos.
+  const tamanhoTitulo = Math.max(
+    7,
+    Math.min(
+      12,
+      (w - 18) / (titulo.length * 0.62)
+    )
+  );
+
+  const tamanhoSubtitulo = subtitulo
+    ? Math.max(
+        5.5,
+        Math.min(
+          7,
+          (w - 16) / (subtitulo.length * 0.58)
+        )
+      )
+    : 0;
 
   let arte = "";
 
   // ==================================================
-  // 1. FUNDO ARTÍSTICO
+  // 1. FUNDO
   // ==================================================
 
   arte += `
@@ -1236,162 +1670,141 @@ function criarManifestacao(ad, cultura) {
     />
   `;
 
-
   // ==================================================
-  // 2. COMPOSIÇÕES GEOMÉTRICAS
+  // 2. ELEMENTOS GEOMÉTRICOS
   // ==================================================
 
   if (cultura.estilo === "geometrico") {
 
     arte += `
-      <circle
-        cx="${x+w*0.82}"
-        cy="${y+h*0.35}"
-        r="${Math.min(h*0.42,w*0.25)}"
-        fill="${destaque}"
-      />
-
       <path
         d="
-          M ${x} ${y+h*0.75}
-          L ${x+w*0.38} ${y}
-          L ${x+w*0.55} ${y+h}
-          Z
-        "
-        fill="#f50057"
-        opacity="0.8"
-      />
-
-      <path
-        d="
-          M ${x+w*0.58} ${y}
-          L ${x+w} ${y+h*0.2}
-          L ${x+w} ${y+h}
-          L ${x+w*0.78} ${y+h}
+          M ${x} ${y+h}
+          L ${x+30} ${y}
+          L ${x+48} ${y+h}
           Z
         "
         fill="${destaque}"
-        opacity="0.65"
-      />
-
-      <path
-        d="
-          M ${x} ${y+h*0.9}
-          L ${x+w*0.25} ${y+h*0.9}
-          L ${x+w*0.38} ${y+h}
-          L ${x} ${y+h}
-          Z
-        "
-        fill="#282828"
-        opacity="0.2"
-      />
-    `;
-
-  }
-
-
-  // ==================================================
-  // 3. COMPOSIÇÕES ABSTRATAS
-  // ==================================================
-
-  else if (cultura.estilo === "abstrato") {
-
-    arte += `
-      <circle
-        cx="${x+w*0.18}"
-        cy="${y+h*0.35}"
-        r="${h*0.42}"
-        fill="${destaque}"
+        opacity="0.95"
       />
 
       <circle
-        cx="${x+w*0.82}"
-        cy="${y+h*0.75}"
-        r="${h*0.36}"
-        fill="#009ca6"
-      />
-
-      <path
-        d="
-          M ${x+w*0.35} ${y}
-          L ${x+w*0.72} ${y}
-          L ${x+w*0.48} ${y+h}
-          L ${x+w*0.18} ${y+h}
-          Z
-        "
-        fill="#ff5722"
-        opacity="0.85"
-      />
-
-      <path
-        d="
-          M ${x+w*0.55} ${y}
-          Q ${x+w*0.85} ${y+h*0.15}
-            ${x+w*0.7} ${y+h*0.5}
-          T ${x+w} ${y+h}
-        "
-        stroke="${texto}"
-        stroke-width="5"
-        fill="none"
-        opacity="0.65"
-      />
-
-      <path
-        d="
-          M ${x} ${y+h*0.8}
-          L ${x+w*0.4} ${y+h*0.2}
-          L ${x+w*0.55} ${y+h*0.3}
-        "
-        stroke="${texto}"
-        stroke-width="3"
-        fill="none"
-      />
-    `;
-
-  }
-
-
-  // ==================================================
-  // 4. COMPOSIÇÕES TIPOGRÁFICAS
-  // ==================================================
-
-  else if (cultura.estilo === "tipografia") {
-
-    arte += `
-      <path
-        d="
-          M ${x} ${y+h*0.75}
-          L ${x+w*0.28} ${y}
-          L ${x+w*0.48} ${y}
-          L ${x+w*0.22} ${y+h}
-          Z
-        "
-        fill="${destaque}"
-      />
-
-      <circle
-        cx="${x+w*0.86}"
-        cy="${y+h*0.25}"
-        r="${h*0.3}"
+        cx="${x+w-15}"
+        cy="${y+13}"
+        r="15"
         fill="${destaque}"
         opacity="0.9"
       />
 
       <path
         d="
-          M ${x+w*0.7} ${y+h*0.8}
-          L ${x+w} ${y+h*0.8}
+          M ${x+w-42} ${y}
+          L ${x+w} ${y+h}
+          L ${x+w-12} ${y+h}
+          Z
         "
-        stroke="${texto}"
-        stroke-width="4"
+        fill="${texto}"
+        opacity="0.18"
       />
     `;
 
   }
 
+  // ==================================================
+  // 3. ELEMENTOS ABSTRATOS
+  // ==================================================
+
+  else if (cultura.estilo === "abstrato") {
+
+    arte += `
+      <circle
+        cx="${x+17}"
+        cy="${y+15}"
+        r="19"
+        fill="${destaque}"
+      />
+
+      <circle
+        cx="${x+w-15}"
+        cy="${y+17}"
+        r="17"
+        fill="${texto}"
+        opacity="0.24"
+      />
+
+      <path
+        d="
+          M ${x+30} ${y}
+          Q ${x+70} ${y+h*1.5}
+            ${x+105} ${y}
+        "
+        stroke="${destaque}"
+        stroke-width="6"
+        fill="none"
+        opacity="0.75"
+      />
+
+      <path
+        d="
+          M ${x} ${y+h-4}
+          L ${x+45} ${y+4}
+          L ${x+70} ${y+h}
+        "
+        stroke="${texto}"
+        stroke-width="2"
+        fill="none"
+        opacity="0.75"
+      />
+    `;
+
+  }
 
   // ==================================================
-  // 5. COMPOSIÇÕES POÉTICAS
+  // 4. ELEMENTOS TIPOGRÁFICOS
+  // ==================================================
+
+  else if (cultura.estilo === "tipografia") {
+
+    arte += `
+      <rect
+        x="${x}"
+        y="${y}"
+        width="8"
+        height="${h}"
+        fill="${destaque}"
+      />
+
+      <rect
+        x="${x+w-8}"
+        y="${y}"
+        width="8"
+        height="${h}"
+        fill="${destaque}"
+      />
+
+      <path
+        d="
+          M ${x+18} ${y+h-3}
+          L ${x+42} ${y+3}
+          L ${x+54} ${y+3}
+        "
+        stroke="${destaque}"
+        stroke-width="3"
+        fill="none"
+      />
+
+      <circle
+        cx="${x+w-20}"
+        cy="${y+9}"
+        r="5"
+        fill="${destaque}"
+      />
+    `;
+
+  }
+
+  // ==================================================
+  // 5. ELEMENTOS POÉTICOS
   // ==================================================
 
   else if (cultura.estilo === "poesia") {
@@ -1399,74 +1812,79 @@ function criarManifestacao(ad, cultura) {
     arte += `
       <path
         d="
-          M ${x} ${y+h*0.8}
-          Q ${x+w*0.25} ${y-h*0.2}
-            ${x+w*0.5} ${y+h*0.65}
-          T ${x+w} ${y+h*0.2}
+          M ${x} ${y+h-5}
+          Q ${x+30} ${y-5}
+            ${x+62} ${y+h-9}
+          T ${x+w} ${y+7}
         "
         stroke="${destaque}"
-        stroke-width="9"
+        stroke-width="6"
         fill="none"
       />
 
       <circle
-        cx="${x+w*0.85}"
-        cy="${y+h*0.75}"
-        r="${h*0.18}"
-        fill="${destaque}"
+        cx="${x+17}"
+        cy="${y+9}"
+        r="5"
+        fill="${texto}"
       />
 
-      <path
-        d="
-          M ${x+w*0.08} ${y+h*0.15}
-          L ${x+w*0.2} ${y+h*0.15}
-        "
-        stroke="${texto}"
-        stroke-width="3"
+      <circle
+        cx="${x+w-15}"
+        cy="${y+h-7}"
+        r="6"
+        fill="${destaque}"
       />
     `;
 
   }
 
+  // ==================================================
+  // 6. SÍMBOLO DECORATIVO
+  // ==================================================
+
+  if (cultura.simbolo) {
+
+    arte += `
+      <text
+        x="${x+12}"
+        y="${y+11}"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        fill="${destaque}"
+        font-family="Arial, sans-serif"
+        font-size="10"
+        font-weight="bold"
+        opacity="0.9"
+      >${escaparXML(cultura.simbolo)}</text>
+    `;
+
+  }
 
   // ==================================================
-  // 6. TEXTO PRINCIPAL
+  // 7. TÍTULO PRINCIPAL
   // ==================================================
-
-  const tamanhoTitulo =
-    ad.tipo === "painel" ? 17 :
-    ad.tipo === "cartaz" ? 13 : 13;
-
-  const centroX = x + w/2;
-
-  const tituloY =
-    ad.tipo === "cartaz" ? y+h*0.62 :
-    ad.tipo === "letreiro" ? y+h*0.65 :
-    y+h*0.57;
-
-  const larguraTexto = w*0.88;
 
   arte += `
     <text
       x="${centroX}"
-      y="${tituloY}"
+      y="${y+18}"
       text-anchor="middle"
       dominant-baseline="middle"
       fill="${texto}"
       font-family="Arial, sans-serif"
       font-size="${tamanhoTitulo}"
       font-weight="900"
-      textLength="${larguraTexto}"
+      textLength="${w-18}"
       lengthAdjust="spacingAndGlyphs"
       paint-order="stroke"
       stroke="${fundo}"
-      stroke-width="0.5"
+      stroke-width="0.35"
     >${titulo}</text>
   `;
 
-
   // ==================================================
-  // 7. TEXTO SECUNDÁRIO
+  // 8. SUBTÍTULO
   // ==================================================
 
   if (subtitulo) {
@@ -1474,41 +1892,21 @@ function criarManifestacao(ad, cultura) {
     arte += `
       <text
         x="${centroX}"
-        y="${y+h*0.82}"
+        y="${y+27}"
         text-anchor="middle"
+        dominant-baseline="middle"
         fill="${texto}"
         font-family="Arial, sans-serif"
-        font-size="8"
+        font-size="${tamanhoSubtitulo}"
         font-weight="bold"
-        letter-spacing="0.5"
+        letter-spacing="0.2"
       >${subtitulo}</text>
     `;
 
   }
 
-
   // ==================================================
-  // 8. ELEMENTOS ARTÍSTICOS ADICIONAIS
-  // ==================================================
-
-  if (cultura.simbolo) {
-
-    arte += `
-      <text
-        x="${x+w*0.12}"
-        y="${y+h*0.27}"
-        fill="${destaque}"
-        font-size="${Math.min(h*0.32, 22)}"
-        font-weight="bold"
-        text-anchor="middle"
-      >${cultura.simbolo}</text>
-    `;
-
-  }
-
-
-  // ==================================================
-  // 9. FINALIZAÇÃO DO MURAL
+  // 9. RECORTE E FINALIZAÇÃO
   // ==================================================
 
   return `
@@ -1534,8 +1932,553 @@ function criarManifestacao(ad, cultura) {
 
 }
 
+
+// ======================================================
+// 15.2. MURAL ARQUITETÔNICO — OBRA 01
+// COMPOSIÇÃO GEOMÉTRICA DE GRANDE ESCALA
+// ======================================================
+
+function criarMuralArquitetonico(predio, obra) {
+
+  const b = predio;
+
+  const [c1, c2, c3, c4, c5] = obra.paleta;
+
+  const face = pontosEdificio(b).esquerda;
+
+  const pontosFace = face
+    .map(p => `${p[0]},${p[1]}`)
+    .join(" ");
+
+  return `
+    <g
+      id="obra-${obra.id}"
+      transform="translate(${b.x},${b.y})"
+    >
+
+      <defs>
+        <clipPath id="recorte-${obra.id}">
+          <polygon points="${pontosFace}"/>
+        </clipPath>
+      </defs>
+
+      <g clip-path="url(#recorte-${obra.id})">
+
+        <!-- FUNDO DO MURAL -->
+        <polygon
+          points="${pontosFace}"
+          fill="${c1}"
+        />
+
+        <!-- GRANDE COMPOSIÇÃO MAGENTA -->
+        <path
+          d="
+            M -8 ${b.d/2}
+            L ${b.w*0.44} ${b.d*0.92}
+            L ${b.w*0.44} ${b.d+b.h*0.78}
+            L -8 ${b.d/2+b.h*0.78}
+            Z
+          "
+          fill="${c3}"
+        />
+
+        <!-- GRANDE PLANO AZUL -->
+        <path
+          d="
+            M ${b.w*0.44} ${b.d*0.92}
+            L ${b.w/2+8} ${b.d}
+            L ${b.w/2+8} ${b.d+b.h}
+            L ${b.w*0.44} ${b.d+b.h*0.78}
+            Z
+          "
+          fill="${c2}"
+        />
+
+        <!-- DIAGONAL LARANJA -->
+        <path
+          d="
+            M -5 ${b.d/2+b.h*0.20}
+            L ${b.w/2+5} ${b.d+b.h*0.46}
+          "
+          stroke="${c4}"
+          stroke-width="19"
+          fill="none"
+        />
+
+        <!-- FAIXA AMARELA -->
+        <path
+          d="
+            M -5 ${b.d/2+b.h*0.60}
+            L ${b.w/2+5} ${b.d+b.h*0.86}
+          "
+          stroke="${c5}"
+          stroke-width="11"
+          fill="none"
+        />
+
+        <!-- MÓDULOS GEOMÉTRICOS -->
+        <path
+          d="
+            M 5 ${b.d/2+b.h*0.12}
+            L 24 ${b.d/2+b.h*0.22}
+            L 24 ${b.d/2+b.h*0.34}
+            L 5 ${b.d/2+b.h*0.24}
+            Z
+          "
+          fill="${c5}"
+        />
+
+        <path
+          d="
+            M 26 ${b.d/2+b.h*0.36}
+            L 43 ${b.d/2+b.h*0.45}
+            L 43 ${b.d/2+b.h*0.57}
+            L 26 ${b.d/2+b.h*0.48}
+            Z
+          "
+          fill="${c1}"
+        />
+
+        <path
+          d="
+            M 7 ${b.d/2+b.h*0.82}
+            L 26 ${b.d/2+b.h*0.92}
+            L 26 ${b.d/2+b.h*1.02}
+            L 7 ${b.d/2+b.h*0.92}
+            Z
+          "
+          fill="${c2}"
+        />
+
+        <!-- PEQUENOS PLANOS DE CONTRASTE -->
+        <circle
+          cx="${b.w*0.29}"
+          cy="${b.d/2+b.h*0.20}"
+          r="9"
+          fill="${c5}"
+        />
+
+        <circle
+          cx="${b.w*0.34}"
+          cy="${b.d/2+b.h*0.76}"
+          r="7"
+          fill="${c4}"
+        />
+
+      </g>
+
+      <!-- CONTORNO ARQUITETÔNICO -->
+      <polygon
+        points="${pontosFace}"
+        fill="none"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- JANELAS REDESENHADAS EM PRIMEIRO PLANO -->
+      ${criarJanelas(b, "esquerda")}
+
+    </g>
+  `;
+
+}
+
+
+// ======================================================
+// 15.3. ESCULTURA GEOMÉTRICA — OBRA 04
+// VOLUMES INTERLIGADOS SOBRE A COBERTURA
+// ======================================================
+
+function criarEsculturaGeometrica(predio, obra) {
+
+  const b = predio;
+
+  const [c1, c2, c3, c4, c5] = obra.paleta;
+
+  return `
+    <g
+      id="obra-${obra.id}"
+      transform="
+        translate(${b.x + b.w/2},${b.y})
+      "
+    >
+
+      <!-- SOMBRA DA ESCULTURA -->
+      <ellipse
+        cx="0"
+        cy="24"
+        rx="47"
+        ry="15"
+        fill="#000000"
+        opacity="0.23"
+      />
+
+      <!-- BASE DE APOIO -->
+      <polygon
+        points="
+          0,7
+          42,25
+          0,45
+          -42,25
+        "
+        fill="#454545"
+        opacity="0.75"
+      />
+
+      <polygon
+        points="
+          0,2
+          37,20
+          0,38
+          -37,20
+        "
+        fill="${c1}"
+        stroke="#454545"
+        stroke-width="1.2"
+      />
+
+      <!-- ANEL GEOMÉTRICO PRINCIPAL -->
+      <path
+        d="
+          M 0,-91
+          L 43,-68
+          L 0,-45
+          L -43,-68
+          Z
+
+          M 0,-74
+          L 23,-68
+          L 0,-56
+          L -23,-68
+          Z
+        "
+        fill="${c3}"
+        fill-rule="evenodd"
+        stroke="#454545"
+        stroke-width="1.3"
+      />
+
+      <!-- FACE LATERAL DO ANEL -->
+      <path
+        d="
+          M 43,-68
+          L 43,-57
+          L 0,-34
+          L 0,-45
+          Z
+        "
+        fill="${c4}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- SEGUNDO ANEL INTERLIGADO -->
+      <path
+        d="
+          M 25,-70
+          L 59,-51
+          L 25,-32
+          L -9,-51
+          Z
+
+          M 25,-57
+          L 42,-51
+          L 25,-44
+          L 8,-51
+          Z
+        "
+        fill="${c2}"
+        fill-rule="evenodd"
+        stroke="#454545"
+        stroke-width="1.2"
+      />
+
+      <!-- FACE INFERIOR DO SEGUNDO ANEL -->
+      <path
+        d="
+          M 59,-51
+          L 59,-40
+          L 25,-21
+          L 25,-32
+          Z
+        "
+        fill="${c1}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- VOLUME GEOMÉTRICO CENTRAL -->
+      <polygon
+        points="
+          -23,-51
+          0,-63
+          23,-51
+          0,-39
+        "
+        fill="${c5}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <polygon
+        points="
+          -23,-51
+          0,-39
+          0,-12
+          -23,-24
+        "
+        fill="${c4}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <polygon
+        points="
+          0,-39
+          23,-51
+          23,-24
+          0,-12
+        "
+        fill="${c3}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- DETALHE DE LUZ -->
+      <circle
+        cx="-9"
+        cy="-53"
+        r="4"
+        fill="#ffffff"
+        opacity="0.9"
+      />
+
+    </g>
+  `;
+
+}
+
+
+// ======================================================
+// 15.4. GALERIA ABERTA — OBRA 13
+// PAVILHÃO CULTURAL INTEGRADO À CIDADE
+// ======================================================
+
+function criarGaleriaAberta(predio, obra) {
+
+  const b = predio;
+
+  const [c1, c2, c3, c4, c5] = obra.paleta;
+
+  return `
+    <g
+      id="obra-${obra.id}"
+      transform="
+        translate(${b.x + b.w/2},${b.y})
+      "
+    >
+
+      <!-- SOMBRA NO TELHADO -->
+      <ellipse
+        cx="0"
+        cy="23"
+        rx="46"
+        ry="14"
+        fill="#000000"
+        opacity="0.18"
+      />
+
+      <!-- PLATAFORMA -->
+      <polygon
+        points="
+          0,5
+          43,26
+          0,48
+          -43,26
+        "
+        fill="${c1}"
+        stroke="#454545"
+        stroke-width="1.2"
+      />
+
+      <!-- PAREDE TRASEIRA -->
+      <polygon
+        points="
+          -29,-27
+          0,-42
+          0,7
+          -29,22
+        "
+        fill="${c2}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- PAINÉIS EXPOSITIVOS SEM TEXTO -->
+      <polygon
+        points="
+          -25,-22
+          -7,-31
+          -7,-9
+          -25,0
+        "
+        fill="${c5}"
+      />
+
+      <polygon
+        points="
+          -4,-32
+          -4,-10
+          -2,-9
+          -2,-33
+        "
+        fill="${c4}"
+      />
+
+      <circle
+        cx="-16"
+        cy="-13"
+        r="5"
+        fill="${c3}"
+      />
+
+      <!-- PAREDE LATERAL -->
+      <polygon
+        points="
+          0,-42
+          29,-27
+          29,22
+          0,7
+        "
+        fill="${c3}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- ABERTURA FRONTAL -->
+      <polygon
+        points="
+          -29,-27
+          0,-12
+          0,7
+          -29,22
+        "
+        fill="#fffaf5"
+        opacity="0.22"
+      />
+
+      <!-- PILARES -->
+      <path
+        d="
+          M -29,-27 L -29,22
+          M 0,-12 L 0,27
+          M 29,-27 L 29,22
+        "
+        stroke="#454545"
+        stroke-width="3.5"
+        fill="none"
+      />
+
+      <!-- COBERTURA -->
+      <polygon
+        points="
+          0,-61
+          45,-39
+          0,-17
+          -45,-39
+        "
+        fill="${c5}"
+        stroke="#454545"
+        stroke-width="1.5"
+      />
+
+      <!-- FACE FRONTAL DA COBERTURA -->
+      <polygon
+        points="
+          -45,-39
+          0,-17
+          0,-9
+          -45,-31
+        "
+        fill="${c1}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- FACE LATERAL DA COBERTURA -->
+      <polygon
+        points="
+          0,-17
+          45,-39
+          45,-31
+          0,-9
+        "
+        fill="${c2}"
+        stroke="#454545"
+        stroke-width="1"
+      />
+
+      <!-- ELEMENTO ARTÍSTICO NO INTERIOR -->
+      <polygon
+        points="
+          0,-43
+          12,-37
+          0,-31
+          -12,-37
+        "
+        fill="${c4}"
+        stroke="#454545"
+        stroke-width="0.8"
+      />
+
+      <circle
+        cx="0"
+        cy="-37"
+        r="3.5"
+        fill="#ffffff"
+      />
+
+    </g>
+  `;
+
+}
+
+// ======================================================
+// 15.5. RENDERIZAR PROTÓTIPO POR EDIFÍCIO
+// ======================================================
+
+function renderizarObraArquitetonica(indicePredio) {
+
+  if (!cidadeTransformada) return "";
+
+  const obra = OBRAS_PROTOTIPO.find(
+    item => item.predio === indicePredio
+  );
+
+  if (!obra) return "";
+
+  const predio = PREDIOS[indicePredio];
+
+  if (obra.tipo === "mural") {
+    return criarMuralArquitetonico(predio, obra);
+  }
+
+  if (obra.tipo === "escultura") {
+    return criarEsculturaGeometrica(predio, obra);
+  }
+
+  if (obra.tipo === "galeria") {
+    return criarGaleriaAberta(predio, obra);
+  }
+
+  return "";
+}
+
+
+
 // ======================================================
 // 15.1. PLACAS SUSPENSAS PARA PALAVRAS
+// CABOS E CORPOS EM CAMADAS INDEPENDENTES
 // ======================================================
 
 // DISTRIBUIR MENSAGENS EM ATÉ TRÊS LINHAS
@@ -1564,13 +2507,9 @@ function quebrarTextoPlaca(texto, limite = 17) {
       }
 
       while (palavra.length > limite) {
-
         linhas.push(palavra.slice(0, limite));
-
         palavra = palavra.slice(limite);
-
       }
-
     }
 
     const tentativa = linha
@@ -1578,9 +2517,7 @@ function quebrarTextoPlaca(texto, limite = 17) {
       : palavra;
 
     if (tentativa.length <= limite) {
-
       linha = tentativa;
-
     } else {
 
       if (linha) {
@@ -1588,9 +2525,7 @@ function quebrarTextoPlaca(texto, limite = 17) {
       }
 
       linha = palavra;
-
     }
-
   }
 
   if (linha) {
@@ -1598,15 +2533,19 @@ function quebrarTextoPlaca(texto, limite = 17) {
   }
 
   return linhas.slice(0, 3);
-
 }
 
 
 // ======================================================
 // DESENHAR UMA PLACA SUSPENSA
+// modo: "cabo", "corpo" ou "completa"
 // ======================================================
 
-function criarPlacaSuspensa(posicao, contribuicao) {
+function criarPlacaSuspensa(
+  posicao,
+  contribuicao,
+  modo = "completa"
+) {
 
   const predio = PREDIOS[posicao.predio];
 
@@ -1628,7 +2567,6 @@ function criarPlacaSuspensa(posicao, contribuicao) {
   const x = centroX - largura / 2;
   const y = topoY;
 
-  // Ponto de fixação no topo do prédio.
   const ancoraY = predio.y + predio.d / 2;
 
   const ocupado = Boolean(contribuicao);
@@ -1690,69 +2628,87 @@ function criarPlacaSuspensa(posicao, contribuicao) {
 
   });
 
-  return `
-    <g id="placa-${posicao.id}">
-
-      <!-- CABO DE SUSTENTAÇÃO -->
-      <line
-        x1="${centroX}"
-        y1="${y + altura}"
-        x2="${centroX}"
-        y2="${ancoraY}"
-        stroke="#454545"
-        stroke-width="1.5"
-      />
-
-      <!-- SOMBRA -->
-      <rect
-        x="${x + 2}"
-        y="${y + 2}"
-        width="${largura}"
-        height="${altura}"
-        rx="4"
-        fill="#000000"
-        opacity="0.14"
-      />
-
-      <!-- CORPO DA PLACA -->
-      <rect
-        x="${x}"
-        y="${y}"
-        width="${largura}"
-        height="${altura}"
-        rx="4"
-        fill="${fundo}"
-        stroke="${ocupado ? "#292929" : "#009ca6"}"
-        stroke-width="1.3"
-      />
-
-      <!-- TEXTO -->
-      ${textoSVG}
-
-      <!-- INDICADOR VISUAL -->
-      <circle
-        cx="${x + 6}"
-        cy="${y + 6}"
-        r="2"
-        fill="${corTexto}"
-      />
-
-    </g>
+  const caboSVG = `
+    <line
+      x1="${centroX}"
+      y1="${y + altura}"
+      x2="${centroX}"
+      y2="${ancoraY}"
+      stroke="#454545"
+      stroke-width="1.5"
+    />
   `;
 
+  const corpoSVG = `
+    <!-- SOMBRA -->
+    <rect
+      x="${x + 2}"
+      y="${y + 2}"
+      width="${largura}"
+      height="${altura}"
+      rx="4"
+      fill="#000000"
+      opacity="0.14"
+    />
+
+    <!-- CORPO DA PLACA -->
+    <rect
+      x="${x}"
+      y="${y}"
+      width="${largura}"
+      height="${altura}"
+      rx="4"
+      fill="${fundo}"
+      stroke="${ocupado ? "#292929" : "#009ca6"}"
+      stroke-width="1.3"
+    />
+
+    <!-- TEXTO -->
+    ${textoSVG}
+
+    <!-- INDICADOR VISUAL -->
+    <circle
+      cx="${x + 6}"
+      cy="${y + 6}"
+      r="2"
+      fill="${corTexto}"
+    />
+  `;
+
+  const desenharCabo =
+    modo === "completa" || modo === "cabo";
+
+  const desenharCorpo =
+    modo === "completa" || modo === "corpo";
+
+  if (!desenharCabo && !desenharCorpo) {
+    throw new Error(`Modo inválido para placa: ${modo}`);
+  }
+
+  const identificador =
+    modo === "cabo"
+      ? `cabo-placa-${posicao.id}`
+      : `placa-${posicao.id}`;
+
+  return `
+    <g id="${identificador}">
+      ${desenharCabo ? caboSVG : ""}
+      ${desenharCorpo ? corpoSVG : ""}
+    </g>
+  `;
 }
+
 
 // ======================================================
 // 16. CAMADAS DA CIDADE
+// PUBLICIDADE COMERCIAL OU OBRAS ARQUITETÔNICAS
 // ======================================================
 
 function montarIntervencoes() {
 
   let html = `<g id="camada-intervencoes">`;
 
-  // ==================================================
   // CIDADE ORIGINAL: PUBLICIDADE COMERCIAL
-  // ==================================================
 
   if (!cidadeTransformada) {
 
@@ -1774,25 +2730,17 @@ function montarIntervencoes() {
 
     }
 
-  } else {
-
-    // ==================================================
-    // CIDADE TRANSFORMADA: MANIFESTAÇÕES CULTURAIS
-    // ==================================================
-
-    for (const anuncio of ANUNCIOS) {
-
-      const cultura = MANIFESTACOES.find(
-        item => item.id === anuncio.id
-      );
-
-      if (!cultura) continue;
-
-      html += criarManifestacao(anuncio, cultura);
-
-    }
-
   }
+
+  /*
+    CIDADE TRANSFORMADA:
+
+    Os três protótipos arquitetônicos são desenhados
+    individualmente dentro do loop de edifícios,
+    pela função renderizarObraArquitetonica().
+
+    As outras 12 obras serão integradas na Etapa B.
+  */
 
   html += `</g>`;
 
@@ -1800,8 +2748,10 @@ function montarIntervencoes() {
 
 }
 
+
 // ======================================================
 // 17. MONTAR A CIDADE
+// OBRAS INTEGRADAS À PROFUNDIDADE ARQUITETÔNICA
 // ======================================================
 
 function montarCidade() {
@@ -1809,7 +2759,7 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 -60 1100 670"
+      viewBox="0 -60 1600 720"
       role="img"
       aria-label="Cidade Coletiva"
     >
@@ -1817,53 +2767,83 @@ function montarCidade() {
       <rect
         x="0"
         y="-60"
-        width="1100"
-        height="670"
+        width="1600"
+        height="720"
         fill="#fffaf5"
       />
 
+      <g
+        id="conteudo-cidade"
+        transform="translate(216 0) scale(1.12)"
+      >
+
   `;
 
-  // DESENHAR OS PRÉDIOS
-  // PRESERVAR A ORDEM ORIGINAL DE PROFUNDIDADE
+  // ==================================================
+  // 1. EDIFÍCIOS E OBRAS ARQUITETÔNICAS
+  // ==================================================
 
   for (let i = 0; i < PREDIOS.length; i++) {
 
-    const predio = PREDIOS[i];
+    // Desenhar o edifício original.
+    resultado += criarPredio(PREDIOS[i]);
 
-    resultado += criarPredio(predio);
-
-    // INSERIR PLACAS NA CIDADE TRANSFORMADA
-
+    // Inserir a obra vinculada ao edifício.
+    // A posição no loop respeita a profundidade.
     if (cidadeTransformada) {
 
-      for (const posicao of ESPACOS_PARTICIPATIVOS) {
-
-        if (posicao.predio !== i) {
-          continue;
-        }
-
-        const contribuicao = contribuicoes.find(
-          item =>
-            String(item.id) === String(posicao.id)
-        );
-
-        resultado += criarPlacaSuspensa(
-          posicao,
-          contribuicao
-        );
-
-      }
+      resultado += renderizarObraArquitetonica(i);
 
     }
 
   }
 
-  // INSERIR CAMADAS DE INTERVENÇÃO
+  // ==================================================
+  // 2. PUBLICIDADE COMERCIAL
+  // SOMENTE NA CIDADE ORIGINAL
+  // ==================================================
 
   resultado += montarIntervencoes();
 
-  resultado += "</svg>";
+  // ==================================================
+  // 3. PLACAS PARTICIPATIVAS
+  // PRIMEIRO PLANO — 20 POSIÇÕES PRESERVADAS
+  // ==================================================
+
+  if (cidadeTransformada) {
+
+    resultado += `
+      <g id="camada-placas-suspensas">
+    `;
+
+    for (const posicao of ESPACOS_PARTICIPATIVOS) {
+
+      const contribuicao = contribuicoes.find(
+        item =>
+          String(item.id) === String(posicao.id)
+      );
+
+      resultado += criarPlacaSuspensa(
+        posicao,
+        contribuicao
+      );
+
+    }
+
+    resultado += `
+      </g>
+    `;
+
+  }
+
+  // ==================================================
+  // 4. FINALIZAR SVG
+  // ==================================================
+
+  resultado += `
+      </g>
+    </svg>
+  `;
 
   document.getElementById("cidade").innerHTML =
     resultado;
@@ -1873,8 +2853,6 @@ function montarCidade() {
 // ======================================================
 // 18. TRANSFORMAR A CIDADE
 // ======================================================
-
-
 
 function transformarCidade() {
 
