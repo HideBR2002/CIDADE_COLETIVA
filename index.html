@@ -1817,9 +1817,6 @@ for (const item of TRANSFORMACOES_URBANAS) {
   if (!PREDIOS[item.predio]) {
     throw new Error(`Prédio inválido na transformação ${item.id}.`);
   }
-  if (ESPACOS_PARTICIPATIVOS.some(p => p.predio === item.predio)) {
-    throw new Error(`Transformação ${item.id} conflita com uma placa participativa.`);
-  }
   if (OBRAS_PROTOTIPO.some(o => o.predio === item.predio)) {
     throw new Error(`Transformação ${item.id} conflita com uma obra artística.`);
   }
@@ -2946,7 +2943,7 @@ function renderizarObraArquitetonica(indicePredio) {
 
 // ======================================================
 // 15.1. PLACAS SUSPENSAS PARA PALAVRAS
-// CABOS E CORPOS EM CAMADAS INDEPENDENTES
+// POSICIONAMENTO INDEPENDENTE EM FAIXAS RESERVADAS
 // ======================================================
 
 // DISTRIBUIR MENSAGENS EM ATÉ TRÊS LINHAS
@@ -3109,8 +3106,9 @@ function montarIntervencoes() {
   /*
     CIDADE TRANSFORMADA:
 
-    As 15 intervenções arquitetônicas são desenhadas
-    na camada própria pela função renderizarObraArquitetonica().
+    O cadastro OBRAS_PROTOTIPO e a função
+    renderizarObraArquitetonica() estão definidos separadamente.
+    A montagem atual não invoca esse renderizador neste ponto.
   */
 
   html += `</g>`;
@@ -4086,7 +4084,7 @@ function iniciarRealtime() {
 
         const id = String(registro.painel_id);
 
-        // Validar se pertence aos 30 espaços.
+        // Validar se o ID pertence a uma das 20 posições participativas.
 
         if (!IDS_ESPACOS_PARTICIPATIVOS.has(id)) {
           return;
