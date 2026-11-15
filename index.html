@@ -730,8 +730,9 @@ function criarIndustria(ind) {
 // EQUIPAMENTOS CULTURAIS EXCLUSIVOS DA CIDADE TRANSFORMADA.
 // Substituem visualmente as duas fábricas da composição inicial.
 const MUSEUS_CIDADE_TRANSFORMADA = [
-  { id: "museu-masp-inspirado", tipo: "masp", x: 0, y: -55, w: 100, h: 68 },
-  { id: "museu-amanha-inspirado", tipo: "amanha", x: 1010, y: -55, w: 100, h: 68 }
+  // Ambos permanecem na faixa superior, agora deslocados para mais perto do centro.
+  { id: "museu-masp-inspirado", tipo: "masp", x: 300, y: -55, w: 100, h: 68 },
+  { id: "museu-amanha-inspirado", tipo: "amanha", x: 720, y: -55, w: 100, h: 68 }
 ];
 
 function criarMuseu(museu) {
@@ -771,7 +772,12 @@ const OBRAS_URBANAS_TRANSFORMADAS = [
   { id: "arte-urbana-03", x: 92, y: 425, tipo: "totem", cor: "#ff8c42", apoio: "#168fc0" },
   { id: "arte-urbana-04", x: 875, y: 112, tipo: "leque", cor: "#f50057", apoio: "#ffbd43" },
   { id: "arte-urbana-05", x: 875, y: 315, tipo: "arcos", cor: "#168fc0", apoio: "#625bd5" },
-  { id: "arte-urbana-06", x: 880, y: 430, tipo: "sol", cor: "#ff8c42", apoio: "#009ca6" }
+  { id: "arte-urbana-06", x: 880, y: 430, tipo: "sol", cor: "#ff8c42", apoio: "#009ca6" },
+  // Duas obras na faixa superior e uma instalação em cada lateral.
+  { id: "arte-urbana-07", x: 445, y: 62, tipo: "leque", cor: "#009ca6", apoio: "#ffbd43" },
+  { id: "arte-urbana-08", x: 640, y: 62, tipo: "espiral", cor: "#f50057", apoio: "#168fc0" },
+  { id: "arte-urbana-09", x: 350, y: 230, tipo: "portal", cor: "#ff8c42", apoio: "#625bd5" },
+  { id: "arte-urbana-10", x: 875, y: 220, tipo: "totem", cor: "#009ca6", apoio: "#ffbd43" }
 ];
 
 function criarObraUrbanaLivre(obra) {
