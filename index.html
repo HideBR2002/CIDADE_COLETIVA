@@ -959,6 +959,129 @@ const ESPACOS_PARTICIPATIVOS = [
 
 ];
 
+// ======================================================
+// DISTRIBUIÇÃO AUTOMÁTICA DAS 20 PLACAS
+// EVITA COLISÕES SEM ALTERAR OS EDIFÍCIOS DE ANCORAGEM
+// ======================================================
+
+function distribuirPlacasSemSobreposicao() {
+  const largura = 118;
+  const altura = 40;
+  const distanciaEntrePlacas = 6;
+  const margemColisao = 5;
+  const margemArea = 8;
+  const ocupadas = [];
+
+  const grupos = new Map();
+
+  for (const posicao of ESPACOS_PARTICIPATIVOS) {
+    if (!grupos.has(posicao.predio)) {
+      grupos.set(posicao.predio, []);
+    }
+    grupos.get(posicao.predio).push(posicao);
+  }
+
+  const candidatos = [];
+  for (let dy = -170; dy <= 370; dy += 45) {
+    for (let dx = -360; dx <= 360; dx += 60) {
+      candidatos.push({ dx, dy, custo: Math.abs(dx) + Math.abs(dy) * 0.8 });
+    }
+  }
+  candidatos.sort((a, b) => a.custo - b.custo);
+
+  for (const [indicePredio, placas] of grupos) {
+    const predio = PREDIOS[indicePredio];
+
+    if (!predio || placas.length !== 2) {
+      throw new Error(
+        `A ancoragem do edifício ${indicePredio} precisa ter exatamente duas placas.`
+      );
+    }
+
+    const centroBase = predio.x + predio.w / 2;
+    const topoBase = predio.y - 49 - 46;
+    let posicaoEscolhida = null;
+
+    for (const candidato of candidatos) {
+      const centroX = centroBase + candidato.dx;
+      const topoY = topoBase + candidato.dy;
+
+      const retangulos = [
+        {
+          esquerda: centroX - largura / 2,
+          topo: topoY,
+          direita: centroX + largura / 2,
+          base: topoY + altura
+        },
+        {
+          esquerda: centroX - largura / 2,
+          topo: topoY + altura + distanciaEntrePlacas,
+          direita: centroX + largura / 2,
+          base: topoY + altura * 2 + distanciaEntrePlacas
+        }
+      ];
+
+      const dentroDaArea = retangulos.every(retangulo =>
+        retangulo.esquerda >= margemArea &&
+        retangulo.direita <= 1100 - margemArea &&
+        retangulo.topo >= -50 &&
+        retangulo.base <= 620
+      );
+
+      if (!dentroDaArea) continue;
+
+      const colide = retangulos.some(retangulo => {
+        const teste = {
+          esquerda: retangulo.esquerda - margemColisao,
+          topo: retangulo.topo - margemColisao,
+          direita: retangulo.direita + margemColisao,
+          base: retangulo.base + margemColisao
+        };
+
+        return ocupadas.some(outra =>
+          teste.esquerda < outra.direita &&
+          teste.direita > outra.esquerda &&
+          teste.topo < outra.base &&
+          teste.base > outra.topo
+        );
+      });
+
+      if (!colide) {
+        posicaoEscolhida = { candidato, retangulos };
+        break;
+      }
+    }
+
+    if (!posicaoEscolhida) {
+      throw new Error(
+        `Não foi possível distribuir as placas do edifício ${indicePredio} sem sobreposição.`
+      );
+    }
+
+    const { dx, dy } = posicaoEscolhida.candidato;
+
+    // Mantém a ordem original: placa superior e depois placa inferior.
+    placas[0].dx = dx;
+    placas[0].dy = dy - 46;
+    placas[1].dx = dx;
+    placas[1].dy = dy;
+
+    for (const retangulo of posicaoEscolhida.retangulos) {
+      ocupadas.push({
+        esquerda: retangulo.esquerda - margemColisao,
+        topo: retangulo.topo - margemColisao,
+        direita: retangulo.direita + margemColisao,
+        base: retangulo.base + margemColisao
+      });
+    }
+  }
+
+  return ocupadas;
+}
+
+const RETANGULOS_PLACAS_DISTRIBUIDAS =
+  distribuirPlacasSemSobreposicao();
+
 // VERIFICAÇÃO ESTRUTURAL
 
 if (ESPACOS_PARTICIPATIVOS.length !== 20) {
@@ -3403,6 +3526,12 @@ function montarCidade() {
       <g id="camada-placas-suspensas">
     `;
 
+    // Primeiro desenhar todos os cabos; depois os corpos das placas.
+    // Assim, cabos diagonais nunca atravessam o texto de outra placa.
+    for (const posicao of ESPACOS_PARTICIPATIVOS) {
+      resultado += criarPlacaSuspensa(posicao, null, "cabo");
+    }
+
     for (const posicao of ESPACOS_PARTICIPATIVOS) {
       const contribuicao = contribuicoes.find(
         item => String(item.id) === String(posicao.id)
@@ -3410,7 +3539,8 @@ function montarCidade() {
 
       resultado += criarPlacaSuspensa(
         posicao,
-        contribuicao
+        contribuicao,
+        "corpo"
       );
     }
 
