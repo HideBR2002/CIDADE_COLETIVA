@@ -2034,8 +2034,9 @@ function criarEspacoColetivo(predio, transformacao) {
 // MARCOS CULTURAIS NO TOPO DA CIDADE TRANSFORMADA.
 // Os dois museus ficam na faixa superior livre, sem ocupar ou deslocar lotes.
 const MUSEUS_CIDADE_TRANSFORMADA = [
-  { id: "museu-masp-superior", tipo: "masp", x: 300, y: -53 },
-  { id: "museu-amanha-superior", tipo: "amanha", x: 730, y: -53 }
+  // Reunidos na faixa superior central, alinhados com a rotatória.
+  { id: "museu-masp-superior", tipo: "masp", x: 380, y: -53 },
+  { id: "museu-amanha-superior", tipo: "amanha", x: 540, y: -53 }
 ];
 
 function criarMuseuSuperior(museu) {
@@ -3180,7 +3181,11 @@ function criarPlacaSuspensa(
   const x = centroX - largura / 2;
   const y = topoY;
 
-  const ancoraY = predio.y + predio.d / 2;
+  // Sem a fachada de apoio na cidade transformada, o cabo desce
+  // até a base do lote, preservando a leitura de sustentação da placa.
+  const ancoraY = cidadeTransformada
+    ? predio.y + predio.h + predio.d
+    : predio.y + predio.d / 2;
 
   const ocupado = Boolean(contribuicao);
 
@@ -3484,7 +3489,19 @@ function montarCidade() {
 
   // 1. EDIFÍCIOS E EQUIPAMENTOS — dezesseis lotes, oito em cada lateral.
   // Quadrante superior, praça, ruas e faixa do rio permanecem livres.
+  // Na cidade transformada, os dez edifícios que servem de referência
+  // às placas deixam de ser desenhados para liberar o espaço visual sob elas.
+  // Os edifícios continuam intactos na cidade comercial e suas coordenadas
+  // permanecem disponíveis para ancorar as placas e seus cabos.
+  const PREDIOS_OCULTOS_POR_PLACAS = cidadeTransformada
+    ? new Set(ESPACOS_PARTICIPATIVOS.map(posicao => posicao.predio))
+    : new Set();
+
   for (const indice of PREDIOS_ATIVOS) {
+    if (PREDIOS_OCULTOS_POR_PLACAS.has(indice)) {
+      continue;
+    }
+
     const equipamento = cidadeTransformada
       ? EQUIPAMENTOS_COLETIVOS.find(item => item.predio === indice)
       : null;
