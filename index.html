@@ -926,198 +926,65 @@ ANUNCIOS.forEach((anuncio, indice) => {
 // PALAVRAS ENVIADAS PELO PÚBLICO
 // ======================================================
 
-const ESPACOS_PARTICIPATIVOS = [
-
-  // DEZ edifícios ativos sem transformação urbana.
-  // Cada edifício recebe duas placas empilhadas verticalmente.
-  // A placa superior é desenhada primeiro para que o cabo fique
-  // atrás da placa inferior, sem atravessar o texto.
-
-  // LATERAL ESQUERDA — edifícios 0, 1, 3, 4 e 8
-  { id: "ad01", predio: 0,  dx: 0, dy: -46 },
-  { id: "ad02", predio: 0,  dx: 0, dy: 0 },
-  { id: "ad03", predio: 1,  dx: 0, dy: -46 },
-  { id: "ad04", predio: 1,  dx: 0, dy: 0 },
-  { id: "ad12", predio: 3,  dx: 0, dy: -46 },
-  { id: "ad13", predio: 3,  dx: 0, dy: 0 },
-  { id: "ad14", predio: 4,  dx: 0, dy: -46 },
-  { id: "ad15", predio: 4,  dx: 0, dy: 0 },
-  { id: "ad16", predio: 8,  dx: 0, dy: -46 },
-  { id: "ad17", predio: 8,  dx: 0, dy: 0 },
-
-  // LATERAL DIREITA — edifícios 10, 12, 13, 16 e 19
-  { id: "ad18", predio: 10, dx: 0, dy: -46 },
-  { id: "ad19", predio: 10, dx: 0, dy: 0 },
-  { id: "ad20", predio: 12, dx: 0, dy: -46 },
-  { id: "ad21", predio: 12, dx: 0, dy: 0 },
-  { id: "ad22", predio: 13, dx: 0, dy: -46 },
-  { id: "ad23", predio: 13, dx: 0, dy: 0 },
-  { id: "ad24", predio: 16, dx: 0, dy: -46 },
-  { id: "ad25", predio: 16, dx: 0, dy: 0 },
-  { id: "ad26", predio: 19, dx: 0, dy: -46 },
-  { id: "ad27", predio: 19, dx: 0, dy: 0 }
-
+const IDS_PLACAS_PARTICIPATIVAS = [
+  "ad01", "ad02", "ad03", "ad04",
+  "ad12", "ad13", "ad14", "ad15",
+  "ad16", "ad17", "ad18", "ad19",
+  "ad20", "ad21", "ad22", "ad23",
+  "ad24", "ad25", "ad26", "ad27"
 ];
 
-// ======================================================
-// DISTRIBUIÇÃO AUTOMÁTICA DAS 20 PLACAS
-// EVITA COLISÕES SEM ALTERAR OS EDIFÍCIOS DE ANCORAGEM
-// ======================================================
+// Cada mensagem ocupa uma posição independente em uma das duas faixas
+// laterais reservadas, fora da área ocupada pelos elementos urbanos.
+const ESPACOS_PARTICIPATIVOS = IDS_PLACAS_PARTICIPATIVAS.map(
+  (id, indice) => ({
+    id,
+    x: indice < 10 ? -160 : 1135,
+    y: -30 + (indice % 10) * 48
+  })
+);
 
-function distribuirPlacasSemSobreposicao() {
-  const largura = 118;
-  const altura = 40;
-  const distanciaEntrePlacas = 6;
-  const margemColisao = 7;
-  const margemArea = 8;
-  const ocupadas = [];
-
-  const grupos = new Map();
-  for (const posicao of ESPACOS_PARTICIPATIVOS) {
-    if (!grupos.has(posicao.predio)) grupos.set(posicao.predio, []);
-    grupos.get(posicao.predio).push(posicao);
-  }
-
-  // Caixas de segurança conservadoras para TODOS os edifícios visíveis.
-  // A projeção isométrica fica contida nesta área retangular ampliada.
-  const edificios = [...PREDIOS_ATIVOS].map(indice => {
-    const p = PREDIOS[indice];
-    return {
-      esquerda: p.x - 9,
-      topo: p.y - 9,
-      direita: p.x + p.w + 9,
-      base: p.y + p.d + p.h + 9
-    };
-  });
-
-  const candidatos = [];
-  for (let dy = -260; dy <= 430; dy += 25) {
-    for (let dx = -500; dx <= 500; dx += 30) {
-      candidatos.push({
-        dx, dy,
-        custo: Math.abs(dx) + Math.abs(dy) * 0.8
-      });
-    }
-  }
-  candidatos.sort((a, b) => a.custo - b.custo);
-
-  for (const [indicePredio, placas] of grupos) {
-    const predio = PREDIOS[indicePredio];
-    if (!predio || placas.length !== 2) {
-      throw new Error(`A ancoragem do edifício ${indicePredio} precisa ter exatamente duas placas.`);
-    }
-
-    const centroBase = predio.x + predio.w / 2;
-    const topoBase = predio.y - 49 - 46;
-    const ladoEsquerdo = centroBase < 525;
-    let posicaoEscolhida = null;
-
-    for (const candidato of candidatos) {
-      const centroX = centroBase + candidato.dx;
-      const topoY = topoBase + candidato.dy;
-      const retangulos = [
-        {
-          esquerda: centroX - largura / 2,
-          topo: topoY,
-          direita: centroX + largura / 2,
-          base: topoY + altura
-        },
-        {
-          esquerda: centroX - largura / 2,
-          topo: topoY + altura + distanciaEntrePlacas,
-          direita: centroX + largura / 2,
-          base: topoY + altura * 2 + distanciaEntrePlacas
-        }
-      ];
-
-      const dentroDaArea = retangulos.every(r =>
-        r.esquerda >= margemArea &&
-        r.direita <= 1100 - margemArea &&
-        r.topo >= -50 &&
-        r.base <= 500 &&
-        (ladoEsquerdo ? r.direita <= 525 : r.esquerda >= 525)
-      );
-      if (!dentroDaArea) continue;
-
-      const colideEdificio = retangulos.some(r =>
-        edificios.some(e =>
-          r.esquerda - margemColisao < e.direita &&
-          r.direita + margemColisao > e.esquerda &&
-          r.topo - margemColisao < e.base &&
-          r.base + margemColisao > e.topo
-        )
-      );
-      if (colideEdificio) continue;
-
-      const colidePlaca = retangulos.some(r =>
-        ocupadas.some(o =>
-          r.esquerda - margemColisao < o.direita &&
-          r.direita + margemColisao > o.esquerda &&
-          r.topo - margemColisao < o.base &&
-          r.base + margemColisao > o.topo
-        )
-      );
-      if (colidePlaca) continue;
-
-      posicaoEscolhida = { candidato, retangulos };
-      break;
-    }
-
-    if (!posicaoEscolhida) {
-      throw new Error(`Não foi possível distribuir as placas do edifício ${indicePredio} sem sobrepor edifícios ou outras placas.`);
-    }
-
-    const { dx, dy } = posicaoEscolhida.candidato;
-    placas[0].dx = dx;
-    placas[0].dy = dy - 46;
-    placas[1].dx = dx;
-    placas[1].dy = dy;
-
-    for (const r of posicaoEscolhida.retangulos) {
-      ocupadas.push({
-        esquerda: r.esquerda - margemColisao,
-        topo: r.topo - margemColisao,
-        direita: r.direita + margemColisao,
-        base: r.base + margemColisao
-      });
-    }
-  }
-
-  return ocupadas;
-}
-
-const RETANGULOS_PLACAS_DISTRIBUIDAS =
-  distribuirPlacasSemSobreposicao();
-
-// VERIFICAÇÃO ESTRUTURAL
+const LARGURA_PLACA_PARTICIPATIVA = 118;
+const ALTURA_PLACA_PARTICIPATIVA = 40;
 
 if (ESPACOS_PARTICIPATIVOS.length !== 20) {
   throw new Error("O mapa precisa conter exatamente 20 placas.");
 }
 
-const IDS_ESPACOS_PARTICIPATIVOS =
-  new Set(ESPACOS_PARTICIPATIVOS.map(item => item.id));
-
+const IDS_ESPACOS_PARTICIPATIVOS = new Set(
+  ESPACOS_PARTICIPATIVOS.map(item => item.id)
+);
 if (IDS_ESPACOS_PARTICIPATIVOS.size !== 20) {
   throw new Error("Existem IDs duplicados nas placas.");
 }
 
+// Verificação geométrica: limites da área e colisões entre placas.
 for (const posicao of ESPACOS_PARTICIPATIVOS) {
-
-  if (PREDIOS_REMOVIDOS_JUNTO_AO_RIO.has(posicao.predio)) {
-    throw new Error(
-      `A placa ${posicao.id} referencia um edifício removido junto ao rio.`
-    );
+  if (
+    !Number.isFinite(posicao.x) ||
+    !Number.isFinite(posicao.y) ||
+    posicao.x < -175 ||
+    posicao.x + LARGURA_PLACA_PARTICIPATIVA > 1290 ||
+    posicao.y < -60 ||
+    posicao.y + ALTURA_PLACA_PARTICIPATIVA > 700
+  ) {
+    throw new Error(`A placa ${posicao.id} está fora da área reservada.`);
   }
-
-  if (!PREDIOS[posicao.predio]) {
-    throw new Error(
-      `Prédio inexistente na placa ${posicao.id}.`
-    );
-  }
-
 }
-
+for (let i = 0; i < ESPACOS_PARTICIPATIVOS.length; i++) {
+  const a = ESPACOS_PARTICIPATIVOS[i];
+  for (let j = i + 1; j < ESPACOS_PARTICIPATIVOS.length; j++) {
+    const b = ESPACOS_PARTICIPATIVOS[j];
+    const sobrepoe =
+      a.x < b.x + LARGURA_PLACA_PARTICIPATIVA &&
+      a.x + LARGURA_PLACA_PARTICIPATIVA > b.x &&
+      a.y < b.y + ALTURA_PLACA_PARTICIPATIVA &&
+      a.y + ALTURA_PLACA_PARTICIPATIVA > b.y;
+    if (sobrepoe) {
+      throw new Error(`As placas ${a.id} e ${b.id} estão sobrepostas.`);
+    }
+  }
+}
 
 // ======================================================
 // 3.2. MAPA DAS 15 INTERVENÇÕES ARTÍSTICAS
@@ -1914,28 +1781,8 @@ const PREDIOS_TRANSFORMADOS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.predio)
 );
 
-// Validar as 20 ancoragens da participação na ocupação atual.
-// São dois espaços por edifício ativo que não recebe transformação.
-const CONTAGEM_PLACAS_POR_PREDIO = new Map();
-for (const posicao of ESPACOS_PARTICIPATIVOS) {
-  if (!PREDIOS_ATIVOS.has(posicao.predio)) {
-    throw new Error(`A placa ${posicao.id} não está ancorada em edifício ativo.`);
-  }
-  if (PREDIOS_TRANSFORMADOS.has(posicao.predio)) {
-    throw new Error(`A placa ${posicao.id} conflita com uma transformação urbana.`);
-  }
-  CONTAGEM_PLACAS_POR_PREDIO.set(
-    posicao.predio,
-    (CONTAGEM_PLACAS_POR_PREDIO.get(posicao.predio) || 0) + 1
-  );
-}
-if (
-  ESPACOS_PARTICIPATIVOS.length !== MAX_CONTRIBUICOES ||
-  CONTAGEM_PLACAS_POR_PREDIO.size !== 10 ||
-  [...CONTAGEM_PLACAS_POR_PREDIO.values()].some(total => total !== 2)
-) {
-  throw new Error("As 20 placas devem ocupar dois espaços em cada um dos dez edifícios disponíveis.");
-}
+// As placas são independentes e não reservam edifícios.
+// A validação de quantidade e IDs é feita junto ao mapa de posições.
 
 // As obras não podem apontar para prédios removidos ou substituídos.
 for (const obra of OBRAS_PROTOTIPO) {
@@ -3162,160 +3009,58 @@ function quebrarTextoPlaca(texto, limite = 17) {
 // modo: "cabo", "corpo" ou "completa"
 // ======================================================
 
-function criarPlacaSuspensa(
-  posicao,
-  contribuicao,
-  modo = "completa"
-) {
-
-  const predio = PREDIOS[posicao.predio];
-
-  if (!predio) return "";
-
-  const largura = 118;
-  const altura = 40;
-
-  const centroX =
-    predio.x +
-    predio.w / 2 +
-    (posicao.dx || 0);
-
-  const topoY =
-    predio.y -
-    49 +
-    (posicao.dy || 0);
-
-  const x = centroX - largura / 2;
-  const y = topoY;
-
-  // O cabo liga a placa ao topo do edifício sem atravessar a fachada.
-  const ancoraY = predio.y + predio.d / 2;
+function criarPlacaSuspensa(posicao, contribuicao) {
+  const largura = LARGURA_PLACA_PARTICIPATIVA;
+  const altura = ALTURA_PLACA_PARTICIPATIVA;
+  const x = posicao.x;
+  const y = posicao.y;
+  const centroX = x + largura / 2;
 
   const ocupado = Boolean(contribuicao);
-
-  const fundo = ocupado
-    ? contribuicao.cor
-    : "#fffaf5";
-
+  const fundo = ocupado ? contribuicao.cor : "#fffaf5";
   const corTexto = ocupado
-    ? (
-        ["#ff8c42", "#e5a52c"].includes(fundo)
-          ? "#282828"
-          : "#ffffff"
-      )
+    ? (["#ff8c42", "#e5a52c"].includes(fundo) ? "#282828" : "#ffffff")
     : "#009ca6";
-
-  const mensagem = ocupado
-    ? contribuicao.texto
-    : "SUA PALAVRA AQUI";
-
+  const mensagem = ocupado ? contribuicao.texto : "SUA PALAVRA AQUI";
   const linhas = quebrarTextoPlaca(mensagem);
-
-  const maiorLinha = Math.max(
-    1,
-    ...linhas.map(linha => linha.length)
-  );
-
+  const maiorLinha = Math.max(1, ...linhas.map(linha => linha.length));
   const tamanhoFonte = Math.max(
     6,
-    Math.min(
-      9,
-      (largura - 12) / (maiorLinha * 0.58)
-    )
+    Math.min(9, (largura - 12) / (maiorLinha * 0.58))
   );
-
   const espacamento = 9;
+  const inicioY = y + altura / 2 - ((linhas.length - 1) * espacamento) / 2;
 
-  const inicioY =
-    y +
-    altura / 2 -
-    ((linhas.length - 1) * espacamento) / 2;
-
-  let textoSVG = "";
-
-  linhas.forEach((linha, indice) => {
-
-    textoSVG += `
-      <text
-        x="${centroX}"
-        y="${inicioY + indice * espacamento}"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        fill="${corTexto}"
-        font-family="Arial, sans-serif"
-        font-size="${tamanhoFonte}"
-        font-weight="900"
-      >${escaparXML(linha)}</text>
-    `;
-
-  });
-
-  const caboSVG = `
-    <line
-      x1="${centroX}"
-      y1="${y + altura}"
-      x2="${centroX}"
-      y2="${ancoraY}"
-      stroke="#454545"
-      stroke-width="1.5"
-    />
-  `;
-
-  const corpoSVG = `
-    <!-- SOMBRA -->
-    <rect
-      x="${x + 2}"
-      y="${y + 2}"
-      width="${largura}"
-      height="${altura}"
-      rx="4"
-      fill="#000000"
-      opacity="0.14"
-    />
-
-    <!-- CORPO DA PLACA -->
-    <rect
-      x="${x}"
-      y="${y}"
-      width="${largura}"
-      height="${altura}"
-      rx="4"
-      fill="${fundo}"
-      stroke="${ocupado ? "#292929" : "#009ca6"}"
-      stroke-width="1.3"
-    />
-
-    <!-- TEXTO -->
-    ${textoSVG}
-
-    <!-- INDICADOR VISUAL -->
-    <circle
-      cx="${x + 6}"
-      cy="${y + 6}"
-      r="2"
+  const textoSVG = linhas.map((linha, indice) => `
+    <text
+      x="${centroX}"
+      y="${inicioY + indice * espacamento}"
+      text-anchor="middle"
+      dominant-baseline="middle"
       fill="${corTexto}"
-    />
-  `;
-
-  const desenharCabo =
-    modo === "completa" || modo === "cabo";
-
-  const desenharCorpo =
-    modo === "completa" || modo === "corpo";
-
-  if (!desenharCabo && !desenharCorpo) {
-    throw new Error(`Modo inválido para placa: ${modo}`);
-  }
-
-  const identificador =
-    modo === "cabo"
-      ? `cabo-placa-${posicao.id}`
-      : `placa-${posicao.id}`;
+      font-family="Arial, sans-serif"
+      font-size="${tamanhoFonte}"
+      font-weight="900"
+    >${escaparXML(linha)}</text>
+  `).join("");
 
   return `
-    <g id="${identificador}">
-      ${desenharCabo ? caboSVG : ""}
-      ${desenharCorpo ? corpoSVG : ""}
+    <g id="placa-${posicao.id}">
+      <rect
+        x="${x + 2}" y="${y + 2}"
+        width="${largura}" height="${altura}"
+        rx="4" fill="#000000" opacity="0.14"
+      />
+      <rect
+        x="${x}" y="${y}"
+        width="${largura}" height="${altura}"
+        rx="4"
+        fill="${fundo}"
+        stroke="${ocupado ? "#292929" : "#009ca6"}"
+        stroke-width="1.3"
+      />
+      ${textoSVG}
+      <circle cx="${x + 6}" cy="${y + 6}" r="2" fill="${corTexto}"/>
     </g>
   `;
 }
@@ -3464,15 +3209,15 @@ function montarCidade() {
   let resultado = `
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="-20 -60 1140 760"
+      viewBox="-175 -60 1465 760"
       role="img"
       aria-label="Cidade Coletiva"
     >
 
       <rect
-        x="-20"
+        x="-175"
         y="-60"
-        width="1140"
+        width="1465"
         height="760"
         fill="#fffaf5"
       />
@@ -3535,22 +3280,12 @@ function montarCidade() {
       <g id="camada-placas-suspensas">
     `;
 
-    // Primeiro desenhar todos os cabos; depois os corpos das placas.
-    // Assim, cabos diagonais nunca atravessam o texto de outra placa.
-    for (const posicao of ESPACOS_PARTICIPATIVOS) {
-      resultado += criarPlacaSuspensa(posicao, null, "cabo");
-    }
-
+    // Placas independentes nas duas faixas laterais reservadas.
     for (const posicao of ESPACOS_PARTICIPATIVOS) {
       const contribuicao = contribuicoes.find(
         item => String(item.id) === String(posicao.id)
       );
-
-      resultado += criarPlacaSuspensa(
-        posicao,
-        contribuicao,
-        "corpo"
-      );
+      resultado += criarPlacaSuspensa(posicao, contribuicao);
     }
 
     resultado += `
