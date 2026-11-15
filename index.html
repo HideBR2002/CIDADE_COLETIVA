@@ -544,27 +544,27 @@ function predioPertenceAoQuadrante4(predio) {
 
 // NOVA OCUPAÇÃO — BAIXA DENSIDADE, DISTRIBUIÇÃO ORGÂNICA.
 // Mantém os índices originais para preservar referências do projeto.
-// Somente estes oito edifícios serão renderizados.
+// Dezesseis lotes ativos: onze edifícios convencionais e cinco equipamentos na cidade transformada.
 const PLANO_BAIXA_DENSIDADE = new Map([
-  // LATERAL ESQUERDA — oito edifícios em quatro faixas desencontradas.
+  // LATERAL ESQUERDA — cinco equipamentos coletivos e edifícios distribuídos.
   [0,  { x: 18,  y: 20,  w: 55, d: 30, h: 75 }],
   [1,  { x: 88,  y: 32,  w: 55, d: 30, h: 85 }],
   [3,  { x: 185, y: 135, w: 58, d: 32, h: 80 }],
   [4,  { x: 255, y: 125, w: 58, d: 32, h: 88 }],
-  [6,  { x: 20,  y: 250, w: 60, d: 34, h: 78 }],
   [8,  { x: 110, y: 240, w: 60, d: 34, h: 88 }],
-  [9,  { x: 180, y: 365, w: 58, d: 32, h: 72 }],
   [10, { x: 270, y: 355, w: 58, d: 32, h: 82 }],
+  [27, { x: 20,  y: 250, w: 60, d: 34, h: 78 }],
+  [33, { x: 180, y: 365, w: 58, d: 32, h: 72 }],
 
-  // LATERAL DIREITA — oito edifícios em quatro faixas desencontradas.
+  // LATERAL DIREITA — oito posições, incluindo dois equipamentos coletivos.
   [12, { x: 935,  y: 85,  w: 58, d: 32, h: 78 }],
   [13, { x: 1010, y: 85,  w: 58, d: 32, h: 88 }],
   [15, { x: 720,  y: 175, w: 60, d: 34, h: 82 }],
   [16, { x: 810,  y: 165, w: 60, d: 34, h: 90 }],
   [18, { x: 930,  y: 275, w: 60, d: 34, h: 78 }],
   [19, { x: 1010, y: 265, w: 60, d: 34, h: 88 }],
-  [21, { x: 720,  y: 370, w: 58, d: 32, h: 72 }],
-  [22, { x: 810,  y: 360, w: 58, d: 32, h: 82 }]
+  [22, { x: 810,  y: 360, w: 58, d: 32, h: 82 }],
+  [36, { x: 720,  y: 370, w: 58, d: 32, h: 72 }]
 ]);
 for (const [indice, dimensoes] of PLANO_BAIXA_DENSIDADE) {
   Object.assign(PREDIOS[indice], dimensoes);
@@ -727,43 +727,6 @@ function criarIndustria(ind) {
   `;
 }
  
-// EQUIPAMENTOS CULTURAIS EXCLUSIVOS DA CIDADE TRANSFORMADA.
-// Substituem visualmente as duas fábricas da composição inicial.
-const MUSEUS_CIDADE_TRANSFORMADA = [
-  // Ambos permanecem na faixa superior, agora deslocados para mais perto do centro.
-  { id: "museu-masp-inspirado", tipo: "masp", x: 300, y: -55, w: 100, h: 68 },
-  { id: "museu-amanha-inspirado", tipo: "amanha", x: 720, y: -55, w: 100, h: 68 }
-];
-
-function criarMuseu(museu) {
-  const { id, tipo, x, y, w } = museu;
-  if (tipo === "masp") {
-    return `
-      <g id="${id}" transform="translate(${x} ${y})" stroke-linejoin="round">
-        <ellipse cx="51" cy="69" rx="54" ry="5" fill="#000000" opacity=".12"/>
-        <path d="M 17 32 V 68 M 83 32 V 68" stroke="#d8d4ca" stroke-width="8"/>
-        <path d="M 0 5 L 12 0 H 100 V 32 H 0 Z" fill="#f50057" stroke="#343434" stroke-width="2"/>
-        <path d="M 0 12 H 100 V 29 H 0 Z" fill="#625bd5" opacity=".92"/>
-        <path d="M 9 14 V 27 M 25 14 V 27 M 41 14 V 27 M 57 14 V 27 M 73 14 V 27 M 89 14 V 27" stroke="#b9e6e4" stroke-width="5"/>
-        <path d="M 12 34 H 88" stroke="#d8d4ca" stroke-width="3"/>
-        <path d="M 17 68 H 83" stroke="#51483f" stroke-width="2"/>
-      </g>
-    `;
-  }
-  return `
-    <g id="${id}" transform="translate(${x} ${y})" stroke-linejoin="round">
-      <ellipse cx="51" cy="69" rx="54" ry="5" fill="#000000" opacity=".12"/>
-      <path d="M 4 35 Q 16 8 52 5 Q 88 8 100 35 L 88 42 Q 52 29 16 42 Z" fill="#f4f0e5" stroke="#687c7b" stroke-width="2"/>
-      <path d="M 16 39 Q 52 28 88 39 L 82 63 Q 52 74 22 63 Z" fill="#168fc0" stroke="#425e68" stroke-width="2"/>
-      <path d="M 22 43 Q 52 34 82 43 L 78 59 Q 52 66 26 59 Z" fill="#b8e2df" stroke="#ffffff" stroke-width="1.5"/>
-      <path d="M 31 39 L 34 63 M 48 35 L 49 66 M 66 37 L 64 64" stroke="#ffffff" stroke-width="2" opacity=".8"/>
-      <path d="M 10 68 H 92" stroke="#8d9a91" stroke-width="4"/>
-      <path d="M 17 68 V 73 M 85 68 V 73" stroke="#8d9a91" stroke-width="3"/>
-      <path d="M 4 35 Q 52 20 100 35" fill="none" stroke="#009ca6" stroke-width="3"/>
-    </g>
-  `;
-}
-
 // Obras públicas autônomas, instaladas nos vazios entre edifícios.
 // Não dependem de fachadas nem alteram os prédios-base.
 const OBRAS_URBANAS_TRANSFORMADAS = [
@@ -1823,7 +1786,7 @@ const TRANSFORMACOES_URBANAS = [
   { id: "urb07", predio: 25, tipo: "praca" },
   { id: "urb08", predio: 27, tipo: "biblioteca" },
   { id: "urb09", predio: 33, tipo: "centroCultural" },
-  { id: "urb10", predio: 36, tipo: "convivencia" }
+  { id: "urb10", predio: 36, tipo: "centroCultural", variante: "convivencia" }
 ];
 
 const IDS_TRANSFORMACOES_URBANAS = new Set(
@@ -1847,6 +1810,19 @@ if (TRANSFORMACOES_URBANAS.length !== 10 ||
     IDS_TRANSFORMACOES_URBANAS.size !== 10 ||
     PREDIOS_TRANSFORMADOS.size !== 10) {
   throw new Error("As dez transformações urbanas precisam ter IDs e prédios únicos.");
+}
+
+const EQUIPAMENTOS_COLETIVOS = TRANSFORMACOES_URBANAS.filter(
+  item => ["museu", "biblioteca", "centroCultural"].includes(item.tipo)
+);
+if (
+  EQUIPAMENTOS_COLETIVOS.length !== 5 ||
+  EQUIPAMENTOS_COLETIVOS.filter(item => item.tipo === "museu").length !== 2 ||
+  EQUIPAMENTOS_COLETIVOS.filter(item => item.tipo === "biblioteca").length !== 1 ||
+  EQUIPAMENTOS_COLETIVOS.filter(item => item.tipo === "centroCultural").length !== 2 ||
+  EQUIPAMENTOS_COLETIVOS.some(item => !PREDIOS_ATIVOS.has(item.predio))
+) {
+  throw new Error("Os cinco equipamentos coletivos devem estar ativos: dois museus, uma biblioteca e dois centros culturais.");
 }
 
 for (const item of TRANSFORMACOES_URBANAS) {
@@ -1921,12 +1897,96 @@ function criarEspacoColetivo(predio, transformacao) {
 }
 
 
+function criarEquipamentoColetivo(predio, transformacao) {
+  const b = predio;
+  const w = b.w, d = b.d, h = b.h;
+  const g = pontosEdificio(b);
+  const tipo = transformacao.tipo;
+  const variante = transformacao.variante || "";
+  let topo = "#d8e4df", esquerda = "#b5c9c4", direita = "#879f9a";
+  let detalhes = "";
+
+  if (tipo === "museu" && transformacao.id === "urb04") {
+    // Museu inspirado no MASP: volume suspenso, faixa horizontal e pilotis.
+    topo = "#f50057"; esquerda = "#f0e7d8"; direita = "#c8d1ca";
+    detalhes = `
+      <path d="M 8 ${d/2+8} L ${w/2-5} ${d-5} L ${w/2-5} ${d+h-5} L 8 ${d/2+h+8} Z"
+        fill="#168fc0" opacity=".9" stroke="#465b5b" stroke-width="1"/>
+      <path d="M ${w/2+5} ${d-5} L ${w-8} ${d/2+8} L ${w-8} ${d/2+h+8} L ${w/2+5} ${d+h-5} Z"
+        fill="#168fc0" opacity=".88" stroke="#465b5b" stroke-width="1"/>
+      <path d="M ${w*.2} ${d+h*.68} V ${d+h+2} M ${w*.8} ${d+h*.68} V ${d+h+2}"
+        stroke="#e9e2d2" stroke-width="5"/>
+      <path d="M 5 ${d/2+7} L ${w/2} ${d+7} L ${w-5} ${d/2+7}"
+        fill="none" stroke="#625bd5" stroke-width="3"/>
+    `;
+  } else if (tipo === "museu") {
+    // Museu inspirado no Museu do Amanhã: cobertura branca curva e vidro azul.
+    topo = "#f4f0e5"; esquerda = "#b7dfe0"; direita = "#168fc0";
+    detalhes = `
+      <path d="M 3 ${d/2+7} Q ${w/2} -13 ${w-3} ${d/2+7} L ${w-10} ${d/2+14} Q ${w/2} 2 10 ${d/2+14} Z"
+        fill="#f8f5e9" stroke="#647d7d" stroke-width="2"/>
+      <path d="M 8 ${d/2+15} L ${w/2} ${d+8} L ${w-8} ${d/2+15}"
+        fill="none" stroke="#d8f4ef" stroke-width="4"/>
+      <path d="M ${w*.25} ${d/2+8} L ${w*.25} ${d/2+h*.78} M ${w*.5} ${d+5} V ${d+h*.8} M ${w*.75} ${d/2+8} L ${w*.75} ${d/2+h*.78}"
+        stroke="#ffffff" stroke-width="2.5"/>
+      <path d="M 5 ${d/2+4} Q ${w/2} -18 ${w-5} ${d/2+4}"
+        fill="none" stroke="#009ca6" stroke-width="3"/>
+    `;
+  } else if (tipo === "biblioteca") {
+    topo = "#009ca6"; esquerda = "#f0e4ce"; direita = "#b7c9bd";
+    detalhes = `
+      <path d="M 7 ${d/2+13} L ${w/2-4} ${d+13} L ${w/2-4} ${d+h-8} L 7 ${d/2+h-3} Z"
+        fill="#168fc0" stroke="#4e6664" stroke-width="1"/>
+      <path d="M ${w/2+5} ${d+13} L ${w-7} ${d/2+13} L ${w-7} ${d/2+h-3} L ${w/2+5} ${d+h-8} Z"
+        fill="#e8f1e8" stroke="#4e6664" stroke-width="1"/>
+      <path d="M 13 ${d/2+22} L ${w/2-8} ${d+22} M 13 ${d/2+34} L ${w/2-8} ${d+34}"
+        stroke="#ffbd43" stroke-width="4"/>
+      <path d="M ${w/2+10} ${d+22} L ${w-12} ${d/2+22} M ${w/2+10} ${d+34} L ${w-12} ${d/2+34}"
+        stroke="#009ca6" stroke-width="3"/>
+    `;
+  } else if (variante === "convivencia") {
+    topo = "#625bd5"; esquerda = "#f4dfc8"; direita = "#d28b63";
+    detalhes = `
+      <path d="M 5 ${d/2+8} Q ${w/2} -9 ${w-5} ${d/2+8}"
+        fill="none" stroke="#f50057" stroke-width="6"/>
+      <path d="M 10 ${d/2+18} L ${w/2-4} ${d+18} L ${w/2-4} ${d+h-7} L 10 ${d/2+h+3} Z"
+        fill="#168fc0" stroke="#4e6664" stroke-width="1"/>
+      <path d="M ${w/2+5} ${d+18} L ${w-10} ${d/2+18} L ${w-10} ${d/2+h+3} L ${w/2+5} ${d+h-7} Z"
+        fill="#ffbd43" stroke="#4e6664" stroke-width="1"/>
+    `;
+  } else {
+    // Centro cultural: cobertura facetada e fachadas abertas para convivência.
+    topo = "#ff8c42"; esquerda = "#f1e4d2"; direita = "#d9a47b";
+    detalhes = `
+      <path d="M 5 ${d/2+12} L ${w/2-5} ${d+12} L ${w/2-5} ${d+h-8} L 5 ${d/2+h-4} Z"
+        fill="#009ca6" stroke="#4e6664" stroke-width="1"/>
+      <path d="M ${w/2+5} ${d+12} L ${w-5} ${d/2+12} L ${w-5} ${d/2+h-4} L ${w/2+5} ${d+h-8} Z"
+        fill="#168fc0" stroke="#4e6664" stroke-width="1"/>
+      <path d="M ${w/2} ${d+15} V ${d+h-4}" stroke="#ffbd43" stroke-width="4"/>
+      <path d="M 4 ${d/2+7} L ${w/2} ${d+7} L ${w-4} ${d/2+7}"
+        fill="none" stroke="#fff4df" stroke-width="3"/>
+    `;
+  }
+
+  return `
+    <g id="${transformacao.id}" transform="translate(${b.x} ${b.y})" stroke-linejoin="round">
+      <path d="M 0 ${d/2+h+5} L ${w/2} ${d+h+5} L ${w} ${d/2+h+5} L ${w/2} ${2*d+h+5} Z"
+        fill="#000000" opacity=".10"/>
+      ${poligono(g.esquerda, esquerda, "#4f5b56")}
+      ${poligono(g.direita, direita, "#4f5b56")}
+      ${poligono(g.topo, topo, "#4f5b56")}
+      ${detalhes}
+    </g>
+  `;
+}
+
 function renderizarTransformacaoUrbana(indicePredio) {
   const transformacao = TRANSFORMACOES_URBANAS.find(
-    item => item.predio === indicePredio
+    item => item.predio === indicePredio &&
+      ["museu", "biblioteca", "centroCultural"].includes(item.tipo)
   );
   if (!transformacao) return "";
-  return criarEspacoColetivo(PREDIOS[indicePredio], transformacao);
+  return criarEquipamentoColetivo(PREDIOS[indicePredio], transformacao);
 }
 
 
@@ -3238,10 +3298,15 @@ function montarCidade() {
 
   resultado += criarInfraestruturaUrbana();
 
-  // 1. EDIFÍCIOS — dezesseis posições verificadas, oito em cada lateral.
+  // 1. EDIFÍCIOS E EQUIPAMENTOS — dezesseis lotes, oito em cada lateral.
   // Quadrante superior, praça, ruas e faixa do rio permanecem livres.
   for (const indice of PREDIOS_ATIVOS) {
-    resultado += criarPredio(PREDIOS[indice]);
+    const equipamento = cidadeTransformada
+      ? EQUIPAMENTOS_COLETIVOS.find(item => item.predio === indice)
+      : null;
+    resultado += equipamento
+      ? renderizarTransformacaoUrbana(indice)
+      : criarPredio(PREDIOS[indice]);
   }
 
   // Elementos exclusivos de cada estado: fábricas na cidade inicial;
@@ -3254,9 +3319,6 @@ function montarCidade() {
       resultado += criarIndustria(industria);
     }
   } else {
-    for (const museu of MUSEUS_CIDADE_TRANSFORMADA) {
-      resultado += criarMuseu(museu);
-    }
     for (const obra of OBRAS_URBANAS_TRANSFORMADAS) {
       resultado += criarObraUrbanaLivre(obra);
     }
