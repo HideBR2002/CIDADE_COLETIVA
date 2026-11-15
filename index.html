@@ -897,7 +897,8 @@ const ANUNCIOS = [
   {
     id: "ad11",
     tipo: "letreiro",
-    x: 680, y: 70, w: 135, h: 43,    titulo: "VIVA MELHOR",
+    x: 680, y: 70, w: 135, h: 43,
+    titulo: "VIVA MELHOR",
     subtitulo: "DESCUBRA O NOVO",
     fundo: "#f50057",
     texto: "#ffffff"
@@ -1785,7 +1786,8 @@ const PREDIOS_TRANSFORMADOS = new Set(
 
 // Validar as 20 ancoragens da participação na ocupação atual.
 // São dois espaços por edifício ativo que não recebe transformação.
-const CONTAGEM_PLACAS_POR_PREDIO = new Map();for (const posicao of ESPACOS_PARTICIPATIVOS) {
+const CONTAGEM_PLACAS_POR_PREDIO = new Map();
+for (const posicao of ESPACOS_PARTICIPATIVOS) {
   if (!PREDIOS_ATIVOS.has(posicao.predio)) {
     throw new Error(`A placa ${posicao.id} não está ancorada em edifício ativo.`);
   }
@@ -2684,7 +2686,8 @@ function criarMuralArquitetonico(predio, obra) {
 
       <polygon points="${facePoints}" fill="none" stroke="#454545" stroke-width="1.2"/>
       ${criarJanelas(b, "esquerda")}
-    </g>  `;
+    </g>
+  `;
 }
 
 
@@ -3584,6 +3587,7 @@ async function carregarContribuicoes() {
         );
 
       });
+
     return carregadas.slice(0, MAX_CONTRIBUICOES);
 
   } catch (erro) {
