@@ -968,44 +968,53 @@ function distribuirPlacasSemSobreposicao() {
   const largura = 118;
   const altura = 40;
   const distanciaEntrePlacas = 6;
-  const margemColisao = 5;
+  const margemColisao = 7;
   const margemArea = 8;
   const ocupadas = [];
 
   const grupos = new Map();
-
   for (const posicao of ESPACOS_PARTICIPATIVOS) {
-    if (!grupos.has(posicao.predio)) {
-      grupos.set(posicao.predio, []);
-    }
+    if (!grupos.has(posicao.predio)) grupos.set(posicao.predio, []);
     grupos.get(posicao.predio).push(posicao);
   }
 
+  // Caixas de segurança conservadoras para TODOS os edifícios visíveis.
+  // A projeção isométrica fica contida nesta área retangular ampliada.
+  const edificios = [...PREDIOS_ATIVOS].map(indice => {
+    const p = PREDIOS[indice];
+    return {
+      esquerda: p.x - 9,
+      topo: p.y - 9,
+      direita: p.x + p.w + 9,
+      base: p.y + p.d + p.h + 9
+    };
+  });
+
   const candidatos = [];
-  for (let dy = -170; dy <= 370; dy += 45) {
-    for (let dx = -360; dx <= 360; dx += 60) {
-      candidatos.push({ dx, dy, custo: Math.abs(dx) + Math.abs(dy) * 0.8 });
+  for (let dy = -260; dy <= 430; dy += 25) {
+    for (let dx = -500; dx <= 500; dx += 30) {
+      candidatos.push({
+        dx, dy,
+        custo: Math.abs(dx) + Math.abs(dy) * 0.8
+      });
     }
   }
   candidatos.sort((a, b) => a.custo - b.custo);
 
   for (const [indicePredio, placas] of grupos) {
     const predio = PREDIOS[indicePredio];
-
     if (!predio || placas.length !== 2) {
-      throw new Error(
-        `A ancoragem do edifício ${indicePredio} precisa ter exatamente duas placas.`
-      );
+      throw new Error(`A ancoragem do edifício ${indicePredio} precisa ter exatamente duas placas.`);
     }
 
     const centroBase = predio.x + predio.w / 2;
     const topoBase = predio.y - 49 - 46;
+    const ladoEsquerdo = centroBase < 525;
     let posicaoEscolhida = null;
 
     for (const candidato of candidatos) {
       const centroX = centroBase + candidato.dx;
       const topoY = topoBase + candidato.dy;
-
       const retangulos = [
         {
           esquerda: centroX - largura / 2,
@@ -1021,57 +1030,55 @@ function distribuirPlacasSemSobreposicao() {
         }
       ];
 
-      const dentroDaArea = retangulos.every(retangulo =>
-        retangulo.esquerda >= margemArea &&
-        retangulo.direita <= 1100 - margemArea &&
-        retangulo.topo >= -50 &&
-        retangulo.base <= 620
+      const dentroDaArea = retangulos.every(r =>
+        r.esquerda >= margemArea &&
+        r.direita <= 1100 - margemArea &&
+        r.topo >= -50 &&
+        r.base <= 500 &&
+        (ladoEsquerdo ? r.direita <= 525 : r.esquerda >= 525)
       );
-
       if (!dentroDaArea) continue;
 
-      const colide = retangulos.some(retangulo => {
-        const teste = {
-          esquerda: retangulo.esquerda - margemColisao,
-          topo: retangulo.topo - margemColisao,
-          direita: retangulo.direita + margemColisao,
-          base: retangulo.base + margemColisao
-        };
+      const colideEdificio = retangulos.some(r =>
+        edificios.some(e =>
+          r.esquerda - margemColisao < e.direita &&
+          r.direita + margemColisao > e.esquerda &&
+          r.topo - margemColisao < e.base &&
+          r.base + margemColisao > e.topo
+        )
+      );
+      if (colideEdificio) continue;
 
-        return ocupadas.some(outra =>
-          teste.esquerda < outra.direita &&
-          teste.direita > outra.esquerda &&
-          teste.topo < outra.base &&
-          teste.base > outra.topo
-        );
-      });
+      const colidePlaca = retangulos.some(r =>
+        ocupadas.some(o =>
+          r.esquerda - margemColisao < o.direita &&
+          r.direita + margemColisao > o.esquerda &&
+          r.topo - margemColisao < o.base &&
+          r.base + margemColisao > o.topo
+        )
+      );
+      if (colidePlaca) continue;
 
-      if (!colide) {
-        posicaoEscolhida = { candidato, retangulos };
-        break;
-      }
+      posicaoEscolhida = { candidato, retangulos };
+      break;
     }
 
     if (!posicaoEscolhida) {
-      throw new Error(
-        `Não foi possível distribuir as placas do edifício ${indicePredio} sem sobreposição.`
-      );
+      throw new Error(`Não foi possível distribuir as placas do edifício ${indicePredio} sem sobrepor edifícios ou outras placas.`);
     }
 
     const { dx, dy } = posicaoEscolhida.candidato;
-
-    // Mantém a ordem original: placa superior e depois placa inferior.
     placas[0].dx = dx;
     placas[0].dy = dy - 46;
     placas[1].dx = dx;
     placas[1].dy = dy;
 
-    for (const retangulo of posicaoEscolhida.retangulos) {
+    for (const r of posicaoEscolhida.retangulos) {
       ocupadas.push({
-        esquerda: retangulo.esquerda - margemColisao,
-        topo: retangulo.topo - margemColisao,
-        direita: retangulo.direita + margemColisao,
-        base: retangulo.base + margemColisao
+        esquerda: r.esquerda - margemColisao,
+        topo: r.topo - margemColisao,
+        direita: r.direita + margemColisao,
+        base: r.base + margemColisao
       });
     }
   }
@@ -3181,11 +3188,8 @@ function criarPlacaSuspensa(
   const x = centroX - largura / 2;
   const y = topoY;
 
-  // Sem a fachada de apoio na cidade transformada, o cabo desce
-  // até a base do lote, preservando a leitura de sustentação da placa.
-  const ancoraY = cidadeTransformada
-    ? predio.y + predio.h + predio.d
-    : predio.y + predio.d / 2;
+  // O cabo liga a placa ao topo do edifício sem atravessar a fachada.
+  const ancoraY = predio.y + predio.d / 2;
 
   const ocupado = Boolean(contribuicao);
 
@@ -3487,21 +3491,9 @@ function montarCidade() {
 
   resultado += criarInfraestruturaUrbana();
 
-  // 1. EDIFÍCIOS E EQUIPAMENTOS — dezesseis lotes, oito em cada lateral.
-  // Quadrante superior, praça, ruas e faixa do rio permanecem livres.
-  // Na cidade transformada, os dez edifícios que servem de referência
-  // às placas deixam de ser desenhados para liberar o espaço visual sob elas.
-  // Os edifícios continuam intactos na cidade comercial e suas coordenadas
-  // permanecem disponíveis para ancorar as placas e seus cabos.
-  const PREDIOS_OCULTOS_POR_PLACAS = cidadeTransformada
-    ? new Set(ESPACOS_PARTICIPATIVOS.map(posicao => posicao.predio))
-    : new Set();
-
+  // 1. EDIFÍCIOS E EQUIPAMENTOS — manter todos os dezesseis lotes visíveis.
+  // As placas são distribuídas em áreas livres, sem remover construções.
   for (const indice of PREDIOS_ATIVOS) {
-    if (PREDIOS_OCULTOS_POR_PLACAS.has(indice)) {
-      continue;
-    }
-
     const equipamento = cidadeTransformada
       ? EQUIPAMENTOS_COLETIVOS.find(item => item.predio === indice)
       : null;
