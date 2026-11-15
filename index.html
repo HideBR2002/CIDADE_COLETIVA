@@ -928,35 +928,34 @@ ANUNCIOS.forEach((anuncio, indice) => {
 
 const ESPACOS_PARTICIPATIVOS = [
 
-  // CAMADA SUPERIOR — 4 placas
-  { id: "ad01", predio: 0,  dx: 0, dy: 0 },
-  { id: "ad02", predio: 3,  dx: 0, dy: 0 },
-  { id: "ad03", predio: 6,  dx: 0, dy: 0 },
-  { id: "ad04", predio: 9,  dx: 0, dy: 0 },
+  // DEZ edifícios ativos sem transformação urbana.
+  // Cada edifício recebe duas placas empilhadas verticalmente.
+  // A placa superior é desenhada primeiro para que o cabo fique
+  // atrás da placa inferior, sem atravessar o texto.
 
-  // SEGUNDA CAMADA — 4 placas
-  { id: "ad12", predio: 10, dx: 0, dy: 0 },
-  { id: "ad13", predio: 13, dx: 0, dy: 0 },
-  { id: "ad14", predio: 17, dx: 0, dy: 0 },
-  { id: "ad15", predio: 20, dx: 0, dy: 0 },
+  // LATERAL ESQUERDA — edifícios 0, 1, 3, 4 e 8
+  { id: "ad01", predio: 0,  dx: 0, dy: -46 },
+  { id: "ad02", predio: 0,  dx: 0, dy: 0 },
+  { id: "ad03", predio: 1,  dx: 0, dy: -46 },
+  { id: "ad04", predio: 1,  dx: 0, dy: 0 },
+  { id: "ad12", predio: 3,  dx: 0, dy: -46 },
+  { id: "ad13", predio: 3,  dx: 0, dy: 0 },
+  { id: "ad14", predio: 4,  dx: 0, dy: -46 },
+  { id: "ad15", predio: 4,  dx: 0, dy: 0 },
+  { id: "ad16", predio: 8,  dx: 0, dy: -46 },
+  { id: "ad17", predio: 8,  dx: 0, dy: 0 },
 
-  // TERCEIRA CAMADA — 4 placas
-  { id: "ad16", predio: 21, dx: 0, dy: 0 },
-  { id: "ad17", predio: 24, dx: 0, dy: 0 },
-  { id: "ad18", predio: 28, dx: 0, dy: 0 },
-  { id: "ad19", predio: 31, dx: 0, dy: 0 },
-
-  // QUARTA CAMADA — 4 placas
-  { id: "ad20", predio: 32, dx: 0, dy: 0 },
-  { id: "ad21", predio: 34, dx: 0, dy: 0 },
-  { id: "ad22", predio: 38, dx: 0, dy: 0 },
-  { id: "ad23", predio: 40, dx: 0, dy: 0 },
-
-  // CAMADA INFERIOR — 4 placas
-  { id: "ad24", predio: 4, dx: 0, dy: 0 },
-  { id: "ad25", predio: 43, dx: 0, dy: 0 },
-  { id: "ad26", predio: 14, dx: 0, dy: 0 },
-  { id: "ad27", predio: 48, dx: 0, dy: 0 }
+  // LATERAL DIREITA — edifícios 10, 12, 13, 16 e 19
+  { id: "ad18", predio: 10, dx: 0, dy: -46 },
+  { id: "ad19", predio: 10, dx: 0, dy: 0 },
+  { id: "ad20", predio: 12, dx: 0, dy: -46 },
+  { id: "ad21", predio: 12, dx: 0, dy: 0 },
+  { id: "ad22", predio: 13, dx: 0, dy: -46 },
+  { id: "ad23", predio: 13, dx: 0, dy: 0 },
+  { id: "ad24", predio: 16, dx: 0, dy: -46 },
+  { id: "ad25", predio: 16, dx: 0, dy: 0 },
+  { id: "ad26", predio: 19, dx: 0, dy: -46 },
+  { id: "ad27", predio: 19, dx: 0, dy: 0 }
 
 ];
 
@@ -1795,6 +1794,29 @@ const IDS_TRANSFORMACOES_URBANAS = new Set(
 const PREDIOS_TRANSFORMADOS = new Set(
   TRANSFORMACOES_URBANAS.map(item => item.predio)
 );
+
+// Validar as 20 ancoragens da participação na ocupação atual.
+// São dois espaços por edifício ativo que não recebe transformação.
+const CONTAGEM_PLACAS_POR_PREDIO = new Map();
+for (const posicao of ESPACOS_PARTICIPATIVOS) {
+  if (!PREDIOS_ATIVOS.has(posicao.predio)) {
+    throw new Error(`A placa ${posicao.id} não está ancorada em edifício ativo.`);
+  }
+  if (PREDIOS_TRANSFORMADOS.has(posicao.predio)) {
+    throw new Error(`A placa ${posicao.id} conflita com uma transformação urbana.`);
+  }
+  CONTAGEM_PLACAS_POR_PREDIO.set(
+    posicao.predio,
+    (CONTAGEM_PLACAS_POR_PREDIO.get(posicao.predio) || 0) + 1
+  );
+}
+if (
+  ESPACOS_PARTICIPATIVOS.length !== MAX_CONTRIBUICOES ||
+  CONTAGEM_PLACAS_POR_PREDIO.size !== 10 ||
+  [...CONTAGEM_PLACAS_POR_PREDIO.values()].some(total => total !== 2)
+) {
+  throw new Error("As 20 placas devem ocupar dois espaços em cada um dos dez edifícios disponíveis.");
+}
 
 // As obras não podem apontar para prédios removidos ou substituídos.
 for (const obra of OBRAS_PROTOTIPO) {
@@ -3385,9 +3407,28 @@ function montarCidade() {
 
   resultado += montarIntervencoes();
 
-  // 3. PLACAS PARTICIPATIVAS — TEMPORARIAMENTE OCULTAS
-  // As placas eram ancoradas nos edifícios removidos.
-  // Serão recolocadas somente após a reconstrução da camada de prédios.
+  // 3. PLACAS PARTICIPATIVAS
+  // Exibir as 20 mensagens somente na cidade transformada.
+  if (cidadeTransformada) {
+    resultado += `
+      <g id="camada-placas-suspensas">
+    `;
+
+    for (const posicao of ESPACOS_PARTICIPATIVOS) {
+      const contribuicao = contribuicoes.find(
+        item => String(item.id) === String(posicao.id)
+      );
+
+      resultado += criarPlacaSuspensa(
+        posicao,
+        contribuicao
+      );
+    }
+
+    resultado += `
+      </g>
+    `;
+  }
 
   // ==================================================
   // 4. FINALIZAR SVG
@@ -4029,7 +4070,7 @@ async function adicionarContribuicao(event) {
 
     });
 
-    // Procurar exclusivamente nos 30 espaços.
+    // Procurar exclusivamente nos 20 espaços.
 
     const painelDisponivel =
       ESPACOS_PARTICIPATIVOS.find(
