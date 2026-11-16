@@ -3245,15 +3245,15 @@ function criarInfraestruturaUrbana() {
       </g>
       <!-- Duas ruas diagonais: traçado único, sem contorno em segunda camada -->
       <path d="M340 535 L525 235 L1085 20"
-        fill="none" stroke="#50565a" stroke-width="23"
+        fill="none" stroke="#747b80" stroke-width="23"
         stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M145 15 L525 235 L690 535"
-        fill="none" stroke="#50565a" stroke-width="23"
+        fill="none" stroke="#747b80" stroke-width="23"
         stroke-linecap="round" stroke-linejoin="round"/>
       <!-- Mini rotatória no encontro das duas ruas -->
       <g id="mini-rotatoria" stroke-linejoin="round">
         <circle cx="525" cy="235" r="22"
-          fill="#50565a" stroke="#343a3e" stroke-width="2"/>
+          fill="#747b80" stroke="#4b5257" stroke-width="2"/>
         <circle cx="525" cy="235" r="15"
           fill="#477a4b" stroke="#e6d8b9" stroke-width="3"/>
         <circle cx="525" cy="235" r="4"
@@ -3289,23 +3289,29 @@ function criarMarcoColetivo() {
   return `
     <g id="marco-mundo-colaborativo" transform="translate(455 118) scale(.92 .88)" stroke-linejoin="round">
       <path d="M 5 7 L 15 0 H 204 L 212 8 V 59 L 205 65 H 0 V 15 Z"
-        fill="#34383b" stroke="#202629" stroke-width="3"/>
+        fill="#f5008f" stroke="#202629" stroke-width="3"/>
       <path d="M 10 12 L 19 5 H 198 L 205 12 V 54 H 7 Z"
-        fill="#50565a" stroke="#ffbd43" stroke-width="2"/>
+        fill="#6848e8" stroke="#00d5e8" stroke-width="2.5"/>
       <path d="M 14 56 L 26 60 M 184 5 L 194 0 M 205 43 L 212 49"
-        stroke="#f50057" stroke-width="3" stroke-linecap="round"/>
-      <text x="106" y="30" text-anchor="middle"
-        fill="#fffaf5" stroke="#202629" stroke-width="2.5" paint-order="stroke"
-        font-family="Impact, 'Arial Black', sans-serif" font-size="21"
-        font-weight="900" font-style="italic" letter-spacing=".4"
-        transform="skewX(-5)">UM MUNDO</text>
-      <text x="106" y="49" text-anchor="middle"
-        fill="#ffbd43" stroke="#202629" stroke-width="2.2" paint-order="stroke"
-        font-family="Impact, 'Arial Black', sans-serif" font-size="19"
-        font-weight="900" font-style="italic" letter-spacing=".2"
-        transform="skewX(-5)">FEITO POR TODOS</text>
-      <path d="M 22 18 L 28 13 M 186 48 L 192 43 M 35 53 L 41 50"
-        stroke="#f5f1e5" stroke-width="1.6" opacity=".8"/>
+        stroke="#ffdc35" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M 22 16 L 28 11 M 190 50 L 197 44 M 38 52 L 44 47"
+        stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".95"/>
+      <g font-family="Impact, Haettenschweiler, 'Arial Black', sans-serif"
+        font-weight="900" font-style="italic" text-anchor="middle"
+        paint-order="stroke" stroke-linejoin="round">
+        <text x="107" y="31" transform="rotate(-2 107 25) skewX(-7)"
+          fill="#ffdf32" stroke="#202629" stroke-width="5"
+          font-size="22" letter-spacing="-.5">UM MUNDO</text>
+        <text x="105" y="50" transform="rotate(1 105 44) skewX(-6)"
+          fill="#ffffff" stroke="#f5008f" stroke-width="5"
+          font-size="19" letter-spacing="-.7">FEITO POR TODOS</text>
+        <text x="107" y="31" transform="rotate(-2 107 25) skewX(-7)"
+          fill="#ffdf32" stroke="#202629" stroke-width="1.4"
+          font-size="22" letter-spacing="-.5">UM MUNDO</text>
+        <text x="105" y="50" transform="rotate(1 105 44) skewX(-6)"
+          fill="#ffffff" stroke="#202629" stroke-width="1.4"
+          font-size="19" letter-spacing="-.7">FEITO POR TODOS</text>
+      </g>
     </g>
   `;
 }
