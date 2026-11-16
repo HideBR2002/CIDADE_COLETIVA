@@ -541,6 +541,9 @@ function predioPertenceAoQuadrante4(predio) {
   });
 })();
 
+// Estado definido antes das validações geométricas executadas na inicialização.
+let cidadeTransformada = false;
+
 // NOVA OCUPAÇÃO — BAIXA DENSIDADE, DISTRIBUIÇÃO ORGÂNICA.
 // Mantém os índices originais para preservar referências do projeto.
 // Dezesseis lotes ativos: onze edifícios convencionais e cinco equipamentos na cidade transformada.
@@ -650,7 +653,7 @@ const PREDIOS_COMPLEMENTARES_CIDADE_INICIAL = [
   { x: 330, y: 165, w: 45, d: 26, h: 75, cor: "#ff8c42", janela: 1 },
   { x: 20, y: 375, w: 45, d: 26, h: 65, cor: "#009ca6", janela: 2 },
   { x: 350, y: 300, w: 45, d: 26, h: 70, cor: "#f50057", janela: 0 },
-  { x: 880, y: 135, w: 45, d: 26, h: 65, cor: "#168fc0", janela: 1 },
+  { x: 790, y: 300, w: 45, d: 26, h: 65, cor: "#168fc0", janela: 1 },
   { x: 650, y: 235, w: 45, d: 26, h: 75, cor: "#ff5722", janela: 2 },
   { x: 1078, y: 220, w: 35, d: 24, h: 65, cor: "#625bd5", janela: 0 },
   { x: 660, y: 345, w: 45, d: 26, h: 70, cor: "#009ca6", janela: 1 },
@@ -1586,7 +1589,6 @@ for (const obra of OBRAS_PROTOTIPO) {
 // 5. ESTADO DA CIDADE
 // ======================================================
 
-let cidadeTransformada = false;
 
 let contribuicoes = [];
 
