@@ -573,6 +573,26 @@ for (const [indice, dimensoes] of PLANO_BAIXA_DENSIDADE) {
 }
 const PREDIOS_ATIVOS = new Set(PLANO_BAIXA_DENSIDADE.keys());
 
+// IDENTIFICAÇÃO INTERNA DOS 16 PRÉDIOS DA CIDADE TRANSFORMADA.
+// Os códigos são atributos do SVG/DOM: não aparecem visualmente no site.
+// Lado A: esquerda → direita, de cima → baixo.
+// Lado B: direita → esquerda, de cima → baixo.
+// A chave é o índice original em PREDIOS; assim, a identificação acompanha
+// o prédio mesmo quando ele é renderizado como equipamento coletivo.
+const IDENTIFICACAO_PREDIOS = new Map([
+  // Lado A
+  [0, "1a"], [1, "2a"],
+  [3, "3a"], [4, "4a"],
+  [27, "5a"], [8, "6a"],
+  [33, "7a"], [10, "8a"],
+
+  // Lado B
+  [13, "1b"], [12, "2b"],
+  [15, "3b"], [16, "4b"],
+  [19, "5b"], [18, "6b"],
+  [22, "7b"], [36, "8b"]
+]);
+
 const PREDIOS_QUADRANTE_4 = new Set(
   PREDIOS.reduce((indices, predio, indice) => {
     if (predioPertenceAoQuadrante4(predio)) indices.push(indice);
@@ -3473,9 +3493,16 @@ function montarCidade() {
     const equipamento = cidadeTransformada
       ? EQUIPAMENTOS_COLETIVOS.find(item => item.predio === indice)
       : null;
-    resultado += equipamento
+    const identificacao = IDENTIFICACAO_PREDIOS.get(indice);
+    const desenho = equipamento
       ? renderizarTransformacaoUrbana(indice)
       : criarPredio(PREDIOS[indice], !cidadeTransformada);
+
+    // O identificador fica no elemento SVG para inspeção/manutenção,
+    // sem desenhar número, texto ou etiqueta sobre a fachada.
+    resultado += identificacao
+      ? `<g id="predio-${identificacao}" data-predio="${identificacao}">${desenho}</g>`
+      : desenho;
   }
 
   // Elementos exclusivos de cada estado: fábricas na cidade inicial;
