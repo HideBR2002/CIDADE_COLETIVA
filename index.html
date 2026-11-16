@@ -1860,31 +1860,30 @@ function criarRedeEspacosPublicos() {
   // Praça da Convivência — setor superior esquerdo.
   const pracaEsquerda = `
     <g id="praca-convivencia">
-      <ellipse cx="225" cy="20" rx="49" ry="28" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
-      <ellipse cx="225" cy="20" rx="42" ry="22" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
-      <path d="M 190 20 Q 225 -7 260 20 Q 225 47 190 20" fill="none" stroke="#c7b596" stroke-width="2"/>
-      ${arvore(225,15,.78)}
-      ${banco(193,22,-25)}${banco(257,22,25)}
-      ${luminaria(184,25)}${luminaria(266,25)}
-      ${canteiro(205,43)}${canteiro(245,43)}
+      <ellipse cx="225" cy="-25" rx="49" ry="28" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="225" cy="-25" rx="42" ry="22" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <path d="M 190 -25 Q 225 -52 260 -25 Q 225 2 190 -25" fill="none" stroke="#c7b596" stroke-width="2"/>
+      ${arvore(225,-30,.78)}
+      ${banco(193,-23,-25)}${banco(257,-23,25)}
+      ${luminaria(184,-20)}${luminaria(266,-20)}
+      ${canteiro(205, -2)}${canteiro(245,-2)}
     </g>`;
 
   // Praça Cultural — setor superior direito.
   const pracaDireita = `
     <g id="praca-cultural">
-      <ellipse cx="825" cy="23" rx="48" ry="27" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
-      <ellipse cx="825" cy="23" rx="41" ry="21" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
-      <path d="M 795 23 Q 825 -1 855 23 Q 825 47 795 23" fill="none" stroke="#c7b596" stroke-width="2"/>
-      ${arvore(825,18,.78)}
-      ${banco(793,25,-25)}${banco(857,25,25)}
-      ${luminaria(784,28)}${luminaria(866,28)}
-      ${canteiro(805,46)}${canteiro(845,46)}
+      <ellipse cx="900" cy="-25" rx="48" ry="27" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="900" cy="-25" rx="41" ry="21" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <path d="M 870 -25 Q 900 -49 930 -25 Q 900 -1 870 -25" fill="none" stroke="#c7b596" stroke-width="2"/>
+      ${arvore(900,-30,.78)}
+      ${banco(868,-23,-25)}${banco(932,-23,25)}
+      ${luminaria(859,-20)}${luminaria(941,-20)}
+      ${canteiro(880,-2)}${canteiro(920,-2)}
     </g>`;
 
   // Praça das Águas — pequeno largo de contemplação no parque triangular.
   const pracaAguas = `
-    <g id="praca-das-aguas">
-      <path d="M 525 438 Q 525 456 525 466" fill="none" stroke="#f0e4cf" stroke-width="7" stroke-linecap="round"/>
+    <g id="praca-das-aguas" transform="translate(215 -446)">
       <ellipse cx="525" cy="486" rx="56" ry="24" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
       <ellipse cx="525" cy="486" rx="48" ry="18" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
       <ellipse cx="525" cy="486" rx="15" ry="7" fill="#168fc0" stroke="#ffffff" stroke-width="2"/>
