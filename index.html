@@ -3128,6 +3128,7 @@ function criarInfraestruturaUrbana() {
   let arvoresMargem="";
   const corContornoRio = cidadeTransformada ? "#075b8f" : "#9b7658";
   const corAguaRio = cidadeTransformada ? "#258fc2" : "#c9a783";
+  const corReflexoRio = cidadeTransformada ? "#9bd8e8" : "#ead7bf";
   for(let i=0;i<24;i++){
     const x=24+i*46;
     const ySuperior=522+Math.sin(i*0.72)*4;
@@ -3192,7 +3193,7 @@ function criarInfraestruturaUrbana() {
       <path d="M-20 570 C145 538 255 593 405 573 S670 553 815 583 S1000 608 1120 563"
         fill="none" stroke="${corAguaRio}" stroke-width="44" stroke-linecap="round"/>
       <path d="M30 558 Q105 545 170 558 M480 565 Q550 550 615 565 M850 580 Q930 590 1000 580"
-        fill="none" stroke="#9bd8e8" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+        fill="none" stroke="${corReflexoRio}" stroke-width="3" stroke-linecap="round" opacity=".75"/>
       ${arvoresMargem}
     </g>`;
 }
