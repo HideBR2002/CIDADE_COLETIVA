@@ -3367,9 +3367,13 @@ function criarFiosConexao() {
   // Quatro percursos contínuos, seguindo a identificação interna dos prédios.
   // As duas ligações dos marcos culturais superiores permanecem como na referência.
   const fios = [
-    // Ligações dos marcos culturais superiores à praça central.
-    { id: "fio-museu-masp-praca", d: "M 432 18 C 350 112 390 330 525 438", cor: "#00b9c7" },
-    { id: "fio-museu-amanha-praca", d: "M 592 18 C 700 112 660 330 525 438", cor: "#ffbd43" },
+    // Museus: uma única conexão vermelha em T, sem o antigo cabo azul do MASP.
+    // O trecho horizontal une os dois museus; a haste vertical chega à praça central.
+    {
+      id: "fio-museus-t-vermelho",
+      d: "M 432 18 C 432 42 432 55 460 55 L 525 55 C 550 55 592 42 592 18 M 525 55 C 525 135 525 300 525 438",
+      cor: "#f0182d"
+    },
 
     // A superior: 1a → 2a → 3a → 4a → Praça Central.
     {
@@ -3413,8 +3417,14 @@ function criarFiosConexao() {
 }
 
 function criarNotasMusicais() {
-  // Notas distribuídas sobre os quatro percursos, nas mesmas cores dos fios.
+  // Notas distribuídas sobre os quatro percursos e sobre o T vermelho dos museus.
   const notas = [
+    // Conexão única dos museus — vermelho.
+    { id: "nota-fio-museus-t-01", x: 485, y: 27, cor: "#f0182d", giro: -7 },
+    { id: "nota-fio-museus-t-02", x: 535, y: 112, cor: "#f0182d", giro: 7 },
+    { id: "nota-fio-museus-t-03", x: 535, y: 270, cor: "#f0182d", giro: -7 },
+    { id: "nota-fio-museus-t-04", x: 535, y: 365, cor: "#f0182d", giro: 7 },
+
     // A superior — ciano.
     { id: "nota-rota-a-superior-01", x: 78, y: 5, cor: "#00b9c7", giro: -8 },
     { id: "nota-rota-a-superior-02", x: 174, y: 82, cor: "#00b9c7", giro: 7 },
