@@ -3364,46 +3364,48 @@ function criarMarcoColetivo() {
 }
 
 function criarFiosConexao() {
-  // Os dois museus se conectam ao círculo da praça central inferior.
-  // As duas obras de arte superiores permanecem livres, sem cabos até a rotatória.
-  // Os bairros laterais mantêm suas quatro conexões cada.
+  // Quatro percursos contínuos, seguindo a identificação interna dos prédios.
+  // As duas ligações dos marcos culturais superiores permanecem como na referência.
   const fios = [
-    // Museus: cabos contornam a placa e descem pelas laterais da praça.
+    // Ligações dos marcos culturais superiores à praça central.
     { id: "fio-museu-masp-praca", d: "M 432 18 C 350 112 390 330 525 438", cor: "#00b9c7" },
     { id: "fio-museu-amanha-praca", d: "M 592 18 C 700 112 660 330 525 438", cor: "#ffbd43" },
 
-    // Bairro esquerdo: quatro pares, com cabos arqueados acima das coberturas.
-    { id: "fio-esquerdo-01", d: "M 45 16 Q 80 0 116 51", cor: "#00b9c7" },
-    { id: "fio-esquerdo-02", d: "M 214 130 Q 251 94 288 120", cor: "#ffbd43" },
-    { id: "fio-esquerdo-03", d: "M 50 246 Q 95 215 140 236", cor: "#f5008f" },
-    { id: "fio-esquerdo-04", d: "M 209 351 Q 254 323 299 351", cor: "#6848e8" },
+    // A superior: 1a → 2a → 3a → 4a → Praça Central.
+    {
+      id: "fio-rota-a-superior",
+      d: "M 45 16 C 70 -2 94 26 116 51 C 145 76 181 126 214 130 C 240 133 263 111 288 120 C 340 155 370 260 414 330 C 445 380 485 414 525 438",
+      cor: "#00b9c7"
+    },
 
-    // Bairro direito: os oito edifícios conectados em quatro pares.
-    { id: "fio-direito-01", d: "M 964 80 Q 1011 49 1059 80", cor: "#ffbd43" },
-    { id: "fio-direito-02", d: "M 750 160 Q 805 126 860 155", cor: "#00b9c7" },
-    { id: "fio-direito-03", d: "M 960 260 Q 1010 226 1060 255", cor: "#f5008f" },
-    { id: "fio-direito-04", d: "M 749 355 Q 804 323 859 350", cor: "#6848e8" },
+    // A inferior: 5a → 6a → 7a → 8a → Praça Central.
+    {
+      id: "fio-rota-a-inferior",
+      d: "M 50 246 C 78 222 113 215 140 236 C 166 260 183 325 209 351 C 237 374 269 335 299 351 C 355 381 431 422 525 438",
+      cor: "#f5008f"
+    },
 
-    // Oito novas conexões solicitadas: uma ponte entre pares e uma ligação
-    // ao centro da praça para cada segundo edifício de cada bairro.
-    // Lado A: 2A→3A, 4A→praça, 6A→7A e 8A→praça.
-    { id: "fio-esquerdo-05", d: "M 116 51 C 145 68 176 108 214 130", cor: "#00b9c7" },
-    { id: "fio-esquerdo-06", d: "M 288 120 C 340 180 440 340 525 438", cor: "#ffbd43" },
-    { id: "fio-esquerdo-07", d: "M 140 236 C 158 270 183 321 209 351", cor: "#00b9c7" },
-    { id: "fio-esquerdo-08", d: "M 299 351 C 360 370 455 416 525 438", cor: "#ffbd43" },
+    // B superior: 1b → 2b → 4b → 3b → Praça Central.
+    {
+      id: "fio-rota-b-superior",
+      d: "M 1059 80 C 1030 52 992 50 964 80 C 934 112 895 146 860 155 C 826 164 784 133 750 160 C 704 196 668 290 625 354 C 594 395 557 421 525 438",
+      cor: "#ffbd43"
+    },
 
-    // Lado B: espelhamento da mesma lógica, preservando os quatro fios existentes.
-    { id: "fio-direito-05", d: "M 1059 80 C 1015 100 850 125 750 160", cor: "#00b9c7" },
-    { id: "fio-direito-06", d: "M 860 155 C 805 220 650 350 525 438", cor: "#ffbd43" },
-    { id: "fio-direito-07", d: "M 1060 255 C 1010 285 930 330 859 350", cor: "#00b9c7" },
-    { id: "fio-direito-08", d: "M 749 355 C 690 372 590 414 525 438", cor: "#ffbd43" }
+    // B inferior: 5b → 6b → 7b → 8b → Praça Central.
+    {
+      id: "fio-rota-b-inferior",
+      d: "M 1060 255 C 1027 230 991 232 960 260 C 930 287 894 335 859 350 C 825 365 785 335 749 355 C 688 380 605 418 525 438",
+      cor: "#6848e8"
+    }
   ];
+
   return `
     <g id="camada-fios-conexao" fill="none" stroke-linecap="round" stroke-linejoin="round">
       ${fios.map(fio => `
         <g id="${fio.id}">
-          <path d="${fio.d}" stroke="#26343a" stroke-width="8.2" opacity=".82"/>
-          <path d="${fio.d}" stroke="${fio.cor}" stroke-width="4.2" opacity=".98"/>
+          <path d="${fio.d}" stroke="#26343a" stroke-width="11.5" opacity=".88"/>
+          <path d="${fio.d}" stroke="${fio.cor}" stroke-width="7.5" opacity=".99"/>
         </g>
       `).join("")}
     </g>
@@ -3411,29 +3413,33 @@ function criarFiosConexao() {
 }
 
 function criarNotasMusicais() {
-  // Uma nota por conexão, posicionada sobre o trecho livre do cabo.
+  // Notas distribuídas sobre os quatro percursos, nas mesmas cores dos fios.
   const notas = [
-    { id: "nota-fio-museu-masp-praca", x: 392, y: 225, cor: "#00b9c7", giro: -8 },
-    { id: "nota-fio-museu-amanha-praca", x: 658, y: 225, cor: "#ffbd43", giro: 7 },
-    { id: "nota-fio-esquerdo-01", x: 70, y: 9, cor: "#00b9c7", giro: -8 },
-    { id: "nota-fio-esquerdo-02", x: 245, y: 94, cor: "#ffbd43", giro: 7 },
-    { id: "nota-fio-esquerdo-03", x: 95, y: 215, cor: "#f5008f", giro: -6 },
-    { id: "nota-fio-esquerdo-04", x: 254, y: 321, cor: "#6848e8", giro: 8 },
-    { id: "nota-fio-direito-01", x: 1008, y: 49, cor: "#ffbd43", giro: -7 },
-    { id: "nota-fio-direito-02", x: 805, y: 126, cor: "#00b9c7", giro: 8 },
-    { id: "nota-fio-direito-03", x: 1010, y: 226, cor: "#f5008f", giro: -7 },
-    { id: "nota-fio-direito-04", x: 804, y: 323, cor: "#6848e8", giro: 7 },
+    // A superior — ciano.
+    { id: "nota-rota-a-superior-01", x: 78, y: 5, cor: "#00b9c7", giro: -8 },
+    { id: "nota-rota-a-superior-02", x: 174, y: 82, cor: "#00b9c7", giro: 7 },
+    { id: "nota-rota-a-superior-03", x: 308, y: 128, cor: "#00b9c7", giro: -7 },
+    { id: "nota-rota-a-superior-04", x: 392, y: 267, cor: "#00b9c7", giro: 8 },
 
-    // Notas das oito novas conexões.
-    { id: "nota-fio-esquerdo-05", x: 164, y: 91, cor: "#00b9c7", giro: -7 },
-    { id: "nota-fio-esquerdo-06", x: 405, y: 285, cor: "#ffbd43", giro: 7 },
-    { id: "nota-fio-esquerdo-07", x: 174, y: 295, cor: "#00b9c7", giro: -7 },
-    { id: "nota-fio-esquerdo-08", x: 411, y: 391, cor: "#ffbd43", giro: 7 },
-    { id: "nota-fio-direito-05", x: 887, y: 121, cor: "#00b9c7", giro: 7 },
-    { id: "nota-fio-direito-06", x: 664, y: 293, cor: "#ffbd43", giro: -7 },
-    { id: "nota-fio-direito-07", x: 957, y: 302, cor: "#00b9c7", giro: 7 },
-    { id: "nota-fio-direito-08", x: 624, y: 391, cor: "#ffbd43", giro: -7 }
+    // A inferior — magenta.
+    { id: "nota-rota-a-inferior-01", x: 91, y: 216, cor: "#f5008f", giro: -7 },
+    { id: "nota-rota-a-inferior-02", x: 169, y: 286, cor: "#f5008f", giro: 7 },
+    { id: "nota-rota-a-inferior-03", x: 251, y: 337, cor: "#f5008f", giro: -7 },
+    { id: "nota-rota-a-inferior-04", x: 402, y: 389, cor: "#f5008f", giro: 7 },
+
+    // B superior — amarelo.
+    { id: "nota-rota-b-superior-01", x: 1001, y: 56, cor: "#ffbd43", giro: -7 },
+    { id: "nota-rota-b-superior-02", x: 901, y: 105, cor: "#ffbd43", giro: 7 },
+    { id: "nota-rota-b-superior-03", x: 790, y: 144, cor: "#ffbd43", giro: -7 },
+    { id: "nota-rota-b-superior-04", x: 650, y: 276, cor: "#ffbd43", giro: 7 },
+
+    // B inferior — roxo.
+    { id: "nota-rota-b-inferior-01", x: 1000, y: 232, cor: "#6848e8", giro: 7 },
+    { id: "nota-rota-b-inferior-02", x: 901, y: 291, cor: "#6848e8", giro: -7 },
+    { id: "nota-rota-b-inferior-03", x: 796, y: 340, cor: "#6848e8", giro: 7 },
+    { id: "nota-rota-b-inferior-04", x: 620, y: 394, cor: "#6848e8", giro: -7 }
   ];
+
   return `
     <g id="camada-notas-musicais" stroke-linecap="round" stroke-linejoin="round">
       ${notas.map(nota => `
