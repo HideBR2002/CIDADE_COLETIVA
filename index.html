@@ -1691,7 +1691,7 @@ function poligono(pontos, cor, contorno = "#484848") {
 // 9. JANELAS ORIGINAIS
 // ======================================================
 
-function criarJanelas(b, lado) {
+function criarJanelas(b, lado, janelasAmarelas = false) {
 
   const w = b.w;
   const d = b.d;
@@ -1739,7 +1739,7 @@ function criarJanelas(b, lado) {
 
       resultado += poligono(
         [a, c, e, f],
-        CORES_JANELAS[indice],
+        janelasAmarelas ? "#ffd54f" : CORES_JANELAS[indice],
         "#4a4a4a"
       );
 
@@ -2026,31 +2026,32 @@ function renderizarTransformacaoUrbana(indicePredio) {
 }
 
 
-function criarPredio(b) {
+function criarPredio(b, monocromatico = false) {
 
   const geometria = pontosEdificio(b);
+
+  // Na cidade comercial, fachadas em tons de cinza e janelas amarelas.
+  // Na cidade transformada, preservar integralmente a paleta original.
+  const corEsquerda = monocromatico
+    ? "#a6a6a6"
+    : escurecer(b.cor, 0.19);
+  const corDireita = monocromatico
+    ? "#858585"
+    : escurecer(b.cor, 0.38);
+  const corTopo = monocromatico
+    ? "#c2c2c2"
+    : b.cor;
 
   let html = `
     <g transform="translate(${b.x},${b.y})">
   `;
 
-  html += poligono(
-    geometria.esquerda,
-    escurecer(b.cor, 0.19)
-  );
+  html += poligono(geometria.esquerda, corEsquerda, "#555555");
+  html += poligono(geometria.direita, corDireita, "#555555");
+  html += poligono(geometria.topo, corTopo, "#555555");
 
-  html += poligono(
-    geometria.direita,
-    escurecer(b.cor, 0.38)
-  );
-
-  html += poligono(
-    geometria.topo,
-    b.cor
-  );
-
-  html += criarJanelas(b, "esquerda");
-  html += criarJanelas(b, "direita");
+  html += criarJanelas(b, "esquerda", monocromatico);
+  html += criarJanelas(b, "direita", monocromatico);
 
   html += "</g>";
 
@@ -3242,14 +3243,14 @@ function montarCidade() {
       : null;
     resultado += equipamento
       ? renderizarTransformacaoUrbana(indice)
-      : criarPredio(PREDIOS[indice]);
+      : criarPredio(PREDIOS[indice], !cidadeTransformada);
   }
 
   // Elementos exclusivos de cada estado: fábricas na cidade inicial;
   // museus e obras públicas independentes na cidade transformada.
   if (!cidadeTransformada) {
     for (const predio of PREDIOS_COMPLEMENTARES_CIDADE_INICIAL) {
-      resultado += criarPredio(predio);
+      resultado += criarPredio(predio, true);
     }
     for (const industria of INDUSTRIAS_CIDADE_INICIAL) {
       resultado += criarIndustria(industria);
