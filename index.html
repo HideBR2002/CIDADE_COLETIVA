@@ -3362,7 +3362,21 @@ function criarFiosConexao() {
     { id: "fio-direito-01", d: "M 964 80 Q 1011 49 1059 80", cor: "#ffbd43" },
     { id: "fio-direito-02", d: "M 750 160 Q 805 126 860 155", cor: "#00b9c7" },
     { id: "fio-direito-03", d: "M 960 260 Q 1010 226 1060 255", cor: "#f5008f" },
-    { id: "fio-direito-04", d: "M 749 355 Q 804 323 859 350", cor: "#6848e8" }
+    { id: "fio-direito-04", d: "M 749 355 Q 804 323 859 350", cor: "#6848e8" },
+
+    // Oito novas conexões solicitadas: uma ponte entre pares e uma ligação
+    // ao centro da praça para cada segundo edifício de cada bairro.
+    // Lado A: 2A→3A, 4A→praça, 6A→7A e 8A→praça.
+    { id: "fio-esquerdo-05", d: "M 116 51 C 145 68 176 108 214 130", cor: "#00b9c7" },
+    { id: "fio-esquerdo-06", d: "M 288 120 C 340 180 440 340 525 438", cor: "#ffbd43" },
+    { id: "fio-esquerdo-07", d: "M 140 236 C 158 270 183 321 209 351", cor: "#00b9c7" },
+    { id: "fio-esquerdo-08", d: "M 299 351 C 360 370 455 416 525 438", cor: "#ffbd43" },
+
+    // Lado B: espelhamento da mesma lógica, preservando os quatro fios existentes.
+    { id: "fio-direito-05", d: "M 1059 80 C 1015 100 850 125 750 160", cor: "#00b9c7" },
+    { id: "fio-direito-06", d: "M 860 155 C 805 220 650 350 525 438", cor: "#ffbd43" },
+    { id: "fio-direito-07", d: "M 1060 255 C 1010 285 930 330 859 350", cor: "#00b9c7" },
+    { id: "fio-direito-08", d: "M 749 355 C 690 372 590 414 525 438", cor: "#ffbd43" }
   ];
   return `
     <g id="camada-fios-conexao" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -3388,7 +3402,17 @@ function criarNotasMusicais() {
     { id: "nota-fio-direito-01", x: 1008, y: 49, cor: "#ffbd43", giro: -7 },
     { id: "nota-fio-direito-02", x: 805, y: 126, cor: "#00b9c7", giro: 8 },
     { id: "nota-fio-direito-03", x: 1010, y: 226, cor: "#f5008f", giro: -7 },
-    { id: "nota-fio-direito-04", x: 804, y: 323, cor: "#6848e8", giro: 7 }
+    { id: "nota-fio-direito-04", x: 804, y: 323, cor: "#6848e8", giro: 7 },
+
+    // Notas das oito novas conexões.
+    { id: "nota-fio-esquerdo-05", x: 164, y: 91, cor: "#00b9c7", giro: -7 },
+    { id: "nota-fio-esquerdo-06", x: 405, y: 285, cor: "#ffbd43", giro: 7 },
+    { id: "nota-fio-esquerdo-07", x: 174, y: 295, cor: "#00b9c7", giro: -7 },
+    { id: "nota-fio-esquerdo-08", x: 411, y: 391, cor: "#ffbd43", giro: 7 },
+    { id: "nota-fio-direito-05", x: 887, y: 121, cor: "#00b9c7", giro: 7 },
+    { id: "nota-fio-direito-06", x: 664, y: 293, cor: "#ffbd43", giro: -7 },
+    { id: "nota-fio-direito-07", x: 957, y: 302, cor: "#00b9c7", giro: 7 },
+    { id: "nota-fio-direito-08", x: 624, y: 391, cor: "#ffbd43", giro: -7 }
   ];
   return `
     <g id="camada-notas-musicais" stroke-linecap="round" stroke-linejoin="round">
