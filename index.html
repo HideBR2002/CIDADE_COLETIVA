@@ -3285,33 +3285,58 @@ function criarEspacoPublico() {
 
 
 function criarMarcoColetivo() {
-  // Marco visual da cidade transformada: mensagem coletiva em estilo grafite.
+  // Lettering Throw-up: letras-bolha, contorno espesso, volume e respingos.
+  // A estrutura mantém a posição e a escala atuais da placa.
   return `
     <g id="marco-mundo-colaborativo" transform="translate(455 118) scale(.92 .88)" stroke-linejoin="round">
-      <path d="M 5 7 L 15 0 H 204 L 212 8 V 59 L 205 65 H 0 V 15 Z"
-        fill="#f5008f" stroke="#202629" stroke-width="3"/>
-      <path d="M 10 12 L 19 5 H 198 L 205 12 V 54 H 7 Z"
-        fill="#6848e8" stroke="#00d5e8" stroke-width="2.5"/>
-      <path d="M 14 56 L 26 60 M 184 5 L 194 0 M 205 43 L 212 49"
-        stroke="#ffdc35" stroke-width="3.5" stroke-linecap="round"/>
-      <path d="M 22 16 L 28 11 M 190 50 L 197 44 M 38 52 L 44 47"
-        stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".95"/>
-      <g font-family="Impact, Haettenschweiler, 'Arial Black', sans-serif"
-        font-weight="900" font-style="italic" text-anchor="middle"
-        paint-order="stroke" stroke-linejoin="round">
-        <text x="107" y="31" transform="rotate(-2 107 25) skewX(-7)"
-          fill="#ffdf32" stroke="#202629" stroke-width="5"
-          font-size="22" letter-spacing="-.5">UM MUNDO</text>
-        <text x="105" y="50" transform="rotate(1 105 44) skewX(-6)"
-          fill="#ffffff" stroke="#f5008f" stroke-width="5"
-          font-size="19" letter-spacing="-.7">FEITO POR TODOS</text>
-        <text x="107" y="31" transform="rotate(-2 107 25) skewX(-7)"
-          fill="#ffdf32" stroke="#202629" stroke-width="1.4"
-          font-size="22" letter-spacing="-.5">UM MUNDO</text>
-        <text x="105" y="50" transform="rotate(1 105 44) skewX(-6)"
-          fill="#ffffff" stroke="#202629" stroke-width="1.4"
-          font-size="19" letter-spacing="-.7">FEITO POR TODOS</text>
+      <!-- suporte irregular da pintura -->
+      <path d="M 5 12 L 18 3 L 196 1 L 211 12 L 211 55 L 198 64 L 12 62 L 0 51 Z"
+        fill="#20232b" stroke="#17191e" stroke-width="3"/>
+      <path d="M 11 14 L 22 8 L 193 7 L 203 15 L 202 50 L 192 57 L 17 56 L 8 49 Z"
+        fill="#08b9d0" stroke="#ffdf32" stroke-width="2.5"/>
+
+      <!-- respingos e pequenas marcas de tinta -->
+      <path d="M 12 22 L 2 17 L 8 29 Z M 198 18 L 211 12 L 205 27 Z
+        M 24 55 L 19 68 L 29 61 Z M 185 55 L 182 68 L 193 59 Z"
+        fill="#f5008f" stroke="#20232b" stroke-width="1.5"/>
+      <path d="M 31 10 L 26 1 L 37 7 Z M 176 9 L 184 0 L 188 9 Z
+        M 103 57 Q 108 65 103 72 Q 98 65 103 57 Z"
+        fill="#ffdf32"/>
+      <circle cx="17" cy="37" r="3" fill="#ffdf32"/>
+      <circle cx="196" cy="34" r="3.5" fill="#f5008f"/>
+      <circle cx="43" cy="59" r="2.5" fill="#ffffff"/>
+      <circle cx="169" cy="58" r="2.5" fill="#ffffff"/>
+
+      <!-- letras-bolha: extrusão, contorno colorido e brilho interno -->
+      <g font-family="'Arial Rounded MT Bold', 'Arial Black', 'Trebuchet MS', sans-serif"
+        font-weight="1000" text-anchor="middle" stroke-linejoin="round">
+        <text x="107" y="29" font-size="22" letter-spacing="-1.1"
+          fill="#20232b" stroke="#20232b" stroke-width="9"
+          transform="rotate(-2 107 23) scale(1.02 1)">UM MUNDO</text>
+        <text x="107" y="29" font-size="22" letter-spacing="-1.1"
+          fill="#ffdf32" stroke="#f5008f" stroke-width="6"
+          paint-order="stroke" transform="rotate(-2 107 23) scale(1.02 1)">UM MUNDO</text>
+        <text x="107" y="29" font-size="22" letter-spacing="-1.1"
+          fill="#ffdf32" stroke="#fff4a8" stroke-width="1.2"
+          paint-order="stroke" transform="rotate(-2 107 23) scale(1.02 1)">UM MUNDO</text>
+
+        <text x="106" y="49" font-size="17.5" letter-spacing="-1.05"
+          fill="#20232b" stroke="#20232b" stroke-width="9"
+          transform="rotate(1 106 43) scale(1.02 1)">FEITO POR TODOS</text>
+        <text x="106" y="49" font-size="17.5" letter-spacing="-1.05"
+          fill="#ffffff" stroke="#6848e8" stroke-width="6"
+          paint-order="stroke" transform="rotate(1 106 43) scale(1.02 1)">FEITO POR TODOS</text>
+        <text x="106" y="49" font-size="17.5" letter-spacing="-1.05"
+          fill="#ffffff" stroke="#dffcff" stroke-width="1.1"
+          paint-order="stroke" transform="rotate(1 106 43) scale(1.02 1)">FEITO POR TODOS</text>
       </g>
+
+      <!-- reflexos de tinta e gotas inferiores -->
+      <path d="M 43 15 Q 51 9 58 13 M 145 14 Q 154 8 161 12
+        M 36 37 Q 41 33 46 35 M 164 37 Q 169 33 174 35"
+        fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
+      <path d="M 62 57 Q 59 63 62 67 M 151 56 Q 148 63 151 66"
+        fill="none" stroke="#f5008f" stroke-width="3" stroke-linecap="round"/>
     </g>
   `;
 }
