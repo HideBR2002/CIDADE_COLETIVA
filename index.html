@@ -1824,8 +1824,82 @@ for (const item of TRANSFORMACOES_URBANAS) {
 }
 
 function criarRedeEspacosPublicos() {
-  // As conexões viárias são desenhadas pela infraestrutura do novo plano.
-  return "";
+  // Três praças implantadas somente na cidade transformada.
+  // As posições foram escolhidas nos vazios do plano, sem ocupar lotes ativos.
+  const arvore = (x, y, escala = 1) => `
+    <g transform="translate(${x} ${y}) scale(${escala})">
+      <ellipse cx="0" cy="8" rx="15" ry="5" fill="#000000" opacity=".12"/>
+      <path d="M 0 0 V 12" stroke="#76513a" stroke-width="5"/>
+      <circle cx="0" cy="-9" r="13" fill="#477a4b" stroke="#315f3c" stroke-width="1.5"/>
+      <circle cx="-9" cy="-5" r="8" fill="#6b9b50"/>
+      <circle cx="8" cy="-4" r="8" fill="#3d7045"/>
+      <circle cx="1" cy="-17" r="7" fill="#78a957"/>
+    </g>`;
+
+  const banco = (x, y, rotacao = 0) => `
+    <g transform="translate(${x} ${y}) rotate(${rotacao})">
+      <path d="M -12 -2 H 12" stroke="#76513a" stroke-width="5" stroke-linecap="round"/>
+      <path d="M -10 -5 H 10" stroke="#c58a54" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M -8 0 V 5 M 8 0 V 5" stroke="#51483f" stroke-width="1.8"/>
+    </g>`;
+
+  const luminaria = (x, y) => `
+    <g transform="translate(${x} ${y})">
+      <path d="M 0 0 V -22 Q 0 -27 5 -27" fill="none" stroke="#51483f" stroke-width="2.5"/>
+      <circle cx="6" cy="-27" r="4" fill="#ffbd43" stroke="#80634f" stroke-width="1"/>
+    </g>`;
+
+  const canteiro = (x, y) => `
+    <g transform="translate(${x} ${y})">
+      <ellipse rx="11" ry="5" fill="#6b9b50" stroke="#477a4b" stroke-width="1"/>
+      <circle cx="-5" cy="-2" r="2.5" fill="#f50057"/>
+      <circle cx="1" cy="-4" r="2.5" fill="#ffbd43"/>
+      <circle cx="6" cy="-1" r="2.5" fill="#ffffff"/>
+    </g>`;
+
+  // Praça da Convivência — setor superior esquerdo.
+  const pracaEsquerda = `
+    <g id="praca-convivencia">
+      <ellipse cx="225" cy="75" rx="49" ry="28" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="225" cy="75" rx="42" ry="22" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <path d="M 190 75 Q 225 48 260 75 Q 225 102 190 75" fill="none" stroke="#c7b596" stroke-width="2"/>
+      ${arvore(225,70,.78)}
+      ${banco(193,77,-25)}${banco(257,77,25)}
+      ${luminaria(184,80)}${luminaria(266,80)}
+      ${canteiro(205,98)}${canteiro(245,98)}
+    </g>`;
+
+  // Praça Cultural — setor superior direito.
+  const pracaDireita = `
+    <g id="praca-cultural">
+      <ellipse cx="825" cy="78" rx="48" ry="27" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="825" cy="78" rx="41" ry="21" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <path d="M 795 78 Q 825 54 855 78 Q 825 102 795 78" fill="none" stroke="#c7b596" stroke-width="2"/>
+      ${arvore(825,73,.78)}
+      ${banco(793,80,-25)}${banco(857,80,25)}
+      ${luminaria(784,83)}${luminaria(866,83)}
+      ${canteiro(805,101)}${canteiro(845,101)}
+    </g>`;
+
+  // Praça das Águas — pequeno largo de contemplação no parque triangular.
+  const pracaAguas = `
+    <g id="praca-das-aguas">
+      <path d="M 525 438 Q 525 456 525 466" fill="none" stroke="#f0e4cf" stroke-width="7" stroke-linecap="round"/>
+      <ellipse cx="525" cy="486" rx="56" ry="24" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="525" cy="486" rx="48" ry="18" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <ellipse cx="525" cy="486" rx="15" ry="7" fill="#168fc0" stroke="#ffffff" stroke-width="2"/>
+      <ellipse cx="525" cy="486" rx="6" ry="3" fill="#9fe0e3"/>
+      ${banco(484,487,-18)}${banco(566,487,18)}
+      ${canteiro(500,503)}${canteiro(550,503)}
+      ${luminaria(473,489)}${luminaria(577,489)}
+    </g>`;
+
+  return `
+    <g id="rede-de-pracas" stroke-linejoin="round">
+      ${pracaEsquerda}
+      ${pracaDireita}
+      ${pracaAguas}
+    </g>`;
 }
 
 function criarEspacoColetivo(predio, transformacao) {
@@ -3233,11 +3307,13 @@ function montarCidade() {
   `;
 
   // ==================================================
+  resultado += criarInfraestruturaUrbana();
+
+  // Praças desenhadas sobre o terreno e sob os edifícios/obras,
+  // exclusivamente na cidade transformada.
   if (cidadeTransformada) {
     resultado += criarRedeEspacosPublicos();
   }
-
-  resultado += criarInfraestruturaUrbana();
 
   // 1. EDIFÍCIOS E EQUIPAMENTOS — manter todos os dezesseis lotes visíveis.
   // As placas são distribuídas em áreas livres, sem remover construções.
