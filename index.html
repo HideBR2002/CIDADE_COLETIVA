@@ -3344,15 +3344,13 @@ function criarMarcoColetivo() {
 }
 
 function criarFiosConexao() {
-  // Cabos musicais mais espessos, roteados pelos espaços livres.
-  // Quatro estruturas superiores convergem para a rotatória; cada bairro
-  // lateral tem quatro pares de edifícios conectados.
+  // Os dois museus se conectam ao círculo da praça central inferior.
+  // As duas obras de arte superiores permanecem livres, sem cabos até a rotatória.
+  // Os bairros laterais mantêm suas quatro conexões cada.
   const fios = [
-    // Estruturas culturais da faixa superior: rotas laterais evitam a placa.
-    { id: "fio-superior-01", d: "M 432 18 C 365 62 352 145 525 235", cor: "#00b9c7" },
-    { id: "fio-superior-02", d: "M 592 18 C 700 62 720 145 525 235", cor: "#ffbd43" },
-    { id: "fio-superior-03", d: "M 463 105 C 415 135 420 188 525 235", cor: "#f5008f" },
-    { id: "fio-superior-04", d: "M 658 105 C 705 135 680 188 525 235", cor: "#6848e8" },
+    // Museus: cabos contornam a placa e descem pelas laterais da praça.
+    { id: "fio-museu-masp-praca", d: "M 432 18 C 350 112 390 330 525 438", cor: "#00b9c7" },
+    { id: "fio-museu-amanha-praca", d: "M 592 18 C 700 112 660 330 525 438", cor: "#ffbd43" },
 
     // Bairro esquerdo: quatro pares, com cabos arqueados acima das coberturas.
     { id: "fio-esquerdo-01", d: "M 45 16 Q 80 0 116 51", cor: "#00b9c7" },
@@ -3381,10 +3379,8 @@ function criarFiosConexao() {
 function criarNotasMusicais() {
   // Uma nota por conexão, posicionada sobre o trecho livre do cabo.
   const notas = [
-    { id: "nota-fio-superior-01", x: 370, y: 75, cor: "#00b9c7", giro: -8 },
-    { id: "nota-fio-superior-02", x: 690, y: 75, cor: "#ffbd43", giro: 7 },
-    { id: "nota-fio-superior-03", x: 425, y: 151, cor: "#f5008f", giro: -6 },
-    { id: "nota-fio-superior-04", x: 680, y: 151, cor: "#6848e8", giro: 8 },
+    { id: "nota-fio-museu-masp-praca", x: 392, y: 225, cor: "#00b9c7", giro: -8 },
+    { id: "nota-fio-museu-amanha-praca", x: 658, y: 225, cor: "#ffbd43", giro: 7 },
     { id: "nota-fio-esquerdo-01", x: 70, y: 9, cor: "#00b9c7", giro: -8 },
     { id: "nota-fio-esquerdo-02", x: 245, y: 94, cor: "#ffbd43", giro: 7 },
     { id: "nota-fio-esquerdo-03", x: 95, y: 215, cor: "#f5008f", giro: -6 },
