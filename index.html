@@ -263,13 +263,14 @@ button:disabled {
 
       <textarea
         id="mensagemContribuicao"
+        maxlength="35"
         rows="2"
         placeholder="Ex.: Uma cidade para todos"
         oninput="atualizarContador()"
         required></textarea>
 
       <div class="contador" id="contador">
-        0/40 palavras
+        0/35 caracteres
       </div>
 
       <label>Escolha uma cor</label>
@@ -900,8 +901,8 @@ ANUNCIOS.forEach((anuncio, indice) => {
 
 
 // ======================================================
-// 3.1. MAPA DAS 20 PLACAS SUSPENSAS
-// PALAVRAS ENVIADAS PELO PÚBLICO
+// 3.1. MAPA DAS 40 PLACAS SUSPENSAS
+// CONTRIBUIÇÕES ENVIADAS PELO PÚBLICO
 // ======================================================
 
 const IDS_PLACAS_PARTICIPATIVAS = [
@@ -911,30 +912,32 @@ const IDS_PLACAS_PARTICIPATIVAS = [
   "ad20", "ad21", "ad22", "ad23",
   "ad24", "ad25", "ad26", "ad27",
   "ad28", "ad29", "ad30", "ad31", "ad32",
-  "ad33", "ad34", "ad35", "ad36", "ad37"
+  "ad33", "ad34", "ad35", "ad36", "ad37",
+  "ad38", "ad39", "ad40", "ad41", "ad42",
+  "ad43", "ad44", "ad45", "ad46", "ad47"
 ];
 
 // Cada mensagem ocupa uma posição independente em uma das duas faixas
-// laterais reservadas: 15 posições à esquerda e 15 à direita.
+// laterais reservadas: 20 posições à esquerda e 20 à direita.
 const ESPACOS_PARTICIPATIVOS = IDS_PLACAS_PARTICIPATIVAS.map(
   (id, indice) => ({
     id,
-    x: indice < 15 ? -160 : 1135,
-    y: -30 + (indice % 15) * 48
+    x: indice < 20 ? -160 : 1135,
+    y: -30 + (indice % 20) * 34
   })
 );
 
 const LARGURA_PLACA_PARTICIPATIVA = 118;
-const ALTURA_PLACA_PARTICIPATIVA = 40;
+const ALTURA_PLACA_PARTICIPATIVA = 30;
 
-if (ESPACOS_PARTICIPATIVOS.length !== 30) {
-  throw new Error("O mapa precisa conter exatamente 30 placas.");
+if (ESPACOS_PARTICIPATIVOS.length !== 40) {
+  throw new Error("O mapa precisa conter exatamente 40 placas.");
 }
 
 const IDS_ESPACOS_PARTICIPATIVOS = new Set(
   ESPACOS_PARTICIPATIVOS.map(item => item.id)
 );
-if (IDS_ESPACOS_PARTICIPATIVOS.size !== 30) {
+if (IDS_ESPACOS_PARTICIPATIVOS.size !== 40) {
   throw new Error("Existem IDs duplicados nas placas.");
 }
 
@@ -1570,8 +1573,8 @@ let contribuicoes = [];
 
 let corSelecionada = "#f50057";
 
-const MAX_CONTRIBUICOES = 30;
-const MAX_PALAVRAS_CONTRIBUICAO = 40;
+const MAX_CONTRIBUICOES = 40;
+const MAX_CARACTERES_CONTRIBUICAO = 35;
 
 const CORES_CONTRIBUICAO = [
   "#f50057",
@@ -3514,7 +3517,7 @@ function montarCidade() {
       <g id="camada-placas-suspensas">
     `;
 
-    // Trinta posições independentes nas duas faixas laterais.
+    // Quarenta posições independentes: vinte em cada faixa lateral.
     for (const posicao of ESPACOS_PARTICIPATIVOS) {
       const contribuicao = contribuicoes.find(
         item => String(item.id) === String(posicao.id)
@@ -3678,7 +3681,7 @@ async function carregarContribuicoes() {
           IDS_ESPACOS_PARTICIPATIVOS.has(item.id) &&
           typeof item.texto === "string" &&
           item.texto.trim().length > 0 &&
-          contarPalavras(item.texto) <= MAX_PALAVRAS_CONTRIBUICAO &&
+          item.texto.length <= MAX_CARACTERES_CONTRIBUICAO &&
           CORES_CONTRIBUICAO.includes(item.cor)
         );
 
@@ -3813,12 +3816,12 @@ function atualizarContador() {
     return;
   }
 
-  const quantidadePalavras = contarPalavras(campo.value);
+  const quantidadeCaracteres = campo.value.length;
   contador.textContent =
-    `${quantidadePalavras}/${MAX_PALAVRAS_CONTRIBUICAO} palavras`;
+    `${quantidadeCaracteres}/${MAX_CARACTERES_CONTRIBUICAO} caracteres`;
 
   contador.style.color =
-    quantidadePalavras >= MAX_PALAVRAS_CONTRIBUICAO ? "#f50057" : "#888";
+    quantidadeCaracteres >= MAX_CARACTERES_CONTRIBUICAO ? "#f50057" : "#888";
 
 }
 
@@ -4001,10 +4004,10 @@ async function adicionarContribuicao(event) {
 
   }
 
-  if (!texto || contarPalavras(texto) > MAX_PALAVRAS_CONTRIBUICAO) {
+  if (!texto || texto.length > MAX_CARACTERES_CONTRIBUICAO) {
 
     status.textContent =
-      "Digite uma mensagem de até 40 palavras.";
+      "Digite uma mensagem de até 35 caracteres.";
 
     return;
 
@@ -4047,7 +4050,7 @@ async function adicionarContribuicao(event) {
 
     });
 
-    // Procurar exclusivamente nos 30 espaços.
+    // Procurar exclusivamente nos 40 espaços.
 
     const painelDisponivel =
       ESPACOS_PARTICIPATIVOS.find(
@@ -4200,7 +4203,7 @@ function iniciarRealtime() {
 
         const id = String(registro.painel_id);
 
-        // Validar se o ID pertence a uma das 30 posições participativas.
+        // Validar se o ID pertence a uma das 40 posições participativas.
 
         if (!IDS_ESPACOS_PARTICIPATIVOS.has(id)) {
           return;
@@ -4211,7 +4214,7 @@ function iniciarRealtime() {
         if (
           typeof registro.texto !== "string" ||
           registro.texto.trim().length === 0 ||
-          contarPalavras(registro.texto) > MAX_PALAVRAS_CONTRIBUICAO
+          registro.texto.length > MAX_CARACTERES_CONTRIBUICAO
         ) {
           return;
         }
