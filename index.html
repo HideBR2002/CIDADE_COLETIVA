@@ -1857,47 +1857,51 @@ function criarRedeEspacosPublicos() {
       <circle cx="6" cy="-1" r="2.5" fill="#ffffff"/>
     </g>`;
 
-  // Praça da Convivência — setor superior esquerdo.
+  // Distribuição territorial: uma praça em cada setor delimitado pelas ruas.
+  // As três implantações usam escala compacta e coordenadas fora dos lotes,
+  // dos equipamentos culturais e das obras artísticas existentes.
+
+  // Setor superior — praça de convivência entre os dois eixos viários.
+  const pracaSuperior = `
+    <g id="praca-convivencia" transform="translate(760 80) scale(.72)">
+      <ellipse cx="0" cy="0" rx="49" ry="28" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="42" ry="22" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <path d="M -35 0 Q 0 -27 35 0 Q 0 27 -35 0" fill="none" stroke="#c7b596" stroke-width="2"/>
+      ${arvore(0,-5,.78)}
+      ${banco(-32,2,-25)}${banco(32,2,25)}
+      ${luminaria(-41,5)}${luminaria(41,5)}
+      ${canteiro(-20,20)}${canteiro(20,20)}
+    </g>`;
+
+  // Setor esquerdo — praça de bairro em um vazio entre os edifícios.
   const pracaEsquerda = `
-    <g id="praca-convivencia">
-      <ellipse cx="225" cy="-25" rx="49" ry="28" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
-      <ellipse cx="225" cy="-25" rx="42" ry="22" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
-      <path d="M 190 -25 Q 225 -52 260 -25 Q 225 2 190 -25" fill="none" stroke="#c7b596" stroke-width="2"/>
-      ${arvore(225,-30,.78)}
-      ${banco(193,-23,-25)}${banco(257,-23,25)}
-      ${luminaria(184,-20)}${luminaria(266,-20)}
-      ${canteiro(205, -2)}${canteiro(245,-2)}
+    <g id="praca-bairro-esquerdo" transform="translate(70 165) scale(.72)">
+      <ellipse cx="0" cy="0" rx="49" ry="28" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="42" ry="22" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <path d="M -35 0 Q 0 -27 35 0 Q 0 27 -35 0" fill="none" stroke="#c7b596" stroke-width="2"/>
+      ${arvore(0,-5,.78)}
+      ${banco(-32,2,-25)}${banco(32,2,25)}
+      ${luminaria(-41,5)}${luminaria(41,5)}
+      ${canteiro(-20,20)}${canteiro(20,20)}
     </g>`;
 
-  // Praça Cultural — setor superior direito.
+  // Setor direito — largo com pequeno espelho d'água, afastado dos edifícios.
   const pracaDireita = `
-    <g id="praca-cultural">
-      <ellipse cx="900" cy="-25" rx="48" ry="27" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
-      <ellipse cx="900" cy="-25" rx="41" ry="21" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
-      <path d="M 870 -25 Q 900 -49 930 -25 Q 900 -1 870 -25" fill="none" stroke="#c7b596" stroke-width="2"/>
-      ${arvore(900,-30,.78)}
-      ${banco(868,-23,-25)}${banco(932,-23,25)}
-      ${luminaria(859,-20)}${luminaria(941,-20)}
-      ${canteiro(880,-2)}${canteiro(920,-2)}
-    </g>`;
-
-  // Praça das Águas — pequeno largo de contemplação no parque triangular.
-  const pracaAguas = `
-    <g id="praca-das-aguas" transform="translate(215 -446)">
-      <ellipse cx="525" cy="486" rx="56" ry="24" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
-      <ellipse cx="525" cy="486" rx="48" ry="18" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
-      <ellipse cx="525" cy="486" rx="15" ry="7" fill="#168fc0" stroke="#ffffff" stroke-width="2"/>
-      <ellipse cx="525" cy="486" rx="6" ry="3" fill="#9fe0e3"/>
-      ${banco(484,487,-18)}${banco(566,487,18)}
-      ${canteiro(500,503)}${canteiro(550,503)}
-      ${luminaria(473,489)}${luminaria(577,489)}
+    <g id="praca-bairro-direito" transform="translate(1040 430) scale(.72)">
+      <ellipse cx="0" cy="0" rx="52" ry="27" fill="#d8c9ad" stroke="#a99576" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="45" ry="21" fill="#f0e4cf" stroke="#fff8eb" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="14" ry="7" fill="#168fc0" stroke="#ffffff" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="6" ry="3" fill="#9fe0e3"/>
+      ${banco(-34,1,-18)}${banco(34,1,18)}
+      ${canteiro(-20,17)}${canteiro(20,17)}
+      ${luminaria(-43,3)}${luminaria(43,3)}
     </g>`;
 
   return `
     <g id="rede-de-pracas" stroke-linejoin="round">
+      ${pracaSuperior}
       ${pracaEsquerda}
       ${pracaDireita}
-      ${pracaAguas}
     </g>`;
 }
 
