@@ -3341,23 +3341,62 @@ function criarMarcoColetivo() {
   `;
 }
 
+function criarFiosConexao() {
+  // Rede musical discreta: quatro estruturas superiores ligadas ao núcleo,
+  // e os oito edifícios de cada bairro lateral organizados em pares.
+  // Esta camada é desenhada antes dos prédios para manter fachadas livres.
+  const fios = [
+    // Quatro estruturas do bairro superior até a rotatória.
+    { id: "fio-superior-01", d: "M 45 12 Q 120 95 300 150 Q 420 195 525 235", cor: "#00b9c7" },
+    { id: "fio-superior-02", d: "M 115 22 Q 190 95 330 160 Q 430 210 525 235", cor: "#ffbd43" },
+    { id: "fio-superior-03", d: "M 432 -25 Q 420 65 440 105 Q 455 165 525 235", cor: "#f5008f" },
+    { id: "fio-superior-04", d: "M 592 -25 Q 635 65 650 105 Q 620 180 525 235", cor: "#6848e8" },
+
+    // Bairro esquerdo: oito edifícios, quatro pares.
+    { id: "fio-esquerdo-01", d: "M 45 48 Q 80 70 115 60", cor: "#00b9c7" },
+    { id: "fio-esquerdo-02", d: "M 215 170 Q 250 185 285 165", cor: "#ffbd43" },
+    { id: "fio-esquerdo-03", d: "M 140 275 Q 175 300 210 285", cor: "#f5008f" },
+    { id: "fio-esquerdo-04", d: "M 300 385 Q 335 400 370 385", cor: "#6848e8" },
+
+    // Bairro direito: todos os oito edifícios, também em quatro pares.
+    { id: "fio-direito-01", d: "M 965 105 Q 1000 120 1040 108", cor: "#ffbd43" },
+    { id: "fio-direito-02", d: "M 750 205 Q 785 220 840 205", cor: "#00b9c7" },
+    { id: "fio-direito-03", d: "M 960 305 Q 995 320 1040 300", cor: "#f5008f" },
+    { id: "fio-direito-04", d: "M 750 400 Q 785 415 840 400", cor: "#6848e8" }
+  ];
+  return `
+    <g id="camada-fios-conexao" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      ${fios.map(fio => `
+        <g id="${fio.id}">
+          <path d="${fio.d}" stroke="#ffffff" stroke-width="6" opacity=".52"/>
+          <path d="${fio.d}" stroke="${fio.cor}" stroke-width="2.4" opacity=".88"/>
+        </g>
+      `).join("")}
+    </g>
+  `;
+}
+
 function criarNotasMusicais() {
-  // Duas notas por setor: superior, esquerdo e direito.
-  // Ícones compactos, posicionados fora dos lotes e das estruturas principais.
+  // Uma nota sobre cada fio: não há mais notas decorativas soltas.
   const notas = [
-    { id: "nota-musical-01", x: 350, y: 75, cor: "#f50057", giro: -8 },
-    { id: "nota-musical-02", x: 735, y: 112, cor: "#009ca6", giro: 9 },
-    { id: "nota-musical-03", x: 84, y: 188, cor: "#625bd5", giro: -7 },
-    { id: "nota-musical-04", x: 218, y: 282, cor: "#ff8c42", giro: 8 },
-    { id: "nota-musical-05", x: 790, y: 302, cor: "#168fc0", giro: -9 },
-    { id: "nota-musical-06", x: 884, y: 397, cor: "#d99b22", giro: 7 }
+    { id: "nota-fio-superior-01", x: 280, y: 137, cor: "#00b9c7", giro: -8 },
+    { id: "nota-fio-superior-02", x: 345, y: 169, cor: "#ffbd43", giro: 7 },
+    { id: "nota-fio-superior-03", x: 438, y: 105, cor: "#f5008f", giro: -6 },
+    { id: "nota-fio-superior-04", x: 635, y: 108, cor: "#6848e8", giro: 8 },
+    { id: "nota-fio-esquerdo-01", x: 78, y: 56, cor: "#00b9c7", giro: -8 },
+    { id: "nota-fio-esquerdo-02", x: 250, y: 165, cor: "#ffbd43", giro: 7 },
+    { id: "nota-fio-esquerdo-03", x: 175, y: 278, cor: "#f5008f", giro: -6 },
+    { id: "nota-fio-esquerdo-04", x: 335, y: 380, cor: "#6848e8", giro: 8 },
+    { id: "nota-fio-direito-01", x: 1000, y: 101, cor: "#ffbd43", giro: -7 },
+    { id: "nota-fio-direito-02", x: 795, y: 203, cor: "#00b9c7", giro: 8 },
+    { id: "nota-fio-direito-03", x: 1000, y: 298, cor: "#f5008f", giro: -7 },
+    { id: "nota-fio-direito-04", x: 795, y: 394, cor: "#6848e8", giro: 7 }
   ];
   return `
     <g id="camada-notas-musicais" stroke-linecap="round" stroke-linejoin="round">
       ${notas.map(nota => `
         <g id="${nota.id}" transform="translate(${nota.x} ${nota.y}) rotate(${nota.giro})">
-          <ellipse cx="10" cy="34" rx="13" ry="3.5" fill="#000000" opacity=".12"/>
-          <path d="M 17 5 V 27" stroke="${nota.cor}" stroke-width="3.5"/>
+          <path d="M 17 5 V 27" stroke="#34383b" stroke-width="4.4"/>
           <path d="M 17 5 Q 24 1 29 5 V 11 Q 23 7 17 11 Z" fill="${nota.cor}" stroke="#34383b" stroke-width="1"/>
           <ellipse cx="11" cy="28" rx="7" ry="4.5" transform="rotate(-22 11 28)"
             fill="${nota.cor}" stroke="#34383b" stroke-width="1"/>
@@ -3395,6 +3434,9 @@ function montarCidade() {
 
   // ==================================================
   resultado += criarInfraestruturaUrbana();
+
+  // Fios atrás das construções: conectam os três bairros sem cobrir fachadas.
+  if (cidadeTransformada) resultado += criarFiosConexao();
 
   // Praças desenhadas sobre o terreno e sob os edifícios/obras,
   // exclusivamente na cidade transformada.
