@@ -930,30 +930,32 @@ const IDS_PLACAS_PARTICIPATIVAS = [
   "ad12", "ad13", "ad14", "ad15",
   "ad16", "ad17", "ad18", "ad19",
   "ad20", "ad21", "ad22", "ad23",
-  "ad24", "ad25", "ad26", "ad27"
+  "ad24", "ad25", "ad26", "ad27",
+  "ad28", "ad29", "ad30", "ad31", "ad32",
+  "ad33", "ad34", "ad35", "ad36", "ad37"
 ];
 
 // Cada mensagem ocupa uma posição independente em uma das duas faixas
-// laterais reservadas, fora da área ocupada pelos elementos urbanos.
+// laterais reservadas: 15 posições à esquerda e 15 à direita.
 const ESPACOS_PARTICIPATIVOS = IDS_PLACAS_PARTICIPATIVAS.map(
   (id, indice) => ({
     id,
-    x: indice < 10 ? -160 : 1135,
-    y: -30 + (indice % 10) * 48
+    x: indice < 15 ? -160 : 1135,
+    y: -30 + (indice % 15) * 48
   })
 );
 
 const LARGURA_PLACA_PARTICIPATIVA = 118;
 const ALTURA_PLACA_PARTICIPATIVA = 40;
 
-if (ESPACOS_PARTICIPATIVOS.length !== 20) {
-  throw new Error("O mapa precisa conter exatamente 20 placas.");
+if (ESPACOS_PARTICIPATIVOS.length !== 30) {
+  throw new Error("O mapa precisa conter exatamente 30 placas.");
 }
 
 const IDS_ESPACOS_PARTICIPATIVOS = new Set(
   ESPACOS_PARTICIPATIVOS.map(item => item.id)
 );
-if (IDS_ESPACOS_PARTICIPATIVOS.size !== 20) {
+if (IDS_ESPACOS_PARTICIPATIVOS.size !== 30) {
   throw new Error("Existem IDs duplicados nas placas.");
 }
 
@@ -1590,7 +1592,7 @@ let contribuicoes = [];
 
 let corSelecionada = "#f50057";
 
-const MAX_CONTRIBUICOES = 20;
+const MAX_CONTRIBUICOES = 30;
 
 const CORES_CONTRIBUICAO = [
   "#f50057",
@@ -3275,22 +3277,24 @@ function montarCidade() {
   resultado += montarIntervencoes();
 
   // 3. PLACAS PARTICIPATIVAS
-  // As 20 mensagens aparecem nos dois estados da cidade.
-  resultado += `
-    <g id="camada-placas-suspensas">
-  `;
+  // As mensagens são exibidas somente depois da transformação.
+  if (cidadeTransformada) {
+    resultado += `
+      <g id="camada-placas-suspensas">
+    `;
 
-  // Placas independentes nas duas faixas laterais reservadas.
-  for (const posicao of ESPACOS_PARTICIPATIVOS) {
-    const contribuicao = contribuicoes.find(
-      item => String(item.id) === String(posicao.id)
-    );
-    resultado += criarPlacaSuspensa(posicao, contribuicao);
+    // Trinta posições independentes nas duas faixas laterais.
+    for (const posicao of ESPACOS_PARTICIPATIVOS) {
+      const contribuicao = contribuicoes.find(
+        item => String(item.id) === String(posicao.id)
+      );
+      resultado += criarPlacaSuspensa(posicao, contribuicao);
+    }
+
+    resultado += `
+      </g>
+    `;
   }
-
-  resultado += `
-    </g>
-  `;
 
   // ==================================================
   // 4. FINALIZAR SVG
@@ -3916,7 +3920,7 @@ async function adicionarContribuicao(event) {
 
     });
 
-    // Procurar exclusivamente nos 20 espaços.
+    // Procurar exclusivamente nos 30 espaços.
 
     const painelDisponivel =
       ESPACOS_PARTICIPATIVOS.find(
@@ -4069,7 +4073,7 @@ function iniciarRealtime() {
 
         const id = String(registro.painel_id);
 
-        // Validar se o ID pertence a uma das 20 posições participativas.
+        // Validar se o ID pertence a uma das 30 posições participativas.
 
         if (!IDS_ESPACOS_PARTICIPATIVOS.has(id)) {
           return;
